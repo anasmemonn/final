@@ -1,251 +1,133 @@
 <!DOCTYPE html>
 <html lang="en">
     <link rel="icon" href=cokie.jpg type="image/jpg">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Cookie Jar</title>
-  <style>
-    /* General Styles */
-    body {
-      font-family: 'Arial', sans-serif;
-      background: linear-gradient(135deg, #f5a623, #f0a6ca);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      margin: 0;
-      overflow: hidden;
-    }
+    
+    <div class="custom-container">
+        Check out my <a href="ss.html" style="color: #f39c12; font-weight: bold;">Cookie Jar</a> where I track my small wins!
+    </div>
 
-    /* Container */
-    .container {
-      text-align: center;
-      background: #fff;
-      border-radius: 15px;
-      padding: 30px 50px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-      position: relative;
-      max-width: 600px;
-      width: 100%;
-    }
+    <h3>Check out my <a href="sss.html" style="color: #f39c12; font-weight: bold;">routine & calender</a> where i put calendar and routine</h3>
+    <h4>Check out my <a href="yy.html" style="color: #f39c12; font-weight: bold;">subject </a> where i put time of all subject</h3>
 
-    /* Header */
-    h1 {
-      font-size: 2.5rem;
-      color: #ff6f61;
-      margin-bottom: 20px;
-      font-weight: bold;
-      position: relative;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Me</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #111;
+            color: #fff;
+            text-align: center;
+        }
+        .custom-container {
+            text-align: center;   /* Center-align the content */
+            position: absolute;   /* Use absolute positioning to control position */
+            bottom: 40px;         /* Distance from the bottom */
+            left: 50%; 
+            font-size: large; 
+            font-size: larger;          /* Move it to the horizontal center */
+            transform: translateX(-50%); /* Center it accurately */
+        }
+        
+        .container {
+            padding: 20px;
+        }
+        
+        h3 {
+            position: absolute;
+            bottom: 10px;  /* Distance from the bottom */
+              /* Align it to the right side */
+            font-size: large;
+            text-align: center;  /* Optional, to center text inside the h3 */
+        }
+        h4 {
+            position: absolute;
+            bottom: 40px;  /* Distance from the bottom */
+            right: px; 
+              /* Align it to the right side */
+            text-align: center;  /* Optional, to center text inside the h3 */
+            font-size: large;
+        }
+        
+        p {
+            margin-right: 20px; /* Space between elements */
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #f39c12;
+            animation: fadeIn 2s ease-in-out;
+        }
 
-    h1::after {
-      content: "🎯 Small Wins Matter!";
-      font-size: 1.2rem;
-      color: #f59a75;
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      bottom: -25px;
-      animation: bounce 2s infinite ease-in-out;
-    }
+        h2 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #e74c3c;
+        }
 
-    @keyframes bounce {
-      0%, 100% {
-        transform: translateX(-50%) translateY(0);
-      }
-      50% {
-        transform: translateX(-50%) translateY(-8px);
-      }
-    }
+        p {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin:5px auto;
+            max-width: 800px;
+            text-align: justify;
+        }
 
-    /* Jar Styles */
-    .jar {
-      width: 320px;
-      height: 450px;
-      background: radial-gradient(circle at bottom, #ffddc1, #f5b971);
-      border: 5px solid #ff6f61;
-      border-radius: 15px;
-      position: relative;
-      overflow-y: auto;
-      padding: 20px;
-      box-shadow: inset 0 4px 10px rgba(0, 0, 0, 0.1);
-      margin: 20px auto;
-      animation: jarEntrance 1s ease-out;
-    }
+        .key-points {
+            margin: 5px auto;
+            padding: 10px;
+            text-align: left;
+            background-color: #222;
+            border-radius: 8px;
+            display: inline-block;
+            width: 80%;
+        }
 
-    @keyframes jarEntrance {
-      from {
-        transform: scale(0.8);
-        opacity: 0;
-      }
-      to {
-        transform: scale(1);
-        opacity: 1;
-      }
-    }
+        .key-points ul {
+            list-style-type: none;
+            padding: 0;
+        }
 
-    /* Cookie List and Styles */
-    .cookies-list {
-      text-align: left;
-      max-height: 100%;
-      padding: 10px;
-      overflow-y: auto;
-    }
+        .key-points ul li {
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #333;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
 
-    .cookie {
-      background: #fff3cd;
-      border: 2px dashed #ff6f61;
-      border-radius: 12px;
-      padding: 12px;
-      margin: 15px 0;
-      color: #333;
-      font-size: 1.1rem;
-      position: relative;
-      animation: fadeIn 0.5s ease-in-out;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      transition: transform 0.3s, box-shadow 0.3s;
-    }
+        .key-points ul li:hover {
+            background-color: #555;
+        }
 
-    .cookie:hover {
-      transform: scale(1.05);
-      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
-      cursor: pointer;
-    }
-
-    /* Delete Button */
-    .delete-btn {
-      background: none;
-      border: none;
-      color: #d9554e;
-      font-size: 1rem;
-      position: absolute;
-      top: 1px;
-      right: 5px;
-      cursor: pointer;
-      transition: transform 0.15s ease, color 0.2s ease;
-    }
-
-    .delete-btn:hover {
-      transform: scale(1.2);
-      color: #ff6f61;
-    }
-
-    /* Form Styles */
-    form {
-      margin-top: 25px;
-    }
-
-    input {
-      padding: 12px;
-      width: 240px;
-      border: 2px solid #ff6f61;
-      border-radius: 5px;
-      outline: none;
-      transition: border-color 0.3s;
-      font-size: 1.1rem;
-      margin-right: 10px;
-    }
-
-    input:focus {
-      border-color: #d9554e;
-    }
-
-    button {
-      padding: 12px 18px;
-      background: #ff6f61;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-      font-size: 1.1rem;
-      cursor: pointer;
-      transition: background 0.3s, transform 0.2s;
-    }
-
-    /* Keyframe for Cookie FadeIn */
-    @keyframes fadeIn {
-      from {
-        transform: translateY(-10px);
-        opacity: 0;
-      }
-      to {
-        transform: translateY(0);
-        opacity: 1;
-      }
-    }
-  </style>
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(-20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+    </style>
 </head>
 <body>
-    
-  <div class="container">
-    <h1>🎯 My Cookie Jar</h1>
+    <div class="container">
+        <h1>About Me</h1>
+        <h2>Understanding Myself</h2>
+        <p>Hello! My name is <strong>ANAS</strong>. I am 14 years old and currently in 10th grade. My dream is to become an AI Software Developer and pursue engineering with a focus on coding. I have a strong interest in mathematics and I aim to score good marks in my studies, despite feeling that the education system can be limiting at times. My ultimate goal is to become a software engineer and make a positive impact while earning money.</p>
 
-    <!-- Cookie Jar Section -->
-    <div id="cookie-jar">
-      <form id="cookieForm">
-        <input type="text" id="cookieInput" placeholder="Enter your achievement..." required />
-        <button type="submit">Add Cookie 🍪</button>
-      </form>
+        <p>I am very focused, determined, and disciplined when it comes to my goals. I love challenging myself and exploring new technologies, especially in the field of web development, ethical hacking, and cybersecurity.</p>
 
-      <div class="jar">
-        <div class="cookies-list" id="cookiesList"></div>
-      </div>
+        <div class="key-points">
+            <h2>Key Points About Me:</h2>
+            <ul>
+                <li><strong>Focused Learner:</strong> I enjoy working on projects like calendars, timers, and professional interfaces using HTML, CSS, and JavaScript.</li>
+                <li><strong>Mathematics Enthusiast:</strong> I love solving problems and I plan to take mathematics in 11th grade to deepen my understanding of the subject.</li>
+                <li><strong>Creative Developer:</strong> I aim for aesthetically pleasing designs in all my projects, preferring professional and motivational styles.</li>
+                <li><strong>Discipline:</strong> I wake up early and try to balance my day between studies, prayers, and personal growth.</li>
+                <li><strong>Philosophy:</strong> I believe in the "Power of Small Wins," achieving big goals step by step.</li>
+            </ul>
+        </div>
     </div>
-  </div>
-
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const cookieForm = document.getElementById('cookieForm');
-      const cookieInput = document.getElementById('cookieInput');
-      const cookiesList = document.getElementById('cookiesList');
-    
-      const loadCookies = () => {
-        const cookies = JSON.parse(localStorage.getItem('cookies')) || [];
-        cookies.forEach(cookie => addCookieToDOM(cookie));
-      };
-    
-      const saveCookie = (cookie) => {
-        const cookies = JSON.parse(localStorage.getItem('cookies')) || [];
-        cookies.push(cookie);
-        localStorage.setItem('cookies', JSON.stringify(cookies));
-      };
-    
-      const removeCookieFromStorage = (cookie) => {
-        let cookies = JSON.parse(localStorage.getItem('cookies')) || [];
-        cookies = cookies.filter(item => item !== cookie);
-        localStorage.setItem('cookies', JSON.stringify(cookies));
-      };
-    
-      const addCookieToDOM = (cookie) => {
-        const cookieDiv = document.createElement('div');
-        cookieDiv.classList.add('cookie');
-        
-        const deleteButton = document.createElement('button');
-        deleteButton.classList.add('delete-btn');
-        deleteButton.textContent = '✖';
-        deleteButton.addEventListener('click', () => {
-          cookiesList.removeChild(cookieDiv);
-          removeCookieFromStorage(cookie);
-        });
-        
-        cookieDiv.innerHTML = cookie;
-        cookieDiv.appendChild(deleteButton);
-        cookiesList.appendChild(cookieDiv);
-      };
-    
-      cookieForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const newCookie = cookieInput.value.trim();
-        if (newCookie) {
-          addCookieToDOM(newCookie);
-          saveCookie(newCookie);
-          cookieInput.value = '';
-        }
-      });
-    
-      loadCookies();
-    });
-  </script>
 </body>
 </html>
