@@ -1,15 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-    <link rel="icon" href=cokie.jpg type="image/jpg">
+    <link rel="icon" href="cokie.jpg" type="image/jpg">
 <head>
-    
-    <div class="custom-container">
-        Check out my <a href="ss.html" style="color: #f39c12; font-weight: bold;">Cookie Jar</a> where I track my small wins!
-    </div>
-
-    <h3>Check out my <a href="sss.html" style="color: #f39c12; font-weight: bold;">routine & calender</a> where i put calendar and routine</h3>
-    <h4>Check out my <a href="yy.html" style="color: #f39c12; font-weight: bold;">subject </a> where i put time of all subject</h3>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About Me</title>
@@ -22,40 +14,11 @@
             color: #fff;
             text-align: center;
         }
-        .custom-container {
-            text-align: center;   /* Center-align the content */
-            position: absolute;   /* Use absolute positioning to control position */
-            bottom: 40px;         /* Distance from the bottom */
-            left: 50%; 
-            font-size: large; 
-            font-size: larger;          /* Move it to the horizontal center */
-            transform: translateX(-50%); /* Center it accurately */
-        }
-        
+
         .container {
             padding: 20px;
         }
-        
-        h3 {
-            position: absolute;
-            bottom: 10px;  /* Distance from the bottom */
-              /* Align it to the right side */
-            font-size: large;
-            text-align: center;  /* Optional, to center text inside the h3 */
-        }
-        h4 {
-            position: absolute;
-            bottom: 40px;  /* Distance from the bottom */
-            right: px; 
-              /* Align it to the right side */
-            text-align: center;  /* Optional, to center text inside the h3 */
-            font-size: large;
-        }
-        
-        p {
-            margin-right: 20px; /* Space between elements */
-        }
-        
+
         h1 {
             font-size: 2.5rem;
             margin-bottom: 10px;
@@ -72,19 +35,19 @@
         p {
             font-size: 1.2rem;
             line-height: 1.6;
-            margin:5px auto;
+            margin: 5px auto;
             max-width: 800px;
             text-align: justify;
         }
 
         .key-points {
-            margin: 5px auto;
-            padding: 10px;
-            text-align: left;
+            margin: 1px auto;
+            padding: 5px;
+            font-size: small;
+            text-align: center;
             background-color: #222;
-            border-radius: 8px;
-            display: inline-block;
-            width: 80%;
+            border-radius: 90px;
+            width: 90%;
         }
 
         .key-points ul {
@@ -102,6 +65,34 @@
 
         .key-points ul li:hover {
             background-color: #555;
+        }
+
+        /* New style for dynamic links */
+        .link-container {
+            display: flex;
+            justify-content: center; /* Aligns links horizontally */
+            margin-top: 30px;
+        }
+
+        .link-container a {
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.5rem;
+            color: #f39c12;
+            margin: 0 15px; /* Added margin for spacing between links */
+            padding: 10px;
+            border: 2px solid #f39c12;
+            border-radius: 10px;
+            width: 200px;
+            text-align: center;
+            background-color: #222;
+            transition: background-color 0.3s, transform 0.3s;
+        }
+
+        .link-container a:hover {
+            background-color: #f39c12;
+            color: #fff;
+            transform: scale(1.05);
         }
 
         @keyframes fadeIn {
@@ -127,6 +118,13 @@
                 <li><strong>Discipline:</strong> I wake up early and try to balance my day between studies, prayers, and personal growth.</li>
                 <li><strong>Philosophy:</strong> I believe in the "Power of Small Wins," achieving big goals step by step.</li>
             </ul>
+        </div>
+
+        <!-- Dynamic Link Section -->
+        <div class="link-container">
+            <a href="ss.html">Check out my Cookie Jar</a>
+            <a href="sss.html">Routine & Calendar</a>
+            <a href="yy.html">Subjects and Times</a>
         </div>
     </div>
 </body>
