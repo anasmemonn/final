@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Power of Small Wins</title>
+    <style>
+        /* Basic Styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: black;
+            color: white;
+            text-align: center;
+            margin: 40px;
+            padding:30px;
+        }
+
+        .container {
+            padding: 20px;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        h1 {
+            font-size: 40px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .highlight {
+            color: yellow;
+            animation: pulse 2s infinite;
+        }
+
+        .content {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        .goals {
+            width: 20%;
+            background-color: #111;
+            padding: 15px;
+            border: 2px solid red;
+            border-radius: 10px;
+        }
+
+        .goals h2 {
+            font-size: 24px;
+            color: yellow;
+            margin-bottom: 10px;
+        }
+
+        .goals ul {
+            list-style: none;
+            padding: 0;
+            text-align: left;
+        }
+
+        .goals ul li {
+            margin: 10px 0;
+            font-size: 16px;
+        }
+
+        .table-container {
+            width: 75%;
+        }
+
+        table {
+            width: 100%;
+            margin: 0 auto;
+            border-collapse: collapse;
+            text-align: center;
+            background-color: black;
+            color: white;
+            animation: slideIn 1s ease-in-out;
+        }
+
+        th, td {
+            border: 2px solid red;
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        th {
+            background-color: red;
+            color: white;
+            font-weight: bold;
+        }
+
+        td {
+            height: 50px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        td.marked {
+            background-color: green;
+            color: white;
+            animation: bounce 0.5s ease-in-out;
+        }
+
+        td.not-done {
+            background-color: rgb(0, 0, 0);
+            color: white;
+            animation: shake 0.3s ease-in-out;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                color: yellow;
+            }
+            50% {
+                transform: scale(1.1);
+                color: orange;
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+        }
+
+        @keyframes shake {
+            0%, 100% {
+                transform: translateX(0);
+            }
+            25% {
+                transform: translateX(-5px);
+            }
+            75% {
+                transform: translateX(5px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>POWER OF <span class="highlight">SMALL WINS</span></h1>
+        <div class="content">
+            <!-- Goals Section -->
+            <div class="goals">
+                <h2>My Goals</h2>
+                <ul>
+                    <li>Complete all tasks daily</li>
+                    <li>Be consistent for 75 days</li>
+                    <li>Track progress effectively</li>
+                    <li>Stay disciplined and focused</li>
+                </ul>
+            </div>
+
+            <!-- Table Section -->
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Day</th>
+                            <th>SOCIAL SCIENCE<br>(30 min)</th>
+                            <th>MATHS<br>(1 hr)</th>
+                            <th>SCIENCE<br>(1 hr)</th>
+                            <th>ENGLISH<br>(45 min)</th>
+                            <th>SANSKRIT<br>(1 hr)</th>
+                            <th>GUJARATI<br>(30 min)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Rows will be dynamically generated -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script>
+        const tbody = document.querySelector('tbody');
+
+        // Initialize local storage
+        const savedProgress = JSON.parse(localStorage.getItem('progress')) || {};
+
+        // Generate rows dynamically for 75 days
+        for (let i = 1; i <= 75; i++) {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td class="day-cell" data-day="Day ${i}">Day ${i}</td>
+                <td class="subject-cell" data-key="Day${i}-Social Science"></td>
+                <td class="subject-cell" data-key="Day${i}-Maths"></td>
+                <td class="subject-cell" data-key="Day${i}-Science"></td>
+                <td class="subject-cell" data-key="Day${i}-English"></td>
+                <td class="subject-cell" data-key="Day${i}-Sanskrit"></td>
+                <td class="subject-cell" data-key="Day${i}-Gujarati"></td>
+            `;
+            tbody.appendChild(row);
+        }
+
+        // Restore progress from local storage
+        document.querySelectorAll('.subject-cell').forEach((cell) => {
+            const key = cell.dataset.key;
+            if (savedProgress[key] === '✅') {
+                cell.classList.add('marked');
+                cell.textContent = '✅';
+            } else if (savedProgress[key] === '❌') {
+                cell.classList.add('not-done');
+                cell.textContent = '❌';
+            }
+
+            // Add click functionality for toggling progress
+            cell.addEventListener('click', () => {
+                if (cell.classList.contains('marked')) {
+                    cell.classList.remove('marked');
+                    cell.classList.add('not-done');
+                    cell.textContent = '❌';
+                    savedProgress[key] = '❌';
+                } else if (cell.classList.contains('not-done')) {
+                    cell.classList.remove('not-done');
+                    cell.textContent = '';
+                    delete savedProgress[key];
+                } else {
+                    cell.classList.add('marked');
+                    cell.textContent = '✅';
+                    savedProgress[key] = '✅';
+                }
+                localStorage.setItem('progress', JSON.stringify(savedProgress));
+            });
+        });
+    </script>
+</body>
+</html>
