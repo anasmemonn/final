@@ -6,6 +6,14 @@
     <title>About Me</title>
     <link rel="icon" href="cokie.jpg" type="image/jpg">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500&display=swap" rel="stylesheet">
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Me</title>
+    <link rel="icon" href="cokie.jpg" type="image/jpg">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500&display=swap" rel="stylesheet">
     <style>
         /* Global Reset */
         * {
@@ -22,17 +30,16 @@
         /* Futuristic Gradient Background */
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(45deg, #111, #222, #333);
-            background-size: 400% 400%;
-            animation: gradientBackground 10s ease infinite;
+            background: linear-gradient(120deg, #000428, #004e92, #111);
+            background-size: 300% 300%;
+            animation: gradientBackground 15s ease infinite;
             color: #fff;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            padding: 20px;
             overflow: auto;
-            perspective: 1000px;
+            perspective: 1500px;
         }
 
         /* Glassmorphism Container */
@@ -40,25 +47,25 @@
             width: 100%;
             max-width: 900px;
             padding: 30px;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.15);
             border-radius: 20px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-            animation: fadeIn 4s ease-in-out;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.6);
+            animation: fadeIn 3s ease-in-out, pulse 8s infinite ease-in-out;
             position: relative;
-            z-index: 1;
             transform-style: preserve-3d;
+            transform: translateZ(50px);
         }
 
         /* Main Title */
         h1 {
             font-size: 3rem;
             margin-bottom: 20px;
-            color: #00f5e9;
+            color: #00e6ff;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            animation: slideIn 4s ease-out;
-            text-shadow: 0 0 20px #00f5e9, 0 0 40px #00f5e9;
+            letter-spacing: 3px;
+            animation: glowText 4s infinite alternate;
+            text-shadow: 0 0 15px #00e6ff, 0 0 30px #00e6ff;
         }
 
         /* Subtitle */
@@ -66,7 +73,7 @@
             font-size: 2rem;
             margin-bottom: 20px;
             color: #ff007c;
-            animation: slideIn 4s ease-out;
+            animation: glowTextAlt 4s infinite alternate;
             text-shadow: 0 0 10px #ff007c, 0 0 20px #ff007c;
         }
 
@@ -74,106 +81,38 @@
         p {
             font-size: 1.2rem;
             margin-bottom: 20px;
-            line-height: 1.6;
-            animation: fadeInText 4s ease-in-out;
+            line-height: 1.8;
+            animation: fadeInText 3s ease-out;
             text-align: justify;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.8px;
         }
 
         /* Key Points Section */
         .key-points {
             margin-top: 30px;
             padding: 20px;
-            background-color: rgba(0, 0, 0, 0.3);
+            background-color: rgba(0, 0, 0, 0.5);
             border-radius: 12px;
-            animation: fadeInText 4s ease-in-out;
-        }
-
-        .key-points h2 {
-            font-size: 1.8rem;
-            margin-bottom: 20px;
-            text-align: center;
-            color: #ff007c;
-        }
-
-        .key-points ul {
-            list-style-type: none;
-            padding: 0;
+            animation: fadeInText 2s ease-in-out;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .key-points ul li {
-            background-color: #222;
+            background: rgba(255, 255, 255, 0.1);
             padding: 12px 20px;
             margin-bottom: 15px;
             border-radius: 10px;
-            transition: background-color 0.5s ease, transform 0.3s ease;
+            transition: background-color 0.4s ease, transform 0.3s ease;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
         }
 
         .key-points ul li:hover {
             background-color: #ff007c;
-            transform: translateY(-3px);
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(255, 0, 124, 0.6);
         }
 
-        /* Magic Sparkle Animation */
-        .magic-sparkle {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 10px;
-            height: 10px;
-            background-color: #00f5e9;
-            border-radius: 50%;
-            animation: sparkle 2s infinite;
-            box-shadow: 0 0 15px #00f5e9, 0 0 30px #00f5e9;
-        }
-
-        @keyframes sparkle {
-            0% { opacity: 0; transform: scale(0.5); }
-            50% { opacity: 1; transform: scale(1); }
-            100% { opacity: 0; transform: scale(0.5); }
-        }
-
-        /* Gradient Animation */
-        @keyframes gradientBackground {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        /* Fade In Animations */
-        @keyframes fadeIn {
-            0% { opacity: 0; transform: translateY(-20px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes slideIn {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(0); }
-        }
-
-        @keyframes fadeInText {
-            0% { opacity: 0; }
-            100% { opacity: 1; }
-        }
-
-        /* Link Hover Effects */
-        .link-container a {
-            text-decoration: none;
-            font-size: 1.2rem;
-            color: #00f5e9;
-            margin: 0 15px;
-            padding: 15px 25px;
-            border: 2px solid #00f5e9;
-            border-radius: 30px;
-            background-color: #222;
-            transition: background-color 0.5s, transform 0.3s, box-shadow 0.3s ease;
-            font-weight: 600;
-            letter-spacing: 1px;
-            text-align: center;
-            display: inline-block;
-            margin-top: 30px;
-        }
-
+        /* Link Container */
         .link-container a:hover {
             background-color: #00f5e9;
             color: #fff;
@@ -182,7 +121,7 @@
         }
 
         /* Instagram Link Styling */
-        .instagram-link {
+        .link-container {
             text-decoration: none;
             font-size: 1.2rem;
             color: #ff007c;
@@ -206,46 +145,73 @@
 
         /* Flexbox Row for Links */
         .link-container {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            margin-top: 40px;
-            flex-wrap: wrap;
+            display: flex; /* Flexbox layout */
+            justify-content: space-around; /* Equal space around the links */
+            align-items: center; /* Center align links vertically */
+            flex-wrap: wrap; /* Enable wrapping to new rows */
+            gap: 20px; /* Space between items */
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.4); /* Background for contrast */
+            border-radius: 15px; /* Rounded corners */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); /* Slight shadow for depth */
+        }
+        .link-container a {
+            text-decoration: none;
+            font-size: 1.2rem;
+            color: #00f5e9; /* Futuristic blue color */
+            margin: 10px 15px; /* Spacing around links */
+            padding: 12px 20px; /* Inner padding for clickable area */
+            border: 2px solid #00f5e9;
+            border-radius: 30px; /* Rounded buttons */
+            background-color: rgba(34, 34, 34, 0.8); /* Dark background with opacity */
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+            font-weight: 600; /* Bold font */
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 245, 233, 0.2); /* Soft shadow for glow */
+        }
+        
+        .link-container a:hover {
+            background-color: #00f5e9;
+            color: #000; /* Text changes to black */
+            transform: scale(1.1); /* Slight zoom effect */
+            box-shadow: 0 6px 15px rgba(0, 245, 233, 0.5); /* Glow effect */
         }
 
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .container {
-                padding: 20px;
-            }
 
-            h1 {
-                font-size: 2.5rem;
-            }
+        /* Keyframe Animations */
+        @keyframes gradientBackground {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
 
-            h2 {
-                font-size: 1.6rem;
-            }
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(-30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
 
-            p {
-                font-size: 1rem;
-            }
+        @keyframes fadeInText {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
 
-            .link-container a {
-                font-size: 1rem;
-                padding: 12px 18px;
-                margin: 10px;
-            }
+        @keyframes glowText {
+            from { text-shadow: 0 0 20px #00e6ff, 0 0 40px #00e6ff; }
+            to { text-shadow: 0 0 30px #00e6ff, 0 0 60px #00e6ff; }
+        }
 
-            .instagram-link {
-                font-size: 1rem;
-                padding: 12px 18px;
-                margin-top: 20px;
-            }
+        @keyframes glowTextAlt {
+            from { text-shadow: 0 0 15px #ff007c, 0 0 30px #ff007c; }
+            to { text-shadow: 0 0 25px #ff007c, 0 0 50px #ff007c; }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
         }
     </style>
 </head>
-<body>
+
     <!-- Magic Sparkles -->
     <div class="magic-sparkle"></div>
 
