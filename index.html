@@ -3,256 +3,433 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Me</title>
+    <title>Anas Memon | AI Developer Portfolio</title>
     <link rel="icon" href="cokie.jpg" type="image/jpg">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500&display=swap" rel="stylesheet">
-    <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Me</title>
-    <link rel="icon" href="cokie.jpg" type="image/jpg">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        /* Global Reset */
+        :root {
+            --primary: #6C63FF;
+            --secondary: #00D1FF;
+            --accent: #FF007C;
+            --bg: radial-gradient(circle at top right, #0a0a2e, #1a1a4a 60%);
+            --glass: rgba(255, 255, 255, 0.08);
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        /* Smooth Scrolling */
-        html {
-            scroll-behavior: smooth;
-        }
-
-        /* Futuristic Gradient Background */
         body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(120deg, #000428, #004e92, #111);
-            background-size: 300% 300%;
-            animation: gradientBackground 15s ease infinite;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
             color: #fff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
             min-height: 100vh;
-            overflow: auto;
-            perspective: 1500px;
+            line-height: 1.6;
+            overflow-x: hidden;
         }
 
-        /* Glassmorphism Container */
         .container {
-            width: 100%;
-            max-width: 900px;
-            padding: 30px;
-            background: rgba(255, 255, 255, 0.15);
-            border-radius: 20px;
-            backdrop-filter: blur(20px);
-            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.6);
-            animation: fadeIn 3s ease-in-out, pulse 8s infinite ease-in-out;
+            max-width: 1200px;
+            margin: 4rem auto;
+            padding: 2rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            margin-bottom: 6rem;
+        }
+
+        .profile-content {
             position: relative;
-            transform-style: preserve-3d;
-            transform: translateZ(50px);
+            padding: 2rem;
+            background: var(--glass);
+            border-radius: 2rem;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 16px 32px rgba(0, 0, 0, 0.3);
         }
 
-        /* Main Title */
         h1 {
-            font-size: 3rem;
-            margin-bottom: 20px;
-            color: #00e6ff;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            animation: glowText 4s infinite alternate;
-            text-shadow: 0 0 15px #00e6ff, 0 0 30px #00e6ff;
+            font-size: 3.5rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1.5rem;
         }
 
-        /* Subtitle */
-        h2 {
-            font-size: 2rem;
-            margin-bottom: 20px;
-            color: #ff007c;
-            animation: glowTextAlt 4s infinite alternate;
-            text-shadow: 0 0 10px #ff007c, 0 0 20px #ff007c;
-        }
-
-        /* Text Paragraph */
-        p {
+        .tagline {
             font-size: 1.2rem;
-            margin-bottom: 20px;
-            line-height: 1.8;
-            animation: fadeInText 3s ease-out;
-            text-align: justify;
-            letter-spacing: 0.8px;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 2rem;
         }
 
-        /* Key Points Section */
-        .key-points {
-            margin-top: 30px;
-            padding: 20px;
-            background-color: rgba(0, 0, 0, 0.5);
-            border-radius: 12px;
-            animation: fadeInText 2s ease-in-out;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+        /* Profile Image */
+        .profile-img {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 2rem;
+            box-shadow: 0 16px 32px rgba(108, 99, 255, 0.2);
+            animation: float 6s ease-in-out infinite;
         }
 
-        .key-points ul li {
+        /* Info Cards */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+        }
+
+        .info-card {
+            padding: 2rem;
+            background: var(--glass);
+            border-radius: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .info-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .info-card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--secondary);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        /* Links Grid */
+        .link-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin: 4rem 0;
+        }
+
+        .nav-card {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            padding: 1.5rem;
+            background: var(--glass);
+            border-radius: 1.2rem;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.1),
+                transparent
+            );
+            transition: 0.5s;
+        }
+
+        .nav-card:hover::before {
+            left: 100%;
+        }
+
+        .nav-card:hover {
+            background: rgba(108, 99, 255, 0.15);
+        }
+
+        .nav-icon {
+            font-size: 1.5rem;
+            color: var(--secondary);
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.8rem;
             background: rgba(255, 255, 255, 0.1);
-            padding: 12px 20px;
-            margin-bottom: 15px;
-            border-radius: 10px;
-            transition: background-color 0.4s ease, transform 0.3s ease;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
         }
 
-        .key-points ul li:hover {
-            background-color: #ff007c;
-            transform: scale(1.05);
-            box-shadow: 0 4px 15px rgba(255, 0, 124, 0.6);
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
         }
 
-        /* Link Container */
-        .link-container a:hover {
-            background-color: #00f5e9;
-            color: #fff;
-            transform: scale(1.05);
-            box-shadow: 0 4px 10px rgba(0, 245, 233, 0.7);
+        .scroll-animate {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: 1s ease;
         }
 
-        /* Instagram Link Styling */
-        .link-container {
-            text-decoration: none;
-            font-size: 1.2rem;
-            color: #ff007c;
-            padding: 15px 25px;
-            border: 2px solid #ff007c;
-            border-radius: 30px;
-            background-color: #222;
-            transition: background-color 0.5s, transform 0.3s, box-shadow 0.3s ease;
-            display: inline-block;
-            text-align: center;
-            margin-top: 20px;
-            font-weight: 600;
+        .scroll-animate.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
-        .instagram-link:hover {
-            background-color: #ff007c;
-            color: #fff;
-            transform: scale(1.05);
-            box-shadow: 0 4px 10px rgba(255, 0, 124, 0.7);
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .container {
+                padding: 1.5rem;
+                margin: 2rem auto;
+            }
         }
 
-        /* Flexbox Row for Links */
-        .link-container {
-            display: flex; /* Flexbox layout */
-            justify-content: space-around; /* Equal space around the links */
-            align-items: center; /* Center align links vertically */
-            flex-wrap: wrap; /* Enable wrapping to new rows */
-            gap: 20px; /* Space between items */
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.4); /* Background for contrast */
-            border-radius: 15px; /* Rounded corners */
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5); /* Slight shadow for depth */
-        }
-        .link-container a {
-            text-decoration: none;
-            font-size: 1.2rem;
-            color: #00f5e9; /* Futuristic blue color */
-            margin: 10px 15px; /* Spacing around links */
-            padding: 12px 20px; /* Inner padding for clickable area */
-            border: 2px solid #00f5e9;
-            border-radius: 30px; /* Rounded buttons */
-            background-color: rgba(34, 34, 34, 0.8); /* Dark background with opacity */
-            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
-            font-weight: 600; /* Bold font */
-            text-align: center;
-            box-shadow: 0 4px 10px rgba(0, 245, 233, 0.2); /* Soft shadow for glow */
-        }
-        
-        .link-container a:hover {
-            background-color: #00f5e9;
-            color: #000; /* Text changes to black */
-            transform: scale(1.1); /* Slight zoom effect */
-            box-shadow: 0 6px 15px rgba(0, 245, 233, 0.5); /* Glow effect */
+        /* Skill Bars */
+        .skill-container {
+            margin: 1.5rem 0;
         }
 
-
-        /* Keyframe Animations */
-        @keyframes gradientBackground {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        .skill-bar {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
         }
 
-        @keyframes fadeIn {
-            0% { opacity: 0; transform: translateY(-30px); }
-            100% { opacity: 1; transform: translateY(0); }
+        .skill-progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            width: 0;
+            transition: width 1s ease-in-out;
         }
 
-        @keyframes fadeInText {
-            0% { opacity: 0; }
-            100% { opacity: 1; }
+        /* Contact Chip */
+        .contact-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding: 0.8rem 1.5rem;
+            background: var(--glass);
+            border-radius: 2rem;
+            margin: 0.5rem;
         }
 
-        @keyframes glowText {
-            from { text-shadow: 0 0 20px #00e6ff, 0 0 40px #00e6ff; }
-            to { text-shadow: 0 0 30px #00e6ff, 0 0 60px #00e6ff; }
+        /* New Detail Sections */
+        .detail-section {
+            margin: 4rem 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
         }
 
-        @keyframes glowTextAlt {
-            from { text-shadow: 0 0 15px #ff007c, 0 0 30px #ff007c; }
-            to { text-shadow: 0 0 25px #ff007c, 0 0 50px #ff007c; }
+        .detail-card {
+            padding: 2rem;
+            background: var(--glass);
+            border-radius: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease;
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.02); }
+        .detail-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .detail-card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--secondary);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .detail-list {
+            list-style: none;
+        }
+
+        .detail-list li {
+            padding: 1rem;
+            margin-bottom: 0.8rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 0.8rem;
+            transition: all 0.3s ease;
+        }
+
+        .detail-list li:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(10px);
+        }
+
+        .detail-list strong {
+            color: var(--primary);
         }
     </style>
 </head>
-
-    <!-- Magic Sparkles -->
-    <div class="magic-sparkle"></div>
-
+<body>
     <div class="container">
-        <h1>About Me</h1>
-        <h2>Understanding Myself</h2>
-        <p>Hello! My name is <strong>ANAS</strong>. I am 14 years old and currently in 10th grade. My dream is to become an AI Software Developer and pursue engineering with a focus on coding. I have a strong interest in mathematics and I aim to score good marks in my studies, despite feeling that the education system can be limiting at times. My ultimate goal is to become a software engineer and make a positive impact while earning money.</p>
+        <section class="hero">
+            <img src="imagee.jpg" alt="Anas Memon" class="profile-img scroll-animate">
+            
+            <div class="profile-content scroll-animate">
+                <h1>Anas Memon</h1>
+                <p class="tagline">AI Developer & Tech Innovator</p>
+                
+                <div class="skill-container">
+                    <div class="skill-bar">
+                        <div class="skill-progress" style="width: 85%"></div>
+                    </div>
+                    <div class="skill-labels">
+                        <span>AI Development</span>
+                        <span>85%</span>
+                    </div>
+                </div>
 
-        <p>I am very focused, determined, and disciplined when it comes to my goals. I love challenging myself and exploring new technologies, especially in the field of web development, ethical hacking, and cybersecurity. Additionally, I am passionate about chess, as it sharpens my strategic thinking and problem-solving abilities.</p>
+                <div class="contact-chip">
+                    <i class="fas fa-map-marker-alt"></i>
+                    HIMMATNAGAR, GUJRAT
+                </div>
+            </div>
+        </section>
 
         <!-- Personal Information Section -->
-        <div class="key-points">
-            <h2>Personal Information</h2>
-            <ul>
-                <li><strong>Age:</strong> 14 years old</li>
-                <li><strong>Grade:</strong> 10th Grade</li>
-                <li><strong>Dream Career:</strong> AI Software Developer</li>
-                <li><strong>Interests:</strong> Web Development, Mathematics, Ethical Hacking, Cybersecurity, Chess</li>
-            </ul>
+        <div class="detail-section">
+            <div class="detail-card scroll-animate">
+                <h2><i class="fas fa-user-astronaut"></i>Personal Information</h2>
+                <ul class="detail-list">
+                    <li><strong>Age:</strong> 14 years old</li>
+                    <li><strong>Grade:</strong> 10th Grade</li>
+                    <li><strong>Dream Career:</strong> AI Software Developer</li>
+                    <li><strong>Interests:</strong> Web Development, Mathematics, Ethical Hacking, Cybersecurity, Chess</li>
+                </ul>
+            </div>
+
+            <!-- Skills Section -->
+            <div class="detail-card scroll-animate">
+                <h2><i class="fas fa-rocket"></i>Skills & Interests</h2>
+                <ul class="detail-list">
+                    <li><strong>Mathematics Enthusiast:</strong> Strong problem-solving skills with plans to specialize in Mathematics</li>
+                    <li><strong>Creative Developer:</strong> Passionate about creating aesthetic web experiences</li>
+                    <li><strong>Tech Explorer:</strong> Focused on AI, cybersecurity, and ethical hacking</li>
+                    <li><strong>Visionary:</strong> Combining coding and AI to drive innovation</li>
+                </ul>
+            </div>
         </div>
 
-        <!-- Skills Section -->
-        <div class="key-points">
-            <h2>Skills & Interests</h2>
-            <ul>
-                <li><strong>Mathematics Enthusiast:</strong> Strong love for problem-solving and plans to specialize in Mathematics in 11th grade.</li>
-                <li><strong>Creative Developer:</strong> Passionate about creating aesthetically pleasing websites and applications.</li>
-                <li><strong>Tech Explorer:</strong> Interested in new tech fields like AI, cybersecurity, and ethical hacking.</li>
-                <li><strong>Visionary:</strong> Aiming to combine coding and AI to revolutionize the future.</li>
-            </ul>
+        <!-- Info Grid -->
+        <div class="info-grid">
+            <div class="info-card scroll-animate">
+                <h2><i class="fas fa-graduation-cap"></i>Education</h2>
+                <p>10th Grade Student<br>
+                Mathematics Focus<br>
+                GPA: 3.8/4.0</p>
+            </div>
+
+            <div class="info-card scroll-animate">
+                <h2><i class="fas fa-trophy"></i>Achievements</h2>
+                <p>Chess Regional Champion 2030 (ADVANCE)<br>
+                Young Coder Award 2025<br>
+                Math Olympiad Finalist</p>
+            </div>
         </div>
 
-        <!-- Key Points Section -->
-        <div class="link-container">
-            <a href="ss.html">Check out my Cookie Jar</a>
-            <a href="sss.html">Routine & Calendar</a>
-            <a href="yy.html">Subjects and Times</a>
-            <a href="nn.html">Best Ever Routin</a>
-            <a href="https://www.instagram.com/noturtype_anass/" class="instagram-link">Instagram</a>
-            <a href="https://www.chess.com" target="_blank">My Chess Journey</a> <!-- Chess Link added here -->
+        <!-- Links Grid -->
+        <div class="link-grid">
+            <a href="ss.html" class="nav-card scroll-animate">
+                <div class="nav-icon"><i class="fas fa-cookie"></i></div>
+                <div>
+                    <h3>Cookie Jar</h3>
+                    <p>Development Projects</p>
+                </div>
+            </a>
+
+            <a href="sss.html" class="nav-card scroll-animate">
+                <div class="nav-icon"><i class="fas fa-calendar-alt"></i></div>
+                <div>
+                    <h3>Productivity System</h3>
+                    <p>Schedule & Routine</p>
+                </div>
+            </a>
+
+            <a href="yy.html" class="nav-card scroll-animate">
+                <div class="nav-icon"><i class="fas fa-book-open"></i></div>
+                <div>
+                    <h3>Academic Hub</h3>
+                    <p>Subjects & Resources</p>
+                </div>
+            </a>
+
+            <a href="nn.html" class="nav-card scroll-animate">
+                <div class="nav-icon"><i class="fas fa-trophy"></i></div>
+                <div>
+                    <h3>Exam Master Plan</h3>
+                    <p>Best Routine (for board)</p>
+                </div>
+            </a>
+
+            <a href="https://www.instagram.com/noturtype_anass/" class="nav-card scroll-animate">
+                <div class="nav-icon"><i class="fab fa-instagram"></i></div>
+                <div>
+                    <h3>Instagram</h3>
+                    <p>@noturtype_anass</p>
+                </div>
+            </a>
+
+            <a href="https://www.chess.com" class="nav-card scroll-animate">
+                <div class="nav-icon"><i class="fas fa-chess"></i></div>
+                <div>
+                    <h3>Chess Profile</h3>
+                    <p>1500+ Rating</p>
+                </div>
+            </a>
         </div>
     </div>
+
+    <script>
+        // Scroll Animation
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    
+                    // Animate skill bars
+                    if(entry.target.querySelector('.skill-progress')) {
+                        const progress = entry.target.querySelector('.skill-progress');
+                        progress.style.width = progress.style.width;
+                    }
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.scroll-animate').forEach((el) => {
+            observer.observe(el);
+        });
+
+        // Floating Animation
+        document.querySelectorAll('.nav-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+            });
+        });
+    </script>
 </body>
 </html>
