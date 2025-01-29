@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study War Room 2.0</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+        :root {
+            --primary: #00ff88;
+            --secondary: #2196f3;
+            --accent: #f59e0b;
+            --bg: linear-gradient(135deg, #0a192f, #172a45);
+            --surface: #1e293b;
+            --text: #f8fafc;
+            --glow: rgba(248, 250, 252, 0.1);
+        }
+
+        [data-theme="light"] {
+            --bg: #f8fafc;
+            --surface: #ffffff;
+            --text: #0f172a;
+            --glow: rgba(15, 23, 42, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 2rem;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 10px var(--glow);
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 999px;
+            margin: 2rem 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+            transition: width 0.5s ease;
+        }
+
+        .routine {
+            display: grid;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .task {
+            background: var(--surface);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .task:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .task.completed {
+            background: rgba(34, 197, 94, 0.1);
+            border-color: var(--secondary);
+        }
+
+        .task.completed span {
+            text-decoration: line-through;
+            opacity: 0.7;
+        }
+
+        .pomodoro-container {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--surface);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+
+        .timer-display {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin: 1rem 0;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .timer-segment {
+            background: var(--bg);
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 1rem;
+            right: 1rem;
+            background: var(--surface);
+            padding: 0.5rem 1rem;
+            border-radius: 999px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .theme-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .quote-section {
+            background: var(--surface);
+            padding: 1.5rem;
+            border-radius: 1rem;
+            margin: 2rem 0;
+            text-align: center;
+            font-style: italic;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .quote-section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s, background 0.3s;
+            font-size: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary {
+            background: var(--secondary);
+            color: white;
+            gap: 1px;
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(45deg, var(--secondary), var(--primary));
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-reset {
+            background: #f44336;
+            color: white;
+            border: 2px solid #f44336;
+            transition: all 0.3s ease;
+        }
+
+        .btn-reset:hover {
+            background: transparent;
+            color: #f44336;
+            border: 2px solid #f44336;
+            box-shadow: 0 4px 12px rgba(244, 67, 54, 0.2);
+        }
+
+        .btn-pomodoro {
+            background: var(--accent);
+            color: white;
+            border: 2px solid var(--accent);
+            transition: all 0.3s ease;
+        }
+
+        .btn-pomodoro:hover {
+            background: transparent;
+            color: var(--accent);
+            border: 2px solid var(--accent);
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
+        }
+
+        .deadline-reminder {
+            background: var(--surface);
+            padding: 1rem;
+            border-radius: 1rem;
+            margin: 2rem 0;
+            text-align: center;
+            font-weight: 600;
+            color: var(--accent);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin: 2rem 0;
+        }
+
+        @media (max-width: 640px) {
+            body {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .pomodoro-container {
+                position: static;
+                margin: 2rem 0;
+            }
+
+            .button-group {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles"></div>
+    <div class="container">
+        <div class="theme-toggle" onclick="toggleTheme()">
+            <span class="theme-icon">🌓</span>
+        </div>
+
+        <div class="header">
+            <h1>📚 Study Analysis Hub ⚡</h1>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress"></div>
+            </div>
+        </div>
+
+        <div class="deadline-reminder">
+            ⏳ Deadline: <span id="countdown"></span> - Stay Focused!
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="completed-tasks">0</div>
+                <div>Tasks Completed</div>
+            </div>
+        </div>
+
+        <div class="quote-section" id="quote">
+            "The secret of getting ahead is getting started." - Mark Twain
+        </div>
+
+        <div class="routine">
+            <div class="task">
+                <input type="checkbox" class="progress">
+                <span>
+                    <span class="time-badge">9 AM - 12 PM</span>
+                    Hardcore Study (Math/Science)
+                </span>
+            </div>
+            <div class="task">
+                <input type="checkbox" class="progress">
+                <span>
+                    <span class="time-badge">12 PM - 1:30 PM</span>
+                    Namaz + Lunch + Mind Reset
+                </span>
+            </div>
+            <div class="task">
+                <input type="checkbox" class="progress">
+                <span>
+                    <span class="time-badge">1:30 PM - 4:30 PM</span>
+                    Theory Subjects (Social Science/English)
+                </span>
+            </div>
+            <div class="task">
+                <input type="checkbox" class="progress">
+                <span>
+                    <span class="time-badge">4:30 PM - 6:30 PM</span>
+                    Namaz + Refreshment + Walk
+                </span>
+            </div>
+            <div class="task">
+                <input type="checkbox" class="progress">
+                <span>
+                    <span class="time-badge">6:30 PM - 8 PM</span>
+                    Weakest Subject Focus (Sanskrit/Gujarati)
+                </span>
+            </div>
+            <div class="task">
+                <input type="checkbox" class="progress">
+                <span>
+                    <span class="time-badge">8 PM - 9 PM</span>
+                    Namaz + Dinner + Mind Reset
+                </span>
+            </div>
+            <div class="task">
+                <input type="checkbox" class="progress">
+                <span>
+                    <span class="time-badge">9 PM - 11 PM</span>
+                    Super Revision + PYQs
+                </span>
+            </div>
+        </div>
+
+        <div class="button-group">
+            <button class="btn btn-pomodoro" onclick="window.open('pomodoro.html', '_blank')">Open Pomodoro Timer</button>
+            <button class="btn btn-reset" onclick="resetProgress()">Reset Progress</button>
+        </div>
+    </div>
+
+    <script>
+        // Theme Management
+        function toggleTheme() {
+            document.body.dataset.theme = 
+                document.body.dataset.theme === 'light' ? 'dark' : 'light';
+            localStorage.setItem('theme', document.body.dataset.theme);
+        }
+
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.body.dataset.theme = savedTheme;
+
+        // Reset Progress
+        function resetProgress() {
+            const checkboxes = document.querySelectorAll('.progress');
+            checkboxes.forEach(checkbox => checkbox.checked = false);
+            completedTasks = [];
+            localStorage.setItem('completedTasks', JSON.stringify(completedTasks));
+            updateProgress();
+        }
+
+        // Progress Tracking
+        let completedTasks = JSON.parse(localStorage.getItem('completedTasks')) || [];
+        let pomodoroCount = parseInt(localStorage.getItem('pomodoroCount')) || 0;
+
+        function updateProgress() {
+            const checkboxes = document.querySelectorAll('.progress');
+            completedTasks = [...checkboxes].map(checkbox => checkbox.checked);
+            localStorage.setItem('completedTasks', JSON.stringify(completedTasks));
+            
+            const checkedCount = completedTasks.filter(Boolean).length;
+            document.getElementById('completed-tasks').textContent = checkedCount;
+            document.getElementById('progress').style.width = 
+                `${(checkedCount / checkboxes.length) * 100}%`;
+
+            checkboxes.forEach((checkbox, index) => {
+                checkbox.closest('.task').classList.toggle('completed', checkbox.checked);
+            });
+
+            if(checkedCount === checkboxes.length) {
+                if(window.confetti) {
+                    confetti({
+                        particleCount: 100,
+                        spread: 70,
+                        origin: { y: 0.6 }
+                    });
+                }
+            }
+        }
+
+        // Countdown Timer for Deadline
+        const deadline = new Date('February 27, 2025 23:59:59').getTime(); // Updated deadline
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const timeLeft = deadline - now;
+
+            const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+            document.getElementById('countdown').innerHTML = 
+                `${days}d ${hours}h ${minutes}m ${seconds}s`;
+
+            if (timeLeft <= 0) {
+                clearInterval(countdownInterval);
+                document.getElementById('countdown').innerHTML = "February 27, 2025";
+            }
+        }
+
+        const countdownInterval = setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // Motivational Quotes
+        const quotes = [
+            "Success is the sum of small efforts, repeated day in and day out. - Robert Collier",
+            "The future belongs to those who believe in the beauty of their dreams. - Eleanor Roosevelt",
+            "Don't watch the clock; do what it does. Keep going. - Sam Levenson",
+            "The only way to do great work is to love what you do. - Steve Jobs"
+        ];
+
+        function updateQuote() {
+            document.getElementById('quote').textContent = 
+                quotes[Math.floor(Math.random() * quotes.length)];
+        }
+
+        // Initialize
+        document.querySelectorAll('.progress').forEach((checkbox, index) => {
+            checkbox.checked = completedTasks[index] || false;
+            checkbox.addEventListener('change', updateProgress);
+        });
+
+        updateProgress();
+
+        // Particle Background Animation
+        const particlesContainer = document.querySelector('.particles');
+        const particleCount = 100;
+
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            particle.style.left = `${Math.random() * 100}%`;
+            particle.style.top = `${Math.random() * 100}%`;
+            particle.style.animationDuration = `${Math.random() * 5 + 3}s`;
+            particle.style.animationDelay = `${Math.random() * 2}s`;
+            particlesContainer.appendChild(particle);
+        }
+    </script>
+    <style>
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: var(--primary);
+            border-radius: 50%;
+            opacity: 0.7;
+            animation: float linear infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-100vh); }
+        }
+    </style>
+</body>
+</html>
