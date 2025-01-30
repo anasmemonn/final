@@ -1,283 +1,311 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="icon" href="cokie.jpg" type="image/jpg">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Power of Small Wins</title>
+    <title>Quantum Progress Tracker</title>
     <style>
-        /* Basic Styling */
+        :root {
+            --primary: #6CFFEC;
+            --secondary: #7A4AFF;
+            --accent: #FF61D7;
+            --bg: #0A0E17;
+            --glass: rgba(255, 255, 255, 0.03);
+            --neon-glow: 0 0 15px;
+            --cyber-pink: #ff00ff;
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            background-color: black;
-            color: white;
-            text-align: center;
-            margin: 0;
-            padding: 30px;
+            font-family: 'Courier New', monospace;
+            background: var(--bg);
+            color: #E0E0E0;
+            min-height: 100vh;
+            padding: 2rem;
+            overflow-x: hidden;
+        
+            position: ;
+        }
+
+        .cyber-grid {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            background-image: 
+                linear-gradient(rgba(108, 255, 236, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(108, 255, 236, 0.03) 1px, transparent 1px);
+            background-size: 40px 40px;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.3;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { background-position: 0 0; }
+            100% { background-position: 40px 40px; }
         }
 
         .container {
-            padding: 20px;
-            animation: fadeIn 1s ease-in-out;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 20px;
-        }
-
-        h1 {
-            font-size: 40px;
-            font-weight: bold;
-            margin-bottom: 20px;
-            animation: fadeDown 1.5s ease-in-out;
-        }
-
-        .highlight {
-            color: yellow;
-            animation: pulse 2s infinite;
-        }
-
-        h3 {
-            font-size: 24px;
-            color: #ff6a00;
-            margin-top: 20px;
-            animation: glowingPulse 2s infinite;
-            text-shadow: 0 0 15px rgba(255, 105, 180, 0.8), 0 0 20px rgba(255, 165, 0, 1);
-        }
-
-        @keyframes glowingPulse {
-            0%, 100% {
-                text-shadow: 0 0 15px rgba(255, 105, 180, 0.8), 0 0 20px rgba(255, 165, 0, 1);
-            }
-            50% {
-                text-shadow: 0 0 25px rgba(255, 105, 180, 1), 0 0 30px rgba(255, 165, 0, 1);
-            }
-        }
-
-        .table-container {
-            width: 100%;
-            animation: slideInRight 1s ease-in-out;
-            margin-top: 20px;
-        }
-
-        table {
-            width: 100%;
+            max-width: 14000px;
             margin: 0 auto;
-            border-collapse: collapse;
-            text-align: center;
-            background-color: black;
-            color: white;
+            backdrop-filter: blur(12px);
+            position: relative;
+            background: radial-gradient(circle at center, rgba(122,74,255,0.1) 0%, transparent 70%);
         }
 
-        th, td {
-            border: 2px solid red;
-            padding: 10px;
-            font-size: 16px;
-            cursor: pointer;
+        .title h1 {
+            font-size: 3rem;
+            color: transparent;
+            text-align: center;
+            margin-bottom: 2rem;
+            font-weight: 800;
+            letter-spacing: -1.5px;
+            text-shadow: 0 0 25px var(--primary);
+            background: linear-gradient(45deg, var(--primary), var(--cyber-pink));
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: titleGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes titleGlow {
+            0% { text-shadow: 0 0 15px var(--primary); }
+            100% { text-shadow: 0 0 35px var(--accent); }
+        }
+
+        .matrix-terminal {
+            background: linear-gradient(145deg, rgba(10,14,23,0.9), rgba(122,74,255,0.1));
+            border: 1px solid var(--secondary);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 3rem;
+            position: relative;
+            min-height: 80px;
+            box-shadow: 0 0 30px rgba(122,74,255,0.1);
+        }
+
+        .hologram-table {
+            /* ... अन्य स्टाइल्स ... */
+            overflow: hidden;
+            position: relative;
+            border: 1px solid rgba(108,255,236,0.1);
+            padding: 23px; /* Container के अंदर स्पेस के लिए */
+        }
+        
+        .hologram-table table {
+            width: 100%;
+            border-collapse: separate; /* यह जरूरी है */
+            border-spacing: 23px; /* सेल्स के बीच का गैप */
+            margin: -23px; /* Padding compensate करने के लिए */
+        }
+        
+        .hologram-table th,
+        .hologram-table td {
+            /* थोड़ा पैडिंग कम करें */
+            padding: 0.8rem;
+            position: relative;
+            background: rgba(108, 255, 236, 0.02);
+        }
+        
+        .hologram-table td:hover {
+            transform: scale(1.03); /* हॉवर एफेक्ट सुधारें */
+        }}
+
+        .hologram-table::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(108, 255, 236, 0.1), transparent);
+            animation: hologramScan 3s linear infinite;
+        }
+
+        @keyframes hologramScan {
+            0% { left: -100%; }
+            100% { left: 150%; }
         }
 
         th {
-            background-color: red;
-            color: white;
-            font-weight: bold;
+            background: linear-gradient(45deg, rgba(122,74,255,0.2), transparent);
+            padding: 1.2rem;
+            font-weight: 600;
+            text-align: left;
+            color: var(--primary);
+            border-bottom: 2px solid var(--secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         td {
-            height: 50px;
-            transition: background-color 0.3s, transform 0.2s;
+            padding: 1rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(108, 255, 236, 0.05);
+            transition: all 0.2s ease;
+            position: relative;
+            cursor: pointer;
         }
 
-        td.marked {
-            background-color: rgb(32, 255, 32);
-            color: rgb(0, 0, 0);
-            font-weight: bolder;
-            font-display:initial;
+        .day-cell {
+            font-weight: 600;
+            color: var(--primary);
+            background: linear-gradient(90deg, rgb(68, 0, 255), transparent);
+            text-align: left;
+            text-shadow: 0 0 10px rgba(108,255,236,0.2);
         }
 
-        td.not-done {
-            background-color: rgb(254, 136, 10);
-            color: rgb(0, 0, 0);
-            font-weight: bolder;
-            font-display:initial;
+        .marked {
+            background: linear-gradient(45deg, rgba(16, 221, 194, 0.79), transparent);
+            box-shadow: inset 0 0 15px rgba(221, 255, 3, 0.916);
         }
 
-        td:hover {
-            transform: scale(1.1);
-            background-color: #333;
+        .marked::after {
+            content: '✓';
+            position:center;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            color:rgb(10, 254, 10);
+            font-weight:bolder;
+            text-shadow: 0 0 10px var(--primary);
+            animation: checkPulse 1.5s infinite;
         }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
+        @keyframes checkPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
         }
 
-        @keyframes fadeDown {
-            from {
-                transform: translateY(-50px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
+        .quantum-btn {
+            background: linear-gradient(45deg, var(--secondary), var(--accent));
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 0 25px rgba(122,74,255,0.3);
         }
 
-        @keyframes pulse {
-            0%, 100% {
-                transform: scale(1);
-                color: yellow;
-            }
-            50% {
-                transform: scale(1.1);
-                color: orange;
-            }
+        .quantum-btn:hover {
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 0 35px rgba(255,97,215,0.5);
         }
 
-        @keyframes slideInRight {
-            from {
-                transform: translateX(100px);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
+        @media (max-width: 768px) {
+            body { padding: 1rem; }
+            .title h1 { font-size: 2rem; }
+            td { padding: 0.8rem; }
+            .quantum-btn { 
+                padding: 0.8rem 1.2rem;
+                font-size: 0.9rem;
+                bottom: 1rem;
+                right: 1rem;
             }
         }
     </style>
 </head>
 <body>
+    <div class="cyber-grid"></div>
+    
     <div class="container">
-        <h1>POWER OF <span class="highlight">SMALL WINS</span></h1>
+        <div class="title">
+            <h1>QUANTUM PROGRESS MATRIX</h1>
+            <div class="matrix-terminal">
+                <div id="quote"></div>
+            </div>
+        </div>
 
-        <!-- Dynamic Quote Section -->
-        <h3 id="quote"></h3>
-
-        <!-- Table Section -->
-        <div class="table-container">
+        <div class="hologram-table">
             <table>
                 <thead>
                     <tr>
                         <th>Day</th>
-                        <th>SOCIAL SCIENCE</th>
-                        <th>MATHS</th>
-                        <th>SCIENCE</th>
-                        <th>ENGLISH</th>
-                        <th>SANSKRIT</th>
-                        <th>GUJARATI</th>
+                        <th>Social Science</th>
+                        <th>Maths</th>
+                        <th>Science</th>
+                        <th>English</th>
+                        <th>Sanskrit</th>
+                        <th>Gujarati</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <!-- Rows will be dynamically generated -->
+                <tbody id="tableBody">
+                    <!-- Rows will be generated here -->
                 </tbody>
             </table>
         </div>
     </div>
 
+    <button class="quantum-btn" onclick="resetProgress()">SYSTEM RESET</button>
+
     <script>
         const quotes = [
-            "Success is the sum of small efforts, repeated day in and day out.",
-            "The journey of a thousand miles begins with one step.",
-            "Small things often have a big impact.",
-            "One step at a time is all it takes to get you there.",
-            "Believe in yourself and all that you are.",
-            "The harder you work for something, the greater you’ll feel when you achieve it.",
-            "Dream big, start small, but most of all, start.",
-            "Success doesn’t come from what you do occasionally, but what you do consistently.",
-            "Every small step in the right direction counts.",
-            "Start where you are. Use what you have. Do what you can.",
-            "Great things are not done by impulse, but by small things brought together.",
-            "Don’t stop when you’re tired. Stop when you’re done.",
-            "Hard work beats talent when talent doesn’t work hard.",
-            "It always seems impossible until it’s done.",
-            "Consistency is the key to unlocking success.",
-            "Your future is created by what you do today, not tomorrow.",
-            "The only limit to our realization of tomorrow is our doubts of today.",
-            "Courage doesn’t always roar; sometimes, it’s the quiet voice at the end of the day saying, ‘I will try again tomorrow.’",
-            "What you do today can improve all your tomorrows.",
-            "Little by little becomes a lot.",
-            "Each small step you take today builds momentum for tomorrow.",
-            "The secret of your success is found in your daily routine.",
-            "Every accomplishment starts with the decision to try.",
-            "The way to get started is to quit talking and begin doing.",
-            "Challenges are what make life interesting, and overcoming them is what makes life meaningful.",
-            "The best preparation for tomorrow is doing your best today.",
-            "Success usually comes to those who are too busy to be looking for it.",
-            "You don’t have to be great to start, but you have to start to be great.",
-            "What you plant now, you will harvest later.",
-            "Motivation gets you going, but habit keeps you growing.",
-            "Discipline is choosing between what you want now and what you want most.",
-            "Make each day your masterpiece.",
-            "It’s not about being the best. It’s about being better than you were yesterday.",
-            "Do one thing every day that brings you closer to your goals.",
             "Progress is progress, no matter how small.",
-            "Big journeys begin with small steps.",
-            "Success is nothing more than a few simple disciplines practiced every day.",
-            "Small deeds done are better than great deeds planned.",
-            "Action is the foundational key to success.",
-            "Start small, think big, but most importantly, start.",
-            "The best time to start was yesterday. The second best time is today.",
-            "Persistence guarantees that results are inevitable.",
-            "Today’s small wins create tomorrow’s big successes."
+            "Consistency is the key to mastery.",
+            "Every day is a new opportunity to grow.",
+            "Success is the sum of small efforts repeated.",
+            "The expert in anything was once a beginner."
         ];
 
-        const tbody = document.querySelector('tbody');
-        const quoteElement = document.getElementById("quote");
+        let savedProgress = JSON.parse(localStorage.getItem('quantum_progress')) || {};
+        const subjects = ['Social Science', 'Maths', 'Science', 'English', 'Sanskrit', 'Gujarati'];
+        const days = 30;
 
-        // Display a random quote on each page load
-        const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
-        quoteElement.textContent = randomQuote;
-
-        const savedProgress = JSON.parse(localStorage.getItem('progress')) || {};
-
-        // Generate table rows dynamically for 75 days
-        for (let i = 1; i <= 75; i++) {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td class="day-cell" data-key="Day${i}">Day ${i}</td>
-                <td class="subject-cell" data-key="Day${i}-Social Science">Day ${i} Social Science</td>
-                <td class="subject-cell" data-key="Day${i}-Maths">Day ${i} Maths</td>
-                <td class="subject-cell" data-key="Day${i}-Science">Day ${i} Science</td>
-                <td class="subject-cell" data-key="Day${i}-English">Day ${i} English</td>
-                <td class="subject-cell" data-key="Day${i}-Sanskrit">Day ${i} Sanskrit</td>
-                <td class="subject-cell" data-key="Day${i}-Gujarati">Day ${i} Gujarati</td>
-            `;
-            tbody.appendChild(row);
+        // Initialize table
+        function initTable() {
+            const tbody = document.getElementById('tableBody');
+            
+            for (let day = 1; day <= days; day++) {
+                const row = document.createElement('tr');
+                row.innerHTML = `<td class="day-cell">Day ${day}</td>`;
+                
+                subjects.forEach(subject => {
+                    const cell = document.createElement('td');
+                    cell.dataset.day = day;
+                    cell.dataset.subject = subject;
+                    cell.className = savedProgress[`${day}-${subject}`] ? 'marked' : '';
+                    row.appendChild(cell);
+                });
+                
+                tbody.appendChild(row);
+            }
         }
 
-        // Restore progress from local storage and add click functionality
-        document.querySelectorAll('.day-cell, .subject-cell').forEach(cell => {
-            const key = cell.dataset.key;
+        // Toggle progress state
+        function toggleProgress(cell) {
+            cell.classList.toggle('marked');
+            const key = `${cell.dataset.day}-${cell.dataset.subject}`;
+            savedProgress[key] = cell.classList.contains('marked');
+            localStorage.setItem('quantum_progress', JSON.stringify(savedProgress));
+        }
 
-            if (savedProgress[key] === '✅') {
-                cell.classList.add('marked');
-                cell.textContent += " ✅";
-            } else if (savedProgress[key] === '❌') {
-                cell.classList.add('not-done');
-                cell.textContent += " ❌";
-            }
-
-            cell.addEventListener('click', () => {
-                if (cell.classList.contains('marked')) {
-                    cell.classList.remove('marked');
-                    cell.classList.add('not-done');
-                    cell.textContent = key.replace('-', ' ') + " ❌";
-                    savedProgress[key] = '❌';
-                } else if (cell.classList.contains('not-done')) {
-                    cell.classList.remove('not-done');
-                    cell.textContent = key.replace('-', ' ');
-                    delete savedProgress[key];
-                } else {
-                    cell.classList.add('marked');
-                    cell.textContent = key.replace('-', ' ') + " ✅";
-                    savedProgress[key] = '✅';
-                }
-                localStorage.setItem('progress', JSON.stringify(savedProgress));
+        // Reset all progress
+        function resetProgress() {
+            localStorage.removeItem('quantum_progress');
+            savedProgress = {};
+            document.querySelectorAll('td[data-day]').forEach(cell => {
+                cell.classList.remove('marked');
             });
+        }
+
+        // Initialize click handlers
+        document.addEventListener('click', (e) => {
+            if (e.target.matches('td[data-day]')) {
+                toggleProgress(e.target);
+            }
         });
+
+        // Random quote display
+        document.getElementById('quote').textContent = quotes[Math.floor(Math.random() * quotes.length)];
+
+        // Initialize the table
+        initTable();
     </script>
 </body>
 </html>
