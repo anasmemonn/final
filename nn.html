@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" href="isagi.jpg" type="image/jpg">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Study War Room 2.0</title>
     <style>
@@ -160,7 +161,24 @@
             text-align: center;
             transition: transform 0.2s, box-shadow 0.2s;
         }
+        :root {
+            --primary: #ff0000;
+            --secondary: #ff6b6b;
+            --accent: #ff0000;
+            --bg: #0a0a0a;
+            --surface: #1a1a1a;
+            --text: #ffffff;
+            --glow: rgba(255, 0, 0, 0.3);
+        }
 
+        /* ... (keep previous styles mostly same until .particles) */
+
+     
+
+   
+
+
+        
         .stat-card:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
@@ -335,7 +353,7 @@
         <div class="quote-section" id="quote">
             "The secret of getting ahead is getting started." - Mark Twain
         </div>
-
+       
         <div class="routine">
             <div class="task">
                 <input type="checkbox" class="progress">
@@ -414,6 +432,25 @@
             localStorage.setItem('completedTasks', JSON.stringify(completedTasks));
             updateProgress();
         }
+         // Custom Cursor Logic
+         const cursor = document.querySelector('.custom-cursor');
+        
+         document.addEventListener('mousemove', (e) => {
+             cursor.style.left = `${e.clientX - 15}px`;
+             cursor.style.top = `${e.clientY - 15}px`;
+         });
+ 
+         // Add hover effects for interactive elements
+         document.querySelectorAll('button, input, .task').forEach(el => {
+             el.addEventListener('mouseenter', () => {
+                 cursor.style.transform = 'scale(1.5)';
+             });
+             el.addEventListener('mouseleave', () => {
+                 cursor.style.transform = 'scale(1)';
+             });
+         });
+ 
+         // Remove original particles code and keep other JS the same
 
         // Progress Tracking
         let completedTasks = JSON.parse(localStorage.getItem('completedTasks')) || [];
