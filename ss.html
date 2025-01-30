@@ -1,285 +1,556 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>✨ Cookie Jar of Achievements ✨</title>
-    <link rel="icon" href="cokie.jpg" type="image/jpg">
+    <title>🚀 ✨ Cookie Jar of Achievements ✨ 🚀</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔮</text></svg>">
     <style>
-        /* General Styles */
+        :root {
+            --neon-blue: #00f3ff;
+            --neon-pink: #ff00ff;
+            --matrix-green: #0fff50;
+            --cyber-purple: #bc13fe;
+            --dark-bg: #0a0a0f;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
-            font-family: 'Arial', sans-serif;
-            background: radial-gradient(circle, rgba(242, 85, 96, 0.8), rgba(101, 119, 226, 0.7));
+            font-family: 'Orbitron', sans-serif;
+            background: var(--dark-bg);
+            min-height: 20vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            min-height: 100vh;
-            margin: 0;
-            overflow: hidden;
-            overflow-y: scroll;
-            overflow-x: scroll;
-            color: #fff;
+            color: var(--neon-blue);
+            overflow:auto;
+        }
+
+        /* Cyberpunk background effect */
+        body::before {
+            content: '';
+            position: fixed;
+            width: 200vw;
+            height: 200vh;
+            background: 
+                linear-gradient(transparent 95%, rgba(0, 243, 255, 0.1) 95%),
+                linear-gradient(90deg, transparent 95%, rgba(0, 243, 255, 0.1) 95%);
+            background-size: 30px 30px;
+            opacity: 0.3;
+            z-index: -1;
+            animation: gridScroll 50s linear infinite;
+        }
+
+        @keyframes gridScroll {
+            0% { transform: translate(-50%, -50%); }
+            100% { transform: translate(0%, 0%); }
         }
 
         .container {
-            text-align: center;
-            background: rgba(0, 0, 0, 0.6);
+            background: rgba(10, 10, 15, 0.95);
+            border: 2px solid var(--neon-blue);
             border-radius: 15px;
-            padding: 50px 70px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+            padding: 2rem;
+            box-shadow: 
+                0 0 30px var(--neon-blue),
+                inset 0 0 20px rgba(0, 243, 255, 0.2);
+            width: 200%;
+            max-width: 900px;
             position: relative;
-            max-width: 700px;
-            width: 100%;
             backdrop-filter: blur(10px);
+            transform-style: preserve-3d;
         }
 
-        /* Header */
-        h1 {
-            font-size: 3rem;
-            color: #ffeb3b;
-            margin-bottom: 20px;
-            font-weight: bold;
+        .cyber-header {
+            text-align: center;
+            margin-bottom: 2rem;
             position: relative;
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+            clip-path: polygon(0 0, 100% 0, 95% 100%, 5% 100%);
+            background: linear-gradient(45deg, var(--neon-blue), var(--cyber-purple));
+            padding: 1.5rem;
         }
 
-        h1::after {
-            content: "✨ Unlocking Small Wins!";
-            font-size: 1.3rem;
-            color: #ffd700;
+        .cyber-header h1 {
+            font-size: 2.5rem;
+            color: transparent;
+            background: linear-gradient(45deg, var(--neon-blue), var(--matrix-green));
+            -webkit-background-clip: text;
+            text-shadow: 0 0 15px var(--neon-blue);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .progress-bar {
+            height: 12px;
+            background: rgba(0, 243, 255, 0.1);
+            border-radius: 6px;
+            margin: 2rem 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--neon-pink), var(--cyber-purple));
+            width: 0;
+            transition: width 0.5s ease;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
             position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            bottom: -30px;
-            animation: bounce 2s infinite ease-in-out;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255, 255, 255, 0.3) 50%, 
+                transparent);
+            animation: progressGlow 2s infinite;
         }
 
-        @keyframes bounce {
-            0%, 100% {
-                transform: translateX(-50%) translateY(0);
-            }
-            50% {
-                transform: translateX(-50%) translateY(-10px);
-            }
+        @keyframes progressGlow {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(200%); }
         }
 
-        /* Jar Styles */
-        .jar {
-            width: 360px;
-            height: 500px;
-            background: radial-gradient(circle at bottom, #ff9f80, #ff3f51);
-            border: 6px solid #ffd700;
-            border-radius: 15px;
+        .jar-container {
             position: relative;
-            overflow-y: auto;
-            padding: 20px;
-            box-shadow: inset 0 5px 15px rgba(0, 0, 0, 0.1);
-            margin: 20px auto;
-            animation: jarEntrance 1s ease-out;
+            perspective: 1000px;
+            margin: 2rem 0;
         }
 
-        @keyframes jarEntrance {
-            from {
-                transform: scale(0.8);
-                opacity: 0;
-            }
-
-            to {
-                transform: scale(1);
-                opacity: 1;
-            }
+        .jar {
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid var(--neon-blue);
+            border-radius: 15px;
+            padding: 2rem;
+            min-height: 400px;
+            box-shadow: 
+                inset 0 0 30px var(--neon-blue),
+                0 0 50px var(--neon-blue);
+            transform: perspective(1000px) rotateX(5deg);
+            transition: transform 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
-        /* Cookie Styles */
+        .jar:hover {
+            transform: perspective(1000px) rotateX(3deg) translateY(-5px);
+        }
+
         .cookies-list {
-            text-align: left;
-            max-height: 90%;
-            padding: 10px;
+            display: grid;
+            gap: 1.5rem;
+            max-height: 350px;
             overflow-y: auto;
+            padding-right: 1rem;
         }
 
         .cookie {
-            background: #ffefc0;
-            border: 3px solid #ff6f61;
-            border-radius: 10px;
-            padding: 15px;
-            margin: 15px 0;
-            color: #333;
-            font-size: 1.1rem;
-            position: relative;
-            animation: fadeIn 0.5s ease-in-out;
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+            background: linear-gradient(145deg, rgba(11, 11, 20, 0.9), rgba(0, 243, 255, 0.1));
+            border: 1px solid var(--neon-blue);
+            border-radius: 8px;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.2);
+            transition: all 0.3s ease;
             cursor: pointer;
-            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
         }
 
         .cookie:hover {
-            transform: scale(1.05);
-            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 0 25px var(--neon-blue);
         }
 
-        /* Medal Styles */
-        .medal {
-            position: absolute;
-            top: 5px;
-            right: 10px;
-            background: url('medal.png') no-repeat center;
-            background-size: contain;
-            width: 30px;
-            height: 30px;
-            opacity: 0;
-            transition: opacity 0.5s;
+        .cookie.completed {
+            background: linear-gradient(145deg, rgba(11, 20, 11, 0.9), rgba(15, 255, 80, 0.1));
+            border-color: var(--matrix-green);
         }
 
-        .cookie.complete .medal {
-            opacity: 1;
+        .cookie-badge {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--dark-bg);
+            border: 2px solid var(--neon-blue);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--neon-blue);
+            flex-shrink: 0;
+            transition: all 0.3s ease;
         }
 
-        /* Delete Button */
+        .cookie.completed .cookie-badge {
+            border-color: var(--matrix-green);
+            color: var(--matrix-green);
+        }
+
+        .cookie-content {
+            flex-grow: 1;
+            position: relative;
+        }
+
+        .cookie-text {
+            font-size: 1.1rem;
+            background: linear-gradient(90deg, var(--neon-blue), var(--cyber-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .cookie.completed .cookie-text {
+            background: linear-gradient(90deg, var(--matrix-green), #00ff88);
+            -webkit-background-clip: text;
+        }
+
+        .cookie-date {
+            font-size: 0.8rem;
+            color: var(--neon-blue);
+            margin-top: 0.5rem;
+            opacity: 0.8;
+        }
+
         .delete-btn {
             background: none;
-            border: none;
-            color: #ff6f61;
-            font-size: 1.1rem;
-            position: absolute;
-            top: 1px;
-            right: 5px;
+            border: 2px solid var(--neon-pink);
+            color: var(--neon-pink);
+            padding: 0.5rem;
+            border-radius: 5px;
             cursor: pointer;
-            transition: transform 0.15s ease, color 0.2s ease;
+            transition: all 0.3s ease;
         }
 
         .delete-btn:hover {
-            transform: scale(1.2);
-            color: #ffd700;
+            background: var(--neon-pink);
+            color: var(--dark-bg);
+            transform: scale(1.1);
         }
 
-        /* Form Styles */
-        form {
-            margin-top: 25px;
+        .controls {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
         }
 
-        input {
-            padding: 12px;
-            width: 250px;
-            border: 2px solid #ff6f61;
-            border-radius: 5px;
+        .category-select {
+            flex-grow: 1;
+            padding: 0.8rem;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid var(--neon-blue);
+            border-radius: 8px;
+            color: var(--neon-blue);
+            font-family: 'Orbitron', sans-serif;
+            appearance: none;
+            position: relative;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2300f3ff'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            background-size: 1rem;
+        }
+
+        .add-form {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .achievement-input {
+            flex-grow: 1;
+            padding: 1rem;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid var(--neon-blue);
+            border-radius: 8px;
+            color: var(--neon-blue);
+            font-family: 'Orbitron', sans-serif;
+            transition: all 0.3s ease;
+        }
+
+        .achievement-input:focus {
             outline: none;
-            transition: border-color 0.3s;
-            font-size: 1.1rem;
-            margin-right: 10px;
-            background: rgba(0, 0, 0, 0.2);
-            color: #fff;
+            box-shadow: 0 0 20px var(--neon-blue);
         }
 
-        input:focus {
-            border-color: #ffd700;
-        }
-
-        button {
-            padding: 12px 18px;
-            background: #ff6f61;
-            color: #fff;
+        .add-btn {
+            padding: 1rem 2rem;
+            background: linear-gradient(45deg, var(--neon-pink), var(--cyber-purple));
             border: none;
-            border-radius: 5px;
-            font-size: 1.1rem;
+            border-radius: 8px;
+            color: white;
+            font-family: 'Orbitron', sans-serif;
             cursor: pointer;
-            transition: background 0.3s, transform 0.2s;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
         }
 
-        button:hover {
-            background: #ffd700;
-            transform: scale(1.05);
+        .add-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.3),
+                transparent
+            );
+            animation: btnGlow 1.5s infinite;
         }
 
-        /* Keyframe for Cookie FadeIn */
-        @keyframes fadeIn {
-            from {
-                transform: translateY(-10px);
-                opacity: 0;
+        @keyframes btnGlow {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid var(--neon-blue);
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .stats div {
+            padding: 1rem;
+            border-right: 1px solid var(--neon-blue);
+        }
+
+        .stats div:last-child {
+            border-right: none;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                padding: 1rem;
             }
-            to {
-                transform: translateY(0);
-                opacity: 1;
+
+            .cyber-header h1 {
+                font-size: 1.8rem;
             }
+
+            .add-form {
+                flex-direction: column;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .stats div {
+                border-right: none;
+                border-bottom: 1px solid var(--neon-blue);
+            }
+
+            .stats div:last-child {
+                border-bottom: none;
+            }
+        }
+
+        /* Cyberpunk scanline effect */
+        .scanline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                to bottom,
+                transparent 50%,
+                rgba(0, 0, 0, 0.1) 51%,
+                transparent 51%
+            );
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: 999;
+            animation: scanline 6s linear infinite;
+        }
+
+        @keyframes scanline {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+
+        /* Particle background */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .particle {
+            position: absolute;
+            background: var(--neon-blue);
+            border-radius: 50%;
+            animation: particleFloat linear infinite;
+        }
+
+        @keyframes particleFloat {
+            0% { transform: translateY(0) translateX(0); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(-100vh) translateX(50vw); opacity: 0; }
         }
     </style>
 </head>
-
 <body>
+    <div class="scanline"></div>
+    <div class="particles" id="particles"></div>
 
     <div class="container">
-        <h1>🎯 My Cookie Jar of Achievements</h1>
+        <div class="cyber-header">
+            <h1>⚡ ✨ Cookie Jar of Achievements ✨⚡</h1>
+        </div>
 
-        <div id="cookie-jar">
-            <form id="cookieForm">
-                <input type="text" id="cookieInput" placeholder="Enter your achievement..." required />
-                <button type="submit">Add Cookie 🍪</button>
-            </form>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress"></div>
+        </div>
 
+        <div class="controls">
+            <select class="category-select" id="category">
+                <option value="personal">Personal 🧘</option>
+                <option value="work">Work 💼</option>
+                <option value="health">Health 🏋️</option>
+                <option value="learning">Learning 🎓</option>
+            </select>
+        </div>
+
+        <div class="jar-container">
             <div class="jar">
                 <div class="cookies-list" id="cookiesList"></div>
             </div>
+        </div>
+
+        <form class="add-form" id="cookieForm">
+            <input type="text" class="achievement-input" id="cookieInput" placeholder="ENTER ACHIEVEMENT PROTOCOL...">
+            <button type="submit" class="add-btn">INITIATE UPLOAD 🔼</button>
+        </form>
+
+        <div class="stats">
+            <div>TOTAL: <span id="totalCount">0</span></div>
+            <div>COMPLETED: <span id="completedCount">0</span></div>
+            <div>ACTIVE CATEGORIES: <span id="categoryCount">4</span></div>
         </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const cookieForm = document.getElementById('cookieForm');
-            const cookieInput = document.getElementById('cookieInput');
-            const cookiesList = document.getElementById('cookiesList');
-
-            const loadCookies = () => {
-                const cookies = JSON.parse(localStorage.getItem('cookies')) || [];
-                cookies.forEach(cookie => addCookieToDOM(cookie));
-            };
-
-            const saveCookie = (cookie) => {
-                const cookies = JSON.parse(localStorage.getItem('cookies')) || [];
-                cookies.push(cookie);
-                localStorage.setItem('cookies', JSON.stringify(cookies));
-            };
-
-            const removeCookieFromStorage = (cookie) => {
-                let cookies = JSON.parse(localStorage.getItem('cookies')) || [];
-                cookies = cookies.filter(item => item !== cookie);
-                localStorage.setItem('cookies', JSON.stringify(cookies));
-            };
-
-            const addCookieToDOM = (cookie) => {
-                const cookieDiv = document.createElement('div');
-                cookieDiv.classList.add('cookie');
-
-                const medal = document.createElement('div');
-                medal.classList.add('medal');
-                cookieDiv.appendChild(medal);
-
-                const deleteButton = document.createElement('button');
-                deleteButton.classList.add('delete-btn');
-                deleteButton.textContent = '✖';
-                deleteButton.addEventListener('click', () => {
-                    cookiesList.removeChild(cookieDiv);
-                    removeCookieFromStorage(cookie);
-                });
-
-                cookieDiv.innerHTML = cookie;
-                cookieDiv.appendChild(deleteButton);
-                cookiesList.appendChild(cookieDiv);
-            };
-
-            cookieForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                const newCookie = cookieInput.value.trim();
-                if (newCookie) {
-                    addCookieToDOM(newCookie);
-                    saveCookie(newCookie);
-                    cookieInput.value = '';
+            const form = document.getElementById('cookieForm');
+            const input = document.getElementById('cookieInput');
+            const list = document.getElementById('cookiesList');
+            const categorySelect = document.getElementById('category');
+            const progress = document.getElementById('progress');
+            const totalCount = document.getElementById('totalCount');
+            const completedCount = document.getElementById('completedCount');
+    
+            let achievements = JSON.parse(localStorage.getItem('achievements')) || [];
+    
+            function updateLocalStorage() {
+                localStorage.setItem('achievements', JSON.stringify(achievements));
+                updateStats();
+            }
+    
+            function updateStats() {
+                totalCount.textContent = achievements.length;
+                const completed = achievements.filter(a => a.completed).length;
+                completedCount.textContent = completed;
+                progress.style.width = `${(completed / achievements.length) * 100 || 0}%`;
+            }
+    
+            function toggleAchievement(index) {
+                achievements[index].completed = !achievements[index].completed;
+                updateLocalStorage();
+                renderAchievements();
+            }
+    
+            function deleteAchievement(index) {
+                if (!achievements[index].completed) {
+                    achievements.splice(index, 1);
+                    updateLocalStorage();
+                    renderAchievements();
+                } else {
+                    alert("Completed achievements cannot be deleted!");
                 }
-            });
+            }
+    
+            function renderAchievements() {
+                list.innerHTML = '';
+                achievements.forEach((achievement, index) => {
+                    const div = document.createElement('div');
+                    div.className = `cookie ${achievement.completed ? 'completed' : ''}`;
+                    div.innerHTML = `
+                        <div class="cookie-badge">${achievement.categoryIcon}</div>
+                        <div class="cookie-content">
+                            <div class="cookie-text">${achievement.text}</div>
+                            <div class="cookie-date">${new Date(achievement.date).toLocaleDateString()}</div>
+                        </div>
+                        <button class="delete-btn">✖</button>
+                    `;
+                    
+                    // Add toggle functionality
+                    div.addEventListener('click', (e) => {
+                        if (!e.target.classList.contains('delete-btn')) {
+                            toggleAchievement(index);
+                        }
+                    });
 
-            loadCookies();
+                    // Add delete functionality
+                    const deleteBtn = div.querySelector('.delete-btn');
+                    deleteBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        deleteAchievement(index);
+                    });
+
+                    list.appendChild(div);
+                });
+            }
+    
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const text = input.value.trim();
+                if (!text) return;
+    
+                const category = categorySelect.options[categorySelect.selectedIndex];
+                const newAchievement = {
+                    text,
+                    date: new Date().toISOString(),
+                    category: category.value,
+                    categoryIcon: category.text.split(' ')[1],
+                    completed: false
+                };
+    
+                achievements.push(newAchievement);
+                input.value = '';
+                updateLocalStorage();
+                renderAchievements();
+            });
+    
+            renderAchievements();
+            updateStats();
         });
     </script>
 </body>
+    
 
+</body>
 </html>
