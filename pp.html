@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Study Planner 3.0</title>
+    <style>
+        :root {
+            --primary: #1a1a2e;
+            --secondary: #16213e;
+            --accent: #0f3460;
+            --highlight: #e94560;
+            --text: #ffffff;
+            --glass: rgba(255, 255, 255, 0.1);
+            --gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: var(--gradient);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 2rem;
+            position: relative;
+            overflow-x: hidden;
+            transition: background 0.5s ease;
+        }
+
+        body.light-theme {
+            --primary: #f0f0f0;
+            --secondary: #ffffff;
+            --accent: #e0e0e0;
+            --highlight: #ff6b6b;
+            --text: #2d3436;
+            --glass: rgba(0, 0, 0, 0.1);
+            --gradient: linear-gradient(135deg, #f8f9fa 0%, #ffffff 50%, #f1f3f5 100%);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header {
+            text-align: center;
+            margin: 3rem 0;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 4rem;
+            background: linear-gradient(45deg, var(--highlight), #e9456099);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px var(--highlight);
+            animation: glow 2s infinite alternate;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 4rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background: var(--highlight);
+            transform: translateX(-50%);
+            box-shadow: 0 0 20px var(--highlight);
+            animation: timelinePulse 2s infinite;
+        }
+
+        .schedule-card {
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem;
+            width: 45%;
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+        }
+
+        .schedule-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 45px rgba(233, 69, 96, 0.3);
+        }
+
+        .left { float: left; clear: both; }
+        .right { float: right; clear: both; }
+
+        .time-slot {
+            padding: 1.2rem;
+            margin: 1rem 0;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 15px;
+            position: relative;
+            border-left: 4px solid var(--highlight);
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            animation: slideIn 0.5s ease forwards;
+        }
+
+        .time-slot:hover {
+            background: rgba(233, 69, 96, 0.1);
+        }
+
+        .time-slot.active {
+            background: var(--highlight);
+            box-shadow: 0 0 15px var(--highlight);
+            animation: pulse 2s infinite;
+        }
+
+        .probability-switcher {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 3rem 0;
+            flex-wrap: wrap;
+        }
+
+        .switch-btn {
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 50px;
+            background: var(--accent);
+            color: var(--text);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+        .scenario-container {
+            display: none;
+        }
+        .scenario-container.active {
+            display: block;
+        }
+        .switch-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: 0.5s;
+        }
+
+        .switch-btn:hover::before {
+            left: 100%;
+        }
+
+        .switch-btn.active {
+            background: var(--highlight);
+            box-shadow: 0 0 20px var(--highlight);
+        }
+
+        .progress-pie {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: conic-gradient(var(--highlight) 0% 90%, var(--accent) 30% 100%);
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: 0 0 30px rgba(233, 69, 96, 0.3);
+            animation: float 3s ease-in-out infinite;
+            cursor: pointer;
+        }
+
+        .achievements {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            background: var(--glass);
+            padding: 1rem;
+            border-radius: 15px;
+            max-width: 300px;
+            backdrop-filter: blur(10px);
+        }
+
+        .theme-toggle {
+            position: fixed;
+            top: 2rem;
+            left: 2rem;
+            cursor: pointer;
+            padding: 1rem;
+            background: var(--glass);
+            border-radius: 50%;
+            backdrop-filter: blur(10px);
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .night-schedule {
+            margin-top: 4rem;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        /* New Animations */
+        @keyframes timelinePulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Study Focus Effects */
+        .focus-mode {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 999;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .focus-timer {
+            font-size: 4rem;
+            text-align: center;
+            animation: textGlow 1s infinite alternate;
+        }
+
+        @keyframes textGlow {
+            from { text-shadow: 0 0 10px var(--highlight); }
+            to { text-shadow: 0 0 30px var(--highlight); }
+        }
+
+        .completed {
+            background: rgba(0, 255, 0, 0.1) !important;
+            border-color: #00ff00 !important;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: var(--accent);
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            transition: width 0.5s ease;
+        }
+
+        @media (max-width: 768px) {
+            .schedule-card {
+                width: 90%;
+                margin: 1rem auto;
+                float: none !important;
+            }
+
+            .timeline::before {
+                left: 20px;
+            }
+
+            .header h1 {
+                font-size: 2.5rem;
+            }
+
+            .progress-pie {
+                width: 80px;
+                height: 80px;
+                font-size: 0.8rem;
+                bottom: 1rem;
+                right: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    <div class="theme-toggle" onclick="toggleTheme()">🌓</div>
+    <div class="achievements" id="achievements"></div>
+    <div class="progress-pie" id="progressPie">90%</div>
+    <div class="current-time" id="currentTime"></div>
+    <div class="focus-mode" id="focusMode">
+        <div class="focus-timer" id="focusTimer">25:00</div>
+    </div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>Quantum Study Planner ⚡</h1>
+        </div>
+
+        <!-- Morning Schedule -->
+        <div class="probability-switcher">
+            <button class="switch-btn active" onclick="showProbability('probability1')">🌅 6:30 AM Start</button>
+            <button class="switch-btn" onclick="showProbability('probability2')">⏰ 7:15 AM Start</button>
+        </div>
+
+        <div id="probability1" class="scenario-container active">
+            <div class="timeline">
+                <div class="schedule-card left">
+                    <div class="time-slot">
+                        <span class="emoji">⏰</span>
+                        6:30-7:45 AM: Wake up, Walk, Breakfast, Namaz
+                        <div class="progress-bar"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="probability2" class="scenario-container">
+            <div class="timeline">
+                <div class="schedule-card left">
+                    <div class="time-slot">
+                        <span class="emoji">⏰</span>
+                        7:15-7:45 AM: Wake up, Namaz
+                        <div class="progress-bar"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Afternoon Schedule Switcher -->
+        <div class="probability-switcher">
+            <button class="switch-btn active" onclick="showScenario('scenario1')">🏡 Home at 11 AM</button>
+            <button class="switch-btn" onclick="showScenario('scenario2')">🏡 Home at 1 PM</button>
+        </div>
+
+        <!-- Scenarios -->
+        <div id="scenario1" class="scenario-container active">
+            <div class="timeline">
+                <div class="schedule-card right">
+                    <div class="time-slot">
+                        <span class="emoji">📚</span>
+                        11:15-11:55 AM: Deep Study Session
+                        <div class="progress-bar"></div>
+                    </div>
+                    <div class="time-slot break">
+                        <span class="emoji">☕</span>
+                        12:00 PM: Short Break (Hydration & Stretch)
+                    </div>
+                    <div class="time-slot">
+                        <span class="emoji">📝</span>
+                        12:10-12:50 PM: Problem Solving Session
+                        <div class="progress-bar"></div>
+                    </div>
+                    <div class="time-slot break">
+                        <span class="emoji">🍴</span>
+                        1:00-2:00 PM: Lunch & Rest
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="scenario2" class="scenario-container">
+            <div class="timeline">
+                <div class="schedule-card right">
+                    <div class="time-slot">
+                        <span class="emoji">📚</span>
+                        2:30-3:30 PM: Intensive Study Session
+                        <div class="progress-bar"></div>
+                    </div>
+                    <div class="time-slot break">
+                        <span class="emoji">☕</span>
+                        3:30-3:45 PM: Refresh Break
+                    </div>
+                    <div class="time-slot">
+                        <span class="emoji">📖</span>
+                        3:45-4:45 PM: Revision & Notes Making
+                        <div class="progress-bar"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Night Schedule -->
+        <div class="night-schedule">
+            <div class="schedule-card">
+                <h3>🌌 Night Schedule (Fixed)</h3>
+                <div class="time-slot">
+                    <span class="emoji">📚</span>
+                    9:00-9:45 PM: Evening Study Session
+                    <div class="progress-bar"></div>
+                </div>
+                <div class="time-slot break">
+                    <span class="emoji">🍵</span>
+                    9:45-10:00 PM: Tea Break
+                </div>
+                <div class="time-slot">
+                    <span class="emoji">📈</span>
+                    10:00-11:00 PM: Analysis & Strategy Session
+                    <div class="progress-bar"></div>
+                </div>
+                <div class="time-slot break">
+                    <span class="emoji">🧘</span>
+                    11:00-11:15 PM: Meditation & Wind Down
+                </div>
+                <div class="time-slot special">
+                    <span class="emoji">📝</span>
+                    11:15-11:45 PM: Next Day Planning
+                    <div class="progress-bar"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Scenario Switching Logic
+        function showScenario(scenarioId) {
+            document.querySelectorAll('.scenario-container').forEach(container => {
+                container.classList.remove('active');
+            });
+            document.querySelectorAll('.switch-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById(scenarioId).classList.add('active');
+            event.target.classList.add('active');
+        }
+    
+        function showProbability(probabilityId) {
+            document.querySelectorAll('.scenario-container').forEach(container => {
+                container.classList.remove('active');
+            });
+            document.querySelectorAll('.switch-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.getElementById(probabilityId).classList.add('active');
+            event.target.classList.add('active');
+        }
+    
+        // Initialize the planner
+        document.addEventListener('DOMContentLoaded', () => {
+            StudyManager.init();
+            
+            // Initialize default active states
+            document.querySelectorAll('.switch-btn').forEach(btn => {
+                if(btn.classList.contains('active')) {
+                    const targetId = btn.getAttribute('onclick').match(/'(.*?)'/)[1];
+                    document.getElementById(targetId).classList.add('active');
+                }
+            });
+        });
+    
+        // Theme Toggler
+        function toggleTheme() {
+            document.body.classList.toggle('light-theme');
+        }
+    
+        // Complete the StudyManager class implementation
+        class StudyManager {
+            // ... [Keep previous implementation] ...
+    
+            static updateAllProgressBars() {
+                document.querySelectorAll('.time-slot').forEach(slot => {
+                    const now = new Date();
+                    const timeRange = slot.textContent.match(/(\d+:\d+).*?(\d+:\d+)/);
+                    if(timeRange) {
+                        const start = this.parseTime(timeRange[1]);
+                        const end = this.parseTime(timeRange[2]);
+                        const progress = this.calculateProgress(start, end, now);
+                        slot.querySelector('.progress-bar').style.width = `${progress}%`;
+                    }
+                });
+            }
+    
+            static parseTime(timeString) {
+                const [time, modifier] = timeString.split(/(am|pm)/i);
+                let [hours, minutes] = time.split(':').map(Number);
+                if (modifier?.toLowerCase() === 'pm' && hours < 12) hours += 12;
+                if (modifier?.toLowerCase() === 'am' && hours === 12) hours = 0;
+                return new Date().setHours(hours, minutes, 0, 0);
+            }
+    
+            static calculateProgress(start, end, now) {
+                const total = end - start;
+                const elapsed = now - start;
+                return Math.min(Math.max((elapsed / total) * 100, 0), 100);
+            }
+    
+            static showConfetti() {
+                // Add confetti implementation here
+            }
+        }
+    </script>
+    
+
+        
+    </body>
+    </html>
+    </html>
