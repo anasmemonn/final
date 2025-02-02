@@ -9,13 +9,24 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --primary: #6C63FF;
-            --secondary: #00D1FF;
-            --accent: #FF007C;
-            --bg: radial-gradient(circle at top right, #0a0a2e, #1a1a4a 60%);
-            --glass: rgba(255, 255, 255, 0.08);
+            --primary: #8833d7;       /* Vibrant electric purple (BlueViolet) */
+            --secondary: #00ffcc;     /* Bright cyan for a techy vibe */
+            --accent: #ff00ff;        /* Neon magenta for a glowing, futuristic accent */
+            --accent-alt: #ff6f61;    /* Complementary neon coral for variety */
+            --bg: radial-gradient(circle at top right, #000011, #000033 40%, #330033 80%, #220033 100%); /* Deeper cosmic gradient with smoother transitions */
+            --glass: rgba(255, 255, 255, 0.1); /* Semi-transparent glass effect */
+            --glass-border: 1px solid rgba(255, 255, 255, 0.2); /* Subtle border for glass elements */
+            --text: #ffffff;          /* White text for contrast */
+            --text-alt: #e0e0e0;      /* Slightly off-white for secondary text */
+            --shadow: 0 8px 32px rgba(255, 0, 255, 0.6); /* Glowing neon shadow for depth */
+            --shadow-alt: 0 4px 16px rgba(0, 255, 204, 0.5); /* Secondary shadow for cyan elements */
+            --glow: 0 0 15px rgba(255, 0, 255, 0.8), 0 0 30px rgba(255, 0, 255, 0.6); /* Neon glow effect */
+            --glow-alt: 0 0 15px rgba(0, 255, 204, 0.8), 0 0 30px rgba(0, 255, 204, 0.6); /* Complementary cyan glow */
+            --border-glow: 2px solid rgba(255, 0, 255, 0.5); /* Glowing border for futuristic elements */
+            --border-glow-alt: 2px solid rgba(0, 255, 204, 0.5); /* Complementary cyan border glow */
+            --transition: all 0.3s ease-in-out; /* Smooth transition for interactive elements */
+            --blur: blur(10px); /* Blur effect for glassmorphism */
         }
-
         * {
             margin: 0;
             padding: 0;
@@ -25,7 +36,9 @@
         body {
             font-family: 'Inter', sans-serif;
             background: var(--bg);
-            color: #fff;
+            color: var(--text);
+            font-family: 'Arial', sans-serif;
+        
             min-height: 100vh;
             line-height: 1.6;
             overflow-x: hidden;
@@ -279,53 +292,6 @@
         .detail-list strong {
             color: var(--primary);
         }
-
-        /* Password Modal Styles */
-        .password-modal {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: var(--glass);
-            padding: 2rem;
-            border-radius: 1.5rem;
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            z-index: 1000;
-            text-align: center;
-            max-width: 400px;
-            width: 90%;
-            display: none;
-        }
-
-        .password-input {
-            width: 100%;
-            padding: 1rem;
-            margin: 1rem 0;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid var(--primary);
-            border-radius: 0.8rem;
-            color: white;
-            font-size: 1rem;
-        }
-
-        .password-error {
-            color: var(--accent);
-            margin-top: 1rem;
-            display: none;
-        }
-
-        .overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(10px);
-            z-index: 999;
-            display: none;
-        }
     </style>
 </head>
 <body>
@@ -397,7 +363,7 @@
 
         <!-- Links Grid -->
         <div class="link-grid">
-            <a href="javascript:void(0)" onclick="checkPassword('ss.html')" class="nav-card scroll-animate">
+            <a href="ss.html" class="nav-card scroll-animate">
                 <div class="nav-icon"><i class="fas fa-cookie"></i></div>
                 <div>
                     <h3>Cookie Jar</h3>
@@ -405,9 +371,7 @@
                 </div>
             </a>
 
-           
-
-            <a href="javascript:void(0)" onclick="checkPassword('yy.html')" class="nav-card scroll-animate">
+            <a href="yy.html" class="nav-card scroll-animate">
                 <div class="nav-icon"><i class="fas fa-book-open"></i></div>
                 <div>
                     <h3>Academic Hub</h3>
@@ -415,11 +379,19 @@
                 </div>
             </a>
 
-            <a href="javascript:void(0)" onclick="checkPassword('nn.html')" class="nav-card scroll-animate">
+            <a href="nn.html" class="nav-card scroll-animate">
                 <div class="nav-icon"><i class="fas fa-trophy"></i></div>
                 <div>
                     <h3>Exam Master Plan</h3>
                     <p>Best Routine (for board)</p>
+                </div>
+            </a>
+
+            <a href="pp.html" class="nav-card scroll-animate">
+                <div class="nav-icon"><i class="fas fa-book-open"></i></div>
+                <div>
+                    <h3>Mind Mapping</h3>
+                    <p>Tracking Mind Map</p>
                 </div>
             </a>
 
@@ -431,7 +403,6 @@
                 </div>
             </a>
 
-            <!-- Chess link without password -->
             <a href="https://www.chess.com" class="nav-card scroll-animate">
                 <div class="nav-icon"><i class="fas fa-chess"></i></div>
                 <div>
@@ -442,52 +413,7 @@
         </div>
     </div>
 
-    <!-- Password Modal -->
-    <div class="overlay" id="overlay"></div>
-    <div class="password-modal" id="passwordModal">
-        <h2>Enter Secret Key</h2>
-        <input type="password" class="password-input" id="passwordInput" placeholder="Enter password...">
-        <button onclick="verifyPassword()" class="nav-card" style="width: 100%; margin-top: 1rem;">
-            Unlock Content
-        </button>
-        <div class="password-error" id="passwordError">Incorrect password! Try again</div>
-    </div>
-
     <script>
-        // Password Protection Logic
-        let targetUrl = '';
-
-        function checkPassword(url) {
-            if (url.includes('chess.com')) {
-                window.open(url, '_blank');
-                return;
-            }
-            targetUrl = url;
-            document.getElementById('overlay').style.display = 'block';
-            document.getElementById('passwordModal').style.display = 'block';
-        }
-
-        function verifyPassword() {
-            const password = document.getElementById('passwordInput').value;
-            if (password === 'anas1959') {
-                window.open(targetUrl, '_blank');
-                closeModal();
-            } else {
-                document.getElementById('passwordError').style.display = 'block';
-                setTimeout(() => {
-                    document.getElementById('passwordError').style.display = 'none';
-                }, 2000);
-            }
-        }
-
-        function closeModal() {
-            document.getElementById('overlay').style.display = 'none';
-            document.getElementById('passwordModal').style.display = 'none';
-        }
-
-        // Close modal when clicking outside
-        document.getElementById('overlay').addEventListener('click', closeModal);
-
         // Scroll Animation
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
