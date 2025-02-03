@@ -4,55 +4,58 @@
     <meta charset="UTF-8">
     <link rel="icon" href="isagi.jpg" type="image/jpg">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Study War Room 2.0</title>
+    <title>Discipline God - Ultimate Goal Tracker</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
         :root {
-            --primary: #00ff88;
-            --secondary: #2196f3;
+            --primary: #cea93c;
+            --secondary: #482e98;
             --accent: #f59e0b;
-            --bg: linear-gradient(135deg, #0a192f, #172a45);
-            --surface: #1e293b;
-            --text: #f8fafc;
-            --glow: rgba(248, 250, 252, 0.1);
-        }
-
-        [data-theme="light"] {
-            --bg: #f8fafc;
-            --surface: #ffffff;
-            --text: #0f172a;
-            --glow: rgba(15, 23, 42, 0.1);
+            --bg: #ff2600;
+            --text: #1365d8;
+            --card-bg: rgba(255, 251, 0, 0.95);
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            
+            /* Dark Mode Variables */
+            --bg-dark: #0f172a;
+            --text-dark: #fdfeff;
+            --card-bg-dark: rgba(15, 23, 42, 0.95);
+            --shadow-color-dark: rgba(255, 225, 0, 0.993);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-            transition: background 0.3s, color 0.3s;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
         }
 
         body {
+            min-height: 100vh;
             background: var(--bg);
             color: var(--text);
-            min-height: 100vh;
-            padding: 2rem;
-            position: relative;
-            overflow-x: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            line-height: 1.5;
         }
 
-        .particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
+        body[data-theme="dark"] {
+            --bg: var(--bg-dark);
+            --text: var(--text-dark);
+            --card-bg: var(--card-bg-dark);
+            --shadow-color: var(--shadow-color-dark);
         }
 
         .container {
-            max-width: 800px;
-            margin: 0 auto;
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 1.5rem;
+            box-shadow: 0 0 0 1px rgba(255, 225, 0, 0.947),
+                        0 8px 32px var(--shadow-color);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .header {
@@ -61,500 +64,678 @@
             position: relative;
         }
 
-        h1 {
-            font-size: 2.5rem;
+        .title {
+            font-size: 3.5rem;
+            font-weight: 800;
             background: linear-gradient(45deg, var(--primary), var(--secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 1.5rem;
-            text-shadow: 0 0 10px var(--glow);
+            margin-bottom: 1rem;
+            letter-spacing: -0.03em;
         }
 
-        .progress-bar {
-            height: 6px;
-            background: rgba(255, 255, 255, 0.1);
+        .streak-counter {
+            position: absolute;
+            top: -0.5rem;
+            right: -1rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 0.75rem 1.5rem;
             border-radius: 999px;
-            margin: 2rem 0;
+            font-weight: 600;
+            box-shadow: 0 4px 6px var(--shadow-color);
+            transform: rotate(3deg);
+            transition: transform 0.3s ease;
+            animation: pulse 2s infinite, bounce 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: rotate(3deg) scale(1);
+                box-shadow: 0 4px 6px var(--shadow-color);
+            }
+            50% {
+                transform: rotate(3deg) scale(1.05);
+                box-shadow: 0 6px 10px var(--shadow-color);
+            }
+            100% {
+                transform: rotate(3deg) scale(1);
+                box-shadow: 0 4px 6px var(--shadow-color);
+            }
+        }
+        
+        @keyframes bounce {
+            0%, 100% {
+                transform: rotate(3deg) translateY(0);
+            }
+            50% {
+                transform: rotate(3deg) translateY(-5px);
+            }
+        }
+        .dark-mode-.streak-counter {
+            transform: scale(1.1) rotate(360deg);
+            box-shadow: 0 0 20px var(--primary);
+        }
+        .quote-section {
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-radius: 1rem;
+            background: linear-gradient(145deg, rgba(124, 58, 237, 0.05), rgba(124, 58, 237, 0.1));
+            border: 1px solid rgba(91, 4, 241, 0.2);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(124, 58, 237, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .quote-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 234, 0, 0.888), transparent 70%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+        }
+        
+        .quote-section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(93, 0, 255, 0.3);
+        }
+        
+        .quote-section:hover::before {
+            opacity: 1;
+        }
+        
+        .quote-section::after {
+            content: '';
+            position: absolute;
+            top: -1rem;
+            left: 1rem;
+            font-size: 6rem;
+            color: rgba(224, 224, 224, 0.881);
+            font-family: serif;
+            font-weight: bold;
+            z-index: 0;
+        }
+        
+        .quote-section p {
+            position: relative;
+            z-index: 1;
+            font-size: 1.25rem;
+            line-height: 1.6;
+            color: #00ffea;
+            margin: 0;
+        }
+        
+        .quote-section p::before {
+            content: '“';
+            font-size: 2rem;
+            color: rgba(252, 239, 8, 0.95);
+            margin-right: 0.5rem;
+        }
+        
+        .quote-section p::after {
+            content: '”';
+            font-size: 2rem;
+            color: rgba(253, 232, 0, 0.3);
+            margin-left: 0.5rem;
+        }
+        .goal-input-section {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 1rem;
+            margin-bottom: 3rem;
+        }
+
+        .goal-input {
+            padding: 1.25rem;
+            border: none;
+            color: white;
+            color:bolder;
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            background: var(--card-bg);
+            box-shadow: inset 0 0 0 1px rgba(94, 14, 231, 0.941),
+                        0 2px 4px var(--shadow-color);
+            transition: all 0.3s ease;
+        }
+        .dark-mode-.goal-input {
+            transform: scale(1.1) rotate(360deg);
+            box-shadow: 0 0 20px var(--primary);
+        }
+
+        .goal-input:focus {
+            outline: none;
+            box-shadow: inset 0 0 0 2px var(--primary),
+                        0 4px 6px var(--shadow-color);
+        }
+
+        .add-btn {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 0 2rem;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
             overflow: hidden;
         }
 
-        .progress-fill {
+        .add-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, var(--primary), var(--secondary));
-            transition: width 0.5s ease;
+            background: linear-gradient(
+                120deg,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent
+            );
+            transition: left 0.6s;
         }
 
-        .routine {
+        .add-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px var(--shadow-color);
+        }
+
+        .add-btn:hover::before {
+            left: 100%;
+        }
+
+        .goals-container {
             display: grid;
+            gap: 1rem;
+        }
+
+        .goal-item {
+            position: center;
+            padding: 1.9rem;
+            margin: 3rem 0;
+            background: var(--card-bg);
+            border-radius: 1rem;
+          
+            text-overflow: var(--bg-dark);
+            text-transform:inherit;
+            text-rendering: auto;
+            text-align: left ,center;
+            bottom: 10px;
+            box-shadow: 0 4px 6px var(--shadow-color);
+            transition: all 0.3s ease;
+            cursor: grab;
+            font-weight: bolder;
+            position: relative;
+            
+        }
+        .goal-item.completed {
+            background: rgba(8, 255, 173, 0.05);
+            border-left: 4px solid #10b981;
+            opacity: 0.8;
+        }
+
+        .goal-item.completed span {
+            text-decoration:solid;
+            opacity: 0.7;
+        }
+
+        .goal-item:hover {
+            transform: translateY(7px);
+            box-shadow: 0 8px 15px var(--shadow-color);
+        }
+
+        .goal-actions {
+            display: flex;
+            gap: 1.2rem;
+        }
+
+        .action-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .complete-btn {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            padding: 0.1.5rem 1.5rem; /* Add padding for better button size */
+            border-radius: 0.5rem; /* Rounded corners */
+            font-size: 1rem;
+            font-weight: bolder;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-left: auto; /* Push the button to the right */
+            position: relative; /* Enable positioning */
+            top: -10px; /* Move the button 10px upwards */
+        }
+        
+        .complete-btn:hover {
+            background: rgba(16, 185, 129, 0.2); /* Slightly darker on hover */
+            border-color: rgba(16, 185, 129, 0.3); /* Darker border on hover */
+        }
+        
+        .complete-btn:active {
+            transform: scale(0.95); /* Slight scale down on click */
+        }
+
+        .delete-btn {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            padding: 0.75rem 1.5rem; /* Add padding for better button size */
+            border-radius: 0.5rem; /* Rounded corners */
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative; /* Add this to make `top` work */
+            top: -10px; /* Move the button 10px upwards */
+        }
+        
+        .delete-btn:hover {
+            background: rgba(239, 68, 68, 0.2); /* Slightly darker on hover */
+            border-color: rgba(239, 68, 68, 0.3); /* Darker border on hover */
+        }
+        
+        .delete-btn:active {
+            transform: scale(0.95); /* Slight scale down on click */
+        }
+
+        .stats-panel {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
             gap: 1.5rem;
             margin-top: 2rem;
         }
 
-        .task {
-            background: var(--surface);
+        .stat-box {
             padding: 1.5rem;
-            border-radius: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            position: relative;
-            overflow: hidden;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s, box-shadow 0.2s;
+            border-radius: 0.75rem;
+            background: var(--card-bg);
+            text-align: center;
+            box-shadow: 0 0 0 1px rgba(124, 58, 237, 0.1),
+                        0 2px 4px var(--shadow-color);
         }
 
-        .task:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-        }
-
-        .task.completed {
-            background: rgba(34, 197, 94, 0.1);
-            border-color: var(--secondary);
-        }
-
-        .task.completed span {
-            text-decoration: line-through;
-            opacity: 0.7;
-        }
-
-        .pomodoro-container {
+        .dark-mode-toggle {
             position: fixed;
             bottom: 2rem;
             right: 2rem;
-            background: var(--surface);
-            padding: 1.5rem;
-            border-radius: 1rem;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 4rem;
+            height: 4rem;
+            background: var(--card-bg);
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border-radius: 50%;
+            cursor: pointer;
+            display: grid;
+            place-items: center;
+        }
+
+        .dark-mode-toggle:hover {
+            transform: scale(1.1) rotate(360deg);
+            box-shadow: 0 0 20px var(--primary);
+        }
+
+        /* New Celebration Animations */
+        @keyframes celebrate {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.9; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(100px) rotate(0deg); opacity: 0; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 1; }
+        }
+
+        .achievement-badge {
+            position: fixed;
+            top: 20px;
+            right: -300px;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 700;
+            box-shadow: 0 10px 30px rgba(124, 58, 237, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            animation: slideIn 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
             z-index: 1000;
         }
 
-        .timer-display {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin: 1rem 0;
-            text-align: center;
-            display: flex;
-            justify-content: center;
-            gap: 0.5rem;
+        .achievement-badge::after {
+            content: "🎉";
+            font-size: 1.5rem;
+            animation: celebrate 0.6s ease infinite;
         }
 
-        .timer-segment {
-            background: var(--bg);
-            padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
-            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin: 2rem 0;
-        }
-
-        .stat-card {
-            background: var(--surface);
-            padding: 1.5rem;
-            border-radius: 1rem;
-            text-align: center;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        :root {
-            --primary: #ff0000;
-            --secondary: #ff6b6b;
-            --accent: #ff0000;
-            --bg: #0a0a0a;
-            --surface: #1a1a1a;
-            --text: #ffffff;
-            --glow: rgba(255, 0, 0, 0.3);
-        }
-
-        /* ... (keep previous styles mostly same until .particles) */
-
-     
-
-   
-
-
-        
-        .stat-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-        }
-
-        .stat-number {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--primary);
-        }
-
-        .theme-toggle {
+        .celebration {
             position: fixed;
-            top: 1rem;
-            right: 1rem;
-            background: var(--surface);
-            padding: 0.5rem 1rem;
-            border-radius: 999px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            transition: transform 0.2s, box-shadow 0.2s;
+            pointer-events: none;
+            font-size: 2rem;
+            animation: floatUp 2s ease-out forwards;
+            z-index: 9999;
         }
 
-        .theme-toggle:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        .quote-section {
-            background: var(--surface);
-            padding: 1.5rem;
-            border-radius: 1rem;
-            margin: 2rem 0;
-            text-align: center;
-            font-style: italic;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .quote-section:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-        }
-
-        .btn {
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 0.75rem;
-            cursor: pointer;
-            font-weight: 600;
-            transition: transform 0.2s, box-shadow 0.2s, background 0.3s;
-            font-size: 1rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
-
-        .btn-secondary {
-            background: var(--secondary);
-            color: white;
-            gap: 1px;
-        }
-
-        .btn-secondary:hover {
-            background: linear-gradient(45deg, var(--secondary), var(--primary));
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
-
-        .btn-reset {
-            background: #f44336;
-            color: white;
-            border: 2px solid #f44336;
-            transition: all 0.3s ease;
-        }
-
-        .btn-reset:hover {
-            background: transparent;
-            color: #f44336;
-            border: 2px solid #f44336;
-            box-shadow: 0 4px 12px rgba(244, 67, 54, 0.2);
-        }
-
-        .btn-pomodoro {
-            background: var(--accent);
-            color: white;
-            border: 2px solid var(--accent);
-            transition: all 0.3s ease;
-        }
-
-        .btn-pomodoro:hover {
-            background: transparent;
-            color: var(--accent);
-            border: 2px solid var(--accent);
-            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
-        }
-
-        .deadline-reminder {
-            background: var(--surface);
-            padding: 1rem;
-            border-radius: 5rem;
-            margin: 3rem 0;
-            text-align: center;
-            font-weight: bold;
-            color: var(--accent);
-            box-shadow: 0 10px 50px rgba(255, 9, 9, 0.632);
-        }
-
-        .button-group {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            margin: 2rem 0;
-        }
-
-        @media (max-width: 640px) {
-            body {
-                padding: 1rem;
-            }
-
-            h1 {
-                font-size: 2rem;
-            }
-
-            .pomodoro-container {
-                position: static;
-                margin: 2rem 0;
-            }
-
-            .button-group {
-                flex-direction: column;
-                align-items: center;
-            }
+        @keyframes slideIn {
+            0% { right: -300px; }
+            100% { right: 20px; }
         }
     </style>
 </head>
 <body>
-    <div class="particles"></div>
     <div class="container">
-        <div class="theme-toggle" onclick="toggleTheme()">
-            <span class="theme-icon">🌓</span>
-        </div>
-
         <div class="header">
-            <h1>📚 Study Analysis Hub ⚡</h1>
-            <div class="progress-bar">
-                <div class="progress-fill" id="progress"></div>
+            <div class="streak-counte"></div>
+            <h1 class="title">DISCIPLINED TIME TABLE</h1>
+            <p>Master Your Destiny Through Daily Rituals</p>
+        </div>
+
+        <div class="quote-section">
+            <div class="quote-icon">💪</div>
+            <p id="dynamic-quote">"The pain of discipline is less than the pain of regret"</p>
+        </div>
+
+        <div class="goal-input-section">
+            <input type="text" class="goal-input" placeholder="Enter your sacred vow..." id="goalInput">
+            <button class="add-btn" onclick="addGoal()">
+                <span>➕</span> Add Ritual
+            </button>
+        </div>
+
+        <div class="stats-panel">
+            <div class="stat-box">
+                <h3>Daily Progress</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+            <div class="stat-box">
+                <h3>Completed</h3>
+                <div class="stat-number" id="completedCount">0</div>
+            </div>
+            <div class="stat-box">
+                <h3>Pending</h3>
+                <div class="stat-number" id="pendingCount">0</div>
             </div>
         </div>
 
-        <div class="deadline-reminder">
-            ⏳ Deadline: <span id="countdown"></span> - Stay Focused!
-        </div>
-
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-number" id="completed-tasks">0</div>
-                <div>Tasks Completed</div>
-            </div>
-        </div>
-
-        <div class="quote-section" id="quote">
-            "The secret of getting ahead is getting started." - Mark Twain
-        </div>
-       
-        <div class="routine">
-            <div class="task">
-                <input type="checkbox" class="progress">
-                <span>
-                    <span class="time-badge">9 AM - 12 PM</span>
-                    Hardcore Study (Math/Science)
-                </span>
-            </div>
-            <div class="task">
-                <input type="checkbox" class="progress">
-                <span>
-                    <span class="time-badge">12 PM - 1:30 PM</span>
-                    Namaz + Lunch + Mind Reset
-                </span>
-            </div>
-            <div class="task">
-                <input type="checkbox" class="progress">
-                <span>
-                    <span class="time-badge">1:30 PM - 4:30 PM</span>
-                    Theory Subjects (Social Science/English)
-                </span>
-            </div>
-            <div class="task">
-                <input type="checkbox" class="progress">
-                <span>
-                    <span class="time-badge">4:30 PM - 6:30 PM</span>
-                    Namaz + Refreshment + Walk
-                </span>
-            </div>
-            <div class="task">
-                <input type="checkbox" class="progress">
-                <span>
-                    <span class="time-badge">6:30 PM - 8 PM</span>
-                    Weakest Subject Focus (Sanskrit/Gujarati)
-                </span>
-            </div>
-            <div class="task">
-                <input type="checkbox" class="progress">
-                <span>
-                    <span class="time-badge">8 PM - 9 PM</span>
-                    Namaz + Dinner + Mind Reset
-                </span>
-            </div>
-            <div class="task">
-                <input type="checkbox" class="progress">
-                <span>
-                    <span class="time-badge">9 PM - 11 PM</span>
-                    Super Revision + PYQs
-                </span>
-            </div>
-        </div>
-
-        <div class="button-group">
-            <button class="btn btn-pomodoro" onclick="window.open('pomodoro.html', '_blank')">Open Pomodoro Timer</button>
-            <button class="btn btn-reset" onclick="resetProgress()">Reset Progress</button>
-        </div>
+        <div class="goals-container" id="goalsContainer"></div>
     </div>
 
+    <div class="dark-mode-toggle" onclick="toggleDarkMode()">🌓</div>
+
     <script>
-        // Theme Management
-        function toggleTheme() {
-            document.body.dataset.theme = 
-                document.body.dataset.theme === 'light' ? 'dark' : 'light';
-            localStorage.setItem('theme', document.body.dataset.theme);
-        }
+        class GoalTracker {
+            constructor() {
+                this.goals = JSON.parse(localStorage.getItem('goals')) || [];
+                this.streak = parseInt(localStorage.getItem('streak')) || 0;
+                this.darkMode = localStorage.getItem('theme') === 'dark' || false;
+                this.init();
+            }
 
-        // Load saved theme
-        const savedTheme = localStorage.getItem('theme') || 'dark';
-        document.body.dataset.theme = savedTheme;
+            init() {
+                this.renderGoals();
+                this.updateProgress();
+                this.updateStreak();
+                this.showDailyQuote();
+                this.checkMidnightReset();
+                setInterval(() => this.checkMidnightReset(), 60000);
+                this.applyDarkMode();
+                this.enableDragAndDrop();
+                this.setupEventListeners();
+            }
 
-        // Reset Progress
-        function resetProgress() {
-            const checkboxes = document.querySelectorAll('.progress');
-            checkboxes.forEach(checkbox => checkbox.checked = false);
-            completedTasks = [];
-            localStorage.setItem('completedTasks', JSON.stringify(completedTasks));
-            updateProgress();
-        }
-         // Custom Cursor Logic
-         const cursor = document.querySelector('.custom-cursor');
-        
-         document.addEventListener('mousemove', (e) => {
-             cursor.style.left = `${e.clientX - 15}px`;
-             cursor.style.top = `${e.clientY - 15}px`;
-         });
- 
-         // Add hover effects for interactive elements
-         document.querySelectorAll('button, input, .task').forEach(el => {
-             el.addEventListener('mouseenter', () => {
-                 cursor.style.transform = 'scale(1.5)';
-             });
-             el.addEventListener('mouseleave', () => {
-                 cursor.style.transform = 'scale(1)';
-             });
-         });
- 
-         // Remove original particles code and keep other JS the same
+            setupEventListeners() {
+                document.getElementById('goalInput').addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') this.addGoal(e.target.value);
+                });
 
-        // Progress Tracking
-        let completedTasks = JSON.parse(localStorage.getItem('completedTasks')) || [];
-        let pomodoroCount = parseInt(localStorage.getItem('pomodoroCount')) || 0;
+                document.querySelector('.add-btn').addEventListener('click', () => {
+                    const input = document.getElementById('goalInput');
+                    this.addGoal(input.value);
+                    input.value = '';
+                });
 
-        function updateProgress() {
-            const checkboxes = document.querySelectorAll('.progress');
-            completedTasks = [...checkboxes].map(checkbox => checkbox.checked);
-            localStorage.setItem('completedTasks', JSON.stringify(completedTasks));
-            
-            const checkedCount = completedTasks.filter(Boolean).length;
-            document.getElementById('completed-tasks').textContent = checkedCount;
-            document.getElementById('progress').style.width = 
-                `${(checkedCount / checkboxes.length) * 100}%`;
+                document.querySelector('.dark-mode-toggle').addEventListener('click', () => this.toggleDarkMode());
+            }
 
-            checkboxes.forEach((checkbox, index) => {
-                checkbox.closest('.task').classList.toggle('completed', checkbox.checked);
-            });
-
-            if(checkedCount === checkboxes.length) {
-                if(window.confetti) {
-                    confetti({
-                        particleCount: 100,
-                        spread: 70,
-                        origin: { y: 0.6 }
-                    });
+            addGoal(text) {
+                if (text.trim()) {
+                    const newGoal = {
+                        text,
+                        completed: false,
+                        createdAt: Date.now(),
+                        id: Date.now().toString()
+                    };
+                    this.goals.push(newGoal);
+                    this.saveAndRender();
+                    this.showAchievement('New Commitment Forged!');
+                    this.animateConfetti();
                 }
             }
-        }
 
-        // Countdown Timer for Deadline
-        const deadline = new Date('February 27, 2025 23:59:59').getTime(); // Updated deadline
+            toggleComplete(id) {
+                const goal = this.goals.find(g => g.id === id);
+                if (goal) {
+                    goal.completed = !goal.completed;
+                    if (this.allGoalsCompleted()) {
+                        this.streak++;
+                        localStorage.setItem('streak', this.streak);
+                        this.updateStreak();
+                        this.showAchievement('Daily Mastery Achieved!');
+                        this.animateConfetti(100);
+                    }
+                    this.saveAndRender();
+                }
+            }
 
-        function updateCountdown() {
-            const now = new Date().getTime();
-            const timeLeft = deadline - now;
+            deleteGoal(id) {
+                if (confirm("Are you sure you want to break this commitment?")) {
+                    this.goals = this.goals.filter(g => g.id !== id);
+                    this.saveAndRender();
+                    this.showAchievement('Commitment Released...');
+                }
+            }
 
-            const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+            saveAndRender() {
+                localStorage.setItem('goals', JSON.stringify(this.goals));
+                this.renderGoals();
+                this.updateProgress();
+            }
 
-            document.getElementById('countdown').innerHTML = 
-                `${days}d ${hours}h ${minutes}m ${seconds}s`;
+            renderGoals() {
+                const goalsContainer = document.getElementById('goalsContainer');
+                goalsContainer.innerHTML = '';
 
-            if (timeLeft <= 0) {
-                clearInterval(countdownInterval);
-                document.getElementById('countdown').innerHTML = "February 27, 2025";
+                this.goals.forEach((goal, index) => {
+                    const goalItem = document.createElement('div');
+                    goalItem.className = `goal-item ${goal.completed ? 'completed' : ''}`;
+                    goalItem.draggable = true;
+                    goalItem.dataset.id = goal.id;
+                    goalItem.innerHTML = `
+                        <span>${goal.text}</span>
+                        <div class="goal-actions">
+                            <button class="action-btn complete-btn" onclick="tracker.toggleComplete('${goal.id}')">
+                                ${goal.completed ? 'Undo' : 'Complete'}
+                            </button>
+                            <button class="action-btn delete-btn" onclick="tracker.deleteGoal('${goal.id}')">Delete</button>
+                        </div>
+                    `;
+                    goalsContainer.appendChild(goalItem);
+                });
+
+                this.enableDragAndDrop();
+            }
+
+            enableDragAndDrop() {
+                const goalsContainer = document.getElementById('goalsContainer');
+                const items = goalsContainer.querySelectorAll('.goal-item');
+
+                items.forEach(item => {
+                    item.addEventListener('dragstart', this.handleDragStart.bind(this));
+                    item.addEventListener('dragover', this.handleDragOver.bind(this));
+                    item.addEventListener('drop', this.handleDrop.bind(this));
+                    item.addEventListener('dragend', this.handleDragEnd.bind(this));
+                });
+            }
+
+            handleDragStart(e) {
+                this.draggedItem = e.target;
+                e.target.style.opacity = '0.4';
+            }
+
+            handleDragOver(e) {
+                e.preventDefault();
+                const target = e.target.closest('.goal-item');
+                if (target && target !== this.draggedItem) {
+                    const rect = target.getBoundingClientRect();
+                    const offset = rect.y + (rect.height / 2);
+                    if (e.clientY > offset) {
+                        goalsContainer.insertBefore(this.draggedItem, target.nextSibling);
+                    } else {
+                        goalsContainer.insertBefore(this.draggedItem, target);
+                    }
+                }
+            }
+
+            handleDrop(e) {
+                e.preventDefault();
+                const newOrder = Array.from(goalsContainer.children).map(child => child.dataset.id);
+                this.reorderGoals(newOrder);
+                this.saveAndRender();
+            }
+
+            handleDragEnd(e) {
+                e.target.style.opacity = '1';
+                this.draggedItem = null;
+            }
+
+            reorderGoals(newOrder) {
+                this.goals.sort((a, b) => newOrder.indexOf(a.id) - newOrder.indexOf(b.id));
+            }
+
+            updateProgress() {
+                const completed = this.goals.filter(g => g.completed).length;
+                const total = this.goals.length;
+                const progress = total > 0 ? (completed / total) * 100 : 0;
+
+                const progressFill = document.getElementById('progressFill');
+                if (progressFill) {
+                    progressFill.style.width = `${progress}%`;
+                    document.getElementById('completedCount').textContent = completed;
+                    document.getElementById('pendingCount').textContent = total - completed;
+                }
+            }
+
+            updateStreak() {
+                const streakCounter = document.querySelector('.streak-counter');
+                if (streakCounter) {
+                    streakCounter.textContent = `🔥 ${this.streak}-Day Streak`;
+                }
+            }
+
+            allGoalsCompleted() {
+                return this.goals.length > 0 && this.goals.every(g => g.completed);
+            }
+
+            checkMidnightReset() {
+                const lastDate = localStorage.getItem('lastDate');
+                const currentDate = new Date().toLocaleDateString();
+
+                if (lastDate !== currentDate) {
+                    if (this.goals.length > 0) {
+                        const completed = this.goals.filter(g => g.completed).length;
+                        this.saveHistory(completed, this.goals.length - completed);
+                    }
+                    this.goals = [];
+                    localStorage.setItem('lastDate', currentDate);
+                    this.saveAndRender();
+                }
+            }
+
+            saveHistory(completed, pending) {
+                const history = JSON.parse(localStorage.getItem('history')) || [];
+                history.unshift({
+                    date: new Date().getTime(),
+                    completed,
+                    pending
+                });
+                localStorage.setItem('history', JSON.stringify(history));
+            }
+
+            showDailyQuote() {
+                const quotes = {
+                    motivation: [
+                        "The only way to do great work is to love what you do. - Steve Jobs",
+                        "Success is not final, failure is not fatal: It is the courage to continue that counts. - Churchill"
+                    ],
+                    discipline: [
+                        "Discipline is choosing between what you want now and what you want most. - Abraham Lincoln",
+                        "Small daily improvements are the key to staggering long-term results. - Unknown"
+                    ],
+                    success: [
+                        "The difference between ordinary and extraordinary is that little extra. - Jimmy Johnson",
+                        "Success is the sum of small efforts, repeated day in and day out. - R. Collier"
+                    ]
+                };
+
+                const categories = Object.keys(quotes);
+                const category = categories[Math.floor(Math.random() * categories.length)];
+                const quote = quotes[category][Math.floor(Math.random() * quotes[category].length)];
+                document.getElementById('dynamic-quote').textContent = `"${quote}"`;
+            }
+
+            animateConfetti(count = 50) {
+                for (let i = 0; i < count; i++) {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'celebration';
+                    confetti.style.left = Math.random() * 100 + 'vw';
+                    confetti.style.animation = `floatUp ${Math.random() * 3 + 2}s linear`;
+                    confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 70%, 60%)`;
+                    document.body.appendChild(confetti);
+                    setTimeout(() => confetti.remove(), 5000);
+                }
+            }
+
+            showAchievement(message) {
+                const badge = document.createElement('div');
+                badge.className = 'achievement-badge';
+                badge.innerHTML = `${message} 🎉`;
+                document.body.appendChild(badge);
+                setTimeout(() => badge.remove(), 3000);
+            }
+
+            toggleDarkMode() {
+                this.darkMode = !this.darkMode;
+                localStorage.setItem('theme', this.darkMode ? 'dark' : 'light');
+                this.applyDarkMode();
+            }
+
+            applyDarkMode() {
+                document.body.setAttribute('data-theme', this.darkMode ? 'dark' : 'light');
             }
         }
 
-        const countdownInterval = setInterval(updateCountdown, 1000);
-        updateCountdown();
-
-        // Motivational Quotes
-        const quotes = [
-            "Success is the sum of small efforts, repeated day in and day out. - Robert Collier",
-            "The future belongs to those who believe in the beauty of their dreams. - Eleanor Roosevelt",
-            "Don't watch the clock; do what it does. Keep going. - Sam Levenson",
-            "The only way to do great work is to love what you do. - Steve Jobs"
-        ];
-
-        function updateQuote() {
-            document.getElementById('quote').textContent = 
-                quotes[Math.floor(Math.random() * quotes.length)];
-        }
-
-        // Initialize
-        document.querySelectorAll('.progress').forEach((checkbox, index) => {
-            checkbox.checked = completedTasks[index] || false;
-            checkbox.addEventListener('change', updateProgress);
-        });
-
-        updateProgress();
-
-        // Particle Background Animation
-        const particlesContainer = document.querySelector('.particles');
-        const particleCount = 100;
-
-        for (let i = 0; i < particleCount; i++) {
-            const particle = document.createElement('div');
-            particle.classList.add('particle');
-            particle.style.left = `${Math.random() * 100}%`;
-            particle.style.top = `${Math.random() * 100}%`;
-            particle.style.animationDuration = `${Math.random() * 5 + 3}s`;
-            particle.style.animationDelay = `${Math.random() * 2}s`;
-            particlesContainer.appendChild(particle);
-        }
+        // Initialize the app
+        const tracker = new GoalTracker();
     </script>
-    <style>
-        .particle {
-            position: absolute;
-            width: 2px;
-            height: 2px;
-            background: var(--primary);
-            border-radius: 50%;
-            opacity: 0.7;
-            animation: float linear infinite;
-        }
-
-        @keyframes float {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(-100vh); }
-        }
-    </style>
 </body>
 </html>
