@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-      <link rel="icon" href="imagess.jpg" type="image/jpg">
+	    <link rel="icon" href="isagi.jpg" type="image/jpg">
 <head>
   <meta charset="UTF-8">
-  <title>FINAL TIMETABLE
-
-  </title>
+  <title>FINAL TIMETABLE</title>
   <style>
     /* Importing a modern monospaced font */
     @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap');
@@ -100,12 +98,8 @@
     }
   
     @keyframes textGlow {
-      from {
-        text-shadow: 0 0 5px var(--neon-pink);
-      }
-      to {
-        text-shadow: 0 0 20px var(--neon-pink);
-      }
+      from { text-shadow: 0 0 5px var(--neon-pink); }
+      to { text-shadow: 0 0 20px var(--neon-pink); }
     }
   
     h2 {
@@ -303,6 +297,13 @@
       font-size: 1.5rem;
       color: var(--accent);
     }
+    
+    /* Daily points display */
+    #dailyPoints {
+      font-size: 1.2rem;
+      color: var(--neon-blue);
+      margin-top: 0.5rem;
+    }
   
     /* Task History Toggle Button */
     #toggleHistoryBtn {
@@ -364,6 +365,8 @@
   
   <!-- Particles.js Library -->
   <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+  <!-- Canvas-confetti Library for celebration -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 </head>
 <body>
   <div id="particles-js"></div>
@@ -420,6 +423,7 @@
       <div class="reward-system">
         <h2>Reward Points</h2>
         <div class="reward-points" id="rewardPoints">0</div>
+        <div id="dailyPoints">Daily Points: 0/100</div>
       </div>
     </div>
   </div>
@@ -431,8 +435,20 @@
           tasks: JSON.parse(localStorage.getItem('tasks')) || [],
           notes: JSON.parse(localStorage.getItem('notes')) || [],
           rewardPoints: parseInt(localStorage.getItem('rewardPoints')) || 0,
+          dailyPoints: parseInt(localStorage.getItem('dailyPoints')) || 0,
+          dailyDate: localStorage.getItem('dailyDate') || new Date().toLocaleDateString(),
+          dailyGoalAchieved: false
         };
 
+        // Reset daily points if the date has changed
+        const today = new Date().toLocaleDateString();
+        if (this.state.dailyDate !== today) {
+          this.state.dailyPoints = 0;
+          this.state.dailyDate = today;
+          this.state.dailyGoalAchieved = false;
+          this.saveState();
+        }
+        
         this.cacheDOM();
         this.bindEvents();
         this.updateUI();
@@ -456,6 +472,7 @@
         this.addNoteBtn = document.getElementById('addNoteBtn');
         this.toggleHistoryBtn = document.getElementById('toggleHistoryBtn');
         this.rewardPointsDisplay = document.getElementById('rewardPoints');
+        this.dailyPointsDisplay = document.getElementById('dailyPoints');
       }
 
       bindEvents() {
@@ -475,7 +492,7 @@
         this.taskList.addEventListener('click', (e) => {
           if (e.target.classList.contains('complete-task')) {
             const id = Number(e.target.dataset.id);
-            this.completeTask(id);
+            this.completeTask(id, true);
           } else if (e.target.classList.contains('abort-task')) {
             const id = Number(e.target.dataset.id);
             this.abortTask(id);
@@ -495,11 +512,14 @@
           }
         });
 
-        // Delegate note deletion
+        // Delegate note deletion and decryption toggle for encrypted notes
         this.noteHistory.addEventListener('click', (e) => {
           if (e.target.classList.contains('delete-note')) {
             const id = Number(e.target.dataset.id);
             this.deleteNote(id);
+          } else if (e.target.classList.contains('toggle-note')) {
+            const id = Number(e.target.dataset.id);
+            this.toggleNoteDecryption(id);
           }
         });
       }
@@ -508,6 +528,8 @@
         localStorage.setItem('tasks', JSON.stringify(this.state.tasks));
         localStorage.setItem('notes', JSON.stringify(this.state.notes));
         localStorage.setItem('rewardPoints', this.state.rewardPoints);
+        localStorage.setItem('dailyPoints', this.state.dailyPoints);
+        localStorage.setItem('dailyDate', this.state.dailyDate);
       }
 
       handleAddTask() {
@@ -515,6 +537,7 @@
         const time = parseInt(this.taskTime.value);
         if (!text || isNaN(time) || time <= 0) return;
 
+        // Initialize beep flags for progress thresholds
         const newTask = {
           id: Date.now(),
           text,
@@ -524,8 +547,12 @@
           aborted: false,
           progress: 0,
           startTime: Date.now(),
-          endTime: Date.now() + time * 60000, // Convert minutes to ms
-          rewarded: false
+          endTime: Date.now() + time * 60000, // Scheduled end time (in ms)
+          rewarded: false,
+          prompted: false, // flag to indicate if confirmation has been asked
+          beep50: false,
+          beep70: false,
+          beep90: false
         };
 
         this.state.tasks.push(newTask);
@@ -533,20 +560,31 @@
         this.taskTime.value = '';
         this.updateUI();
         this.saveState();
+
+        // Play sound and achievement on first timer start
+        this.playSound('timer.mp3');
+        this.showAchievement('Timer started! Good luck!');
+        // Request notification permission
+        this.requestNotificationPermission();
       }
 
-      completeTask(id) {
+      completeTask(id, manual = false) {
         const task = this.state.tasks.find(t => t.id === id);
         if (task && !task.completed && !task.aborted) {
           task.completed = true;
           task.progress = 100;
+          task.actualCompletionTime = Date.now();
           if (!task.rewarded) {
             this.state.rewardPoints += 20;
+            this.state.dailyPoints += 20;
             task.rewarded = true;
           }
           this.updateUI();
           this.updateRewardPointsDisplay();
           this.saveState();
+
+          // Show the tagda celebration animation
+          this.showCelebration('Mission Accomplished!');
         }
       }
 
@@ -556,7 +594,9 @@
           task.aborted = true;
           task.abortTime = Date.now();
           if (!task.rewarded) {
-            this.state.rewardPoints += 10;
+            // Deduct 20 points for not completing the task
+            this.state.rewardPoints -= 20;
+            this.state.dailyPoints -= 20;
             task.rewarded = true;
           }
           this.updateUI();
@@ -575,11 +615,13 @@
       handleAddNote() {
         const text = this.noteInput.value.trim();
         if (!text) return;
-
+        // Encrypt the note using Base64 (for demonstration purposes)
+        const encryptedText = btoa(text);
         const newNote = {
           id: Date.now(),
-          text,
-          timestamp: new Date().toLocaleString()
+          text: encryptedText,
+          timestamp: new Date().toLocaleString(),
+          showDecrypted: false 
         };
 
         this.state.notes.unshift(newNote);
@@ -594,8 +636,24 @@
         this.saveState();
       }
 
+      toggleNoteDecryption(id) {
+        const note = this.state.notes.find(note => note.id === id);
+        if (note) {
+          note.showDecrypted = !note.showDecrypted;
+          this.updateUI();
+          this.saveState();
+        }
+      }
+
       updateRewardPointsDisplay() {
         this.rewardPointsDisplay.textContent = this.state.rewardPoints;
+        this.dailyPointsDisplay.textContent = `Daily Points: ${this.state.dailyPoints}/100`;
+
+        // If daily goal reached and not already celebrated, show a notification
+        if (this.state.dailyPoints >= 100 && !this.state.dailyGoalAchieved) {
+          this.showAchievement('Daily Goal Achieved!');
+          this.state.dailyGoalAchieved = true;
+        }
       }
 
       getRemainingTimeText(task) {
@@ -631,34 +689,37 @@
       }
 
       renderTaskHistory() {
-        // Render tasks that are either completed or aborted
         const historyTasks = this.state.tasks.filter(task => task.completed || task.aborted);
         if (historyTasks.length === 0) {
           this.taskHistory.innerHTML = `<p class="empty">No completed or aborted missions yet.</p>`;
           return;
         }
-        this.taskHistory.innerHTML = historyTasks.map(task => `
+        this.taskHistory.innerHTML = historyTasks.map(task => {
+          let timingInfo = '';
+          if (task.completed && task.actualCompletionTime) {
+            const diff = task.actualCompletionTime - task.startTime;
+            const minutes = Math.floor(diff / 60000);
+            const seconds = Math.floor((diff % 60000) / 1000);
+            timingInfo = `Completed in ${minutes} min ${seconds} sec`;
+          } else if (task.aborted) {
+            timingInfo = 'Aborted at ' + new Date(task.abortTime).toLocaleTimeString();
+          }
+          return `
           <div class="task-item ${task.completed ? 'completed' : 'aborted'}" data-id="${task.id}">
             <div>
               <div class="priority-tag ${task.priority}">${task.priority.toUpperCase()}</div>
               <span>${task.text}</span>
-              <div class="deadline">
-                ${task.completed ? 'Completed' : 'Aborted'}
-              </div>
               <div class="extra-details">
                 <div>Started: ${new Date(task.startTime).toLocaleString()}</div>
-                <div>
-                  ${task.completed 
-                    ? 'Completed: ' + new Date(task.endTime).toLocaleString() 
-                    : 'Aborted: ' + new Date(task.abortTime).toLocaleString()}
-                </div>
+                <div>${timingInfo}</div>
               </div>
             </div>
             <div>
               <button class="delete-task" data-id="${task.id}">✕</button>
             </div>
           </div>
-        `).join('');
+        `;
+        }).join('');
       }
 
       renderNotes() {
@@ -670,8 +731,9 @@
           <div class="note-item" data-id="${note.id}">
             <div>
               <div class="timestamp">${note.timestamp}</div>
-              <div>${note.text}</div>
+              <div>${note.showDecrypted ? atob(note.text) : note.text}</div>
             </div>
+        
             <button class="delete-note" data-id="${note.id}">✕</button>
           </div>
         `).join('');
@@ -714,14 +776,44 @@
               if (deadlineElem) {
                 deadlineElem.textContent = progress < 100 ? this.getRemainingTimeText(task) : 'Completed';
               }
-              if (progress >= 100 && !task.completed) {
-                task.completed = true;
-                if (!task.rewarded) {
-                  this.state.rewardPoints += 20;
-                  task.rewarded = true;
-                  this.updateRewardPointsDisplay();
+              // Check progress thresholds and speak a message when crossing them:
+              if (!task.beep50 && progress >= 50) {
+                task.beep50 = true;
+                this.speakMessage('You are at 50% come on lets....do it');
+              }
+              if (!task.beep70 && progress >= 70) {
+                task.beep70 = true;
+                this.speakMessage('You are at 70% u can..... do it');
+              }
+              if (!task.beep90 && progress >= 90) {
+                task.beep90 = true;
+                this.speakMessage('You are at 90% just one more step');
+              }
+              // When the timer is done and the user hasn't been prompted yet...
+              if (progress >= 100 && !task.completed && !task.prompted) {
+                task.prompted = true; // ensure we only ask once
+
+                // Play timer completion sound and send notification
+                this.playSound('timer.mp3');
+                if (Notification.permission === "granted") {
+                  new Notification("Task Timer Finished", { 
+                    body: `Task: ${task.text}\nDid you complete the task?`
+                  });
                 }
-                stateUpdated = true;
+                // Ask the user whether they completed the task
+                const userConfirmed = confirm(`The timer for "${task.text}" is finished.\nDid you complete the task?`);
+                if (userConfirmed) {
+                  this.completeTask(task.id);
+                } else {
+                  // Deduct 20 points if not completed
+                  this.state.rewardPoints -= 20;
+                  this.state.dailyPoints -= 20;
+                  task.aborted = true;
+                  task.abortTime = Date.now();
+                  this.updateUI();
+                  this.updateRewardPointsDisplay();
+                  this.saveState();
+                }
               }
             }
           });
@@ -730,10 +822,119 @@
         };
         requestAnimationFrame(updateProgress);
       }
+
+      // Function to play a sound given its source (used for timer.mp3 and periodic reminders)
+      playSound(src) {
+        const audio = new Audio(src);
+        audio.play();
+      }
+
+      // Function to speak a message using the Web Speech API
+      speakMessage(message) {
+        const utterance = new SpeechSynthesisUtterance(message);
+        utterance.rate = 1; // Adjust the rate if desired
+        speechSynthesis.speak(utterance);
+      }
+
+      // Function to show an achievement notification
+      showAchievement(message) {
+        const achievement = document.createElement('div');
+        achievement.textContent = message;
+        achievement.style.position = 'fixed';
+        achievement.style.top = '20px';
+        achievement.style.right = '20px';
+        achievement.style.background = 'var(--neon-pink)';
+        achievement.style.padding = '10px 20px';
+        achievement.style.borderRadius = '5px';
+        achievement.style.boxShadow = 'var(--glow)';
+        achievement.style.zIndex = 1000;
+        document.body.appendChild(achievement);
+        setTimeout(() => {
+          achievement.remove();
+        }, 3000);
+      }
+
+      // Function to show a tagda celebration animation with confetti, flash overlay, and animated overlay
+      showCelebration(message) {
+        // Trigger multiple confetti bursts
+        for (let i = 0; i < 3; i++) {
+          setTimeout(() => {
+            confetti({
+              particleCount: 100,
+              spread: 120,
+              origin: { x: Math.random(), y: Math.random() }
+            });
+          }, i * 200);
+        }
+        // Full-screen flash overlay
+        const flash = document.createElement('div');
+        flash.style.position = 'fixed';
+        flash.style.top = '0';
+        flash.style.left = '0';
+        flash.style.width = '100%';
+        flash.style.height = '100%';
+        flash.style.background = 'rgba(255,255,255,0.3)';
+        flash.style.zIndex = '999';
+        flash.style.opacity = '1';
+        flash.style.transition = 'opacity 1s ease-out';
+        document.body.appendChild(flash);
+        setTimeout(() => {
+          flash.style.opacity = '0';
+        }, 100);
+        setTimeout(() => {
+          flash.remove();
+        }, 1100);
+        // Animated celebration overlay
+        const celebration = document.createElement('div');
+        celebration.textContent = message;
+        celebration.style.position = 'fixed';
+        celebration.style.top = '50%';
+        celebration.style.left = '50%';
+        celebration.style.transform = 'translate(-50%, -50%) scale(0)';
+        celebration.style.background = 'linear-gradient(45deg, #ff0080, #ff8c00)';
+        celebration.style.padding = '40px 60px';
+        celebration.style.borderRadius = '15px';
+        celebration.style.boxShadow = '0 0 40px rgba(255, 255, 255, 0.8)';
+        celebration.style.zIndex = '1000';
+        celebration.style.fontSize = '3rem';
+        celebration.style.color = '#ffffff';
+        celebration.style.transition = 'transform 0.5s ease-out, opacity 0.5s ease-out';
+        celebration.style.opacity = '0';
+        document.body.appendChild(celebration);
+        setTimeout(() => {
+          celebration.style.transform = 'translate(-50%, -50%) scale(1)';
+          celebration.style.opacity = '1';
+        }, 100);
+        setTimeout(() => {
+          celebration.style.transform = 'translate(-50%, -50%) scale(0.5)';
+          celebration.style.opacity = '0';
+        }, 2000);
+        setTimeout(() => {
+          celebration.remove();
+        }, 2500);
+      }
+
+      // Request notification permission from the user
+      requestNotificationPermission() {
+        if ("Notification" in window && Notification.permission !== "granted") {
+          Notification.requestPermission();
+        }
+      }
+
+      // Function to play a beep sound every 5 minutes if there is an active task
+      startBeepReminder() {
+        setInterval(() => {
+          const activeTasks = this.state.tasks.filter(task => !task.completed && !task.aborted);
+          if (activeTasks.length > 0) {
+            this.playSound('beep.mp3');
+          }
+        }, 5 * 60 * 1000);
+      }
     }
 
     document.addEventListener('DOMContentLoaded', () => {
       const app = new DarkProductivityApp();
+      app.startBeepReminder();
       particlesJS('particles-js', {
         particles: {
           number: { value: 150 },
@@ -762,43 +963,5 @@
       });
     });
   </script>
-<!-- Code injected by live-server -->
-<script>
-	// <![CDATA[  <-- For SVG support
-	if ('WebSocket' in window) {
-		(function () {
-			function refreshCSS() {
-				var sheets = [].slice.call(document.getElementsByTagName("link"));
-				var head = document.getElementsByTagName("head")[0];
-				for (var i = 0; i < sheets.length; ++i) {
-					var elem = sheets[i];
-					var parent = elem.parentElement || head;
-					parent.removeChild(elem);
-					var rel = elem.rel;
-					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
-						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
-						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
-					}
-					parent.appendChild(elem);
-				}
-			}
-			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
-			var address = protocol + window.location.host + window.location.pathname + '/ws';
-			var socket = new WebSocket(address);
-			socket.onmessage = function (msg) {
-				if (msg.data == 'reload') window.location.reload();
-				else if (msg.data == 'refreshcss') refreshCSS();
-			};
-			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
-				console.log('Live reload enabled.');
-				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
-			}
-		})();
-	}
-	else {
-		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
-	}
-	// ]]>
-</script>
 </body>
 </html>
