@@ -1,320 +1,804 @@
 <!DOCTYPE html>
 <html lang="en">
+      <link rel="icon" href="imagess.jpg" type="image/jpg">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="imagess.jpg" type="image/jpg">
-    <title>Quantum Progress Tracker</title>
-    <style>
-        :root {
-            --primary: #6CFFEC;
-            --secondary: #7A4AFF;
-            --accent: #FF61D7;
-            --bg: #0A0E17;
-            --glass: rgba(255, 255, 255, 0.03);
-            --neon-glow: 0 0 15px;
-            --cyber-pink: #ff00ff;
-        }
-        :root {
-            --primary: #1af9ba;
-            --secondary: #ff6b6b;
-            --accent: #598cdc;
-            --bg: #0a0a0a;
-            --surface: #1a1a1a;
-            --text: #ffffff;
-            --glow: rgba(255, 0, 0, 0.3);
-        }
-        body {
-            font-family: 'Courier New', monospace;
-            background: var(--bg);
-            color: #E0E0E0;
-            min-height: 100vh;
-            padding: 2rem;
-            overflow-x: hidden;
-        
-            position: ;
-        }
+  <meta charset="UTF-8">
+  <title>FINAL TIMETABLE
 
-        .cyber-grid {
-            position: fixed;
-            width: 100vw;
-            height: 100vh;
-            background-image: 
-                linear-gradient(rgba(108, 255, 236, 0.03) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(108, 255, 236, 0.03) 1px, transparent 1px);
-            background-size: 40px 40px;
-            pointer-events: none;
-            z-index: -1;
-            opacity: 0.3;
-            animation: gridMove 20s linear infinite;
-        }
-
-        @keyframes gridMove {
-            0% { background-position: 0 0; }
-            100% { background-position: 40px 40px; }
-        }
-
-        .container {
-            max-width: 14000px;
-            margin: 0 auto;
-            backdrop-filter: blur(12px);
-            position: relative;
-            background: radial-gradient(circle at center, rgba(122,74,255,0.1) 0%, transparent 70%);
-        }
-
-        .title h1 {
-            font-size: 3rem;
-            color: transparent;
-            text-align: center;
-            margin-bottom: 2rem;
-            font-weight: 800;
-            letter-spacing: -1.5px;
-            text-shadow: 0 0 25px var(--primary);
-            background: linear-gradient(45deg, var(--primary), var(--cyber-pink));
-            -webkit-background-clip: text;
-            background-clip: text;
-            animation: titleGlow 2s ease-in-out infinite alternate;
-        }
-
-        @keyframes titleGlow {
-            0% { text-shadow: 0 0 15px var(--primary); }
-            100% { text-shadow: 0 0 35px var(--accent); }
-        }
-
-        .matrix-terminal {
-            background: linear-gradient(145deg, rgba(10,14,23,0.9), rgba(122,74,255,0.1));
-            border: 1px solid var(--secondary);
-            border-radius: 8px;
-            padding: 1.5rem;
-            margin-bottom: 3rem;
-            position: relative;
-            min-height: 80px;
-            box-shadow: 0 0 30px rgba(122,74,255,0.1);
-        }
-
-        .hologram-table {
-            /* ... अन्य स्टाइल्स ... */
-            overflow: hidden;
-            position: relative;
-            border: 1px solid rgba(108,255,236,0.1);
-            padding: 23px; /* Container के अंदर स्पेस के लिए */
-        }
-        
-        .hologram-table table {
-            width: 100%;
-            border-collapse: separate; /* यह जरूरी है */
-            border-spacing: 23px; /* सेल्स के बीच का गैप */
-            margin: -23px; /* Padding compensate करने के लिए */
-        }
-        
-        .hologram-table th,
-        .hologram-table td {
-            /* थोड़ा पैडिंग कम करें */
-            padding: 0.8rem;
-            position: relative;
-            background: rgba(108, 255, 236, 0.02);
-        }
-        
-        .hologram-table td:hover {
-            transform: scale(1.03); /* हॉवर एफेक्ट सुधारें */
-        }}
-
-        .hologram-table::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 50%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(108, 255, 236, 0.1), transparent);
-            animation: hologramScan 3s linear infinite;
-        }
-
-        @keyframes hologramScan {
-            0% { left: -100%; }
-            100% { left: 150%; }
-        }
-
-        th {
-            background: linear-gradient(45deg, rgba(122,74,255,0.2), transparent);
-            padding: 1.2rem;
-            font-weight: 600;
-            text-align: left;
-            color: var(--primary);
-            border-bottom: 2px solid var(--secondary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        td {
-            padding: 1rem;
-            text-align: center;
-            border-bottom: 1px solid rgba(108, 255, 236, 0.05);
-            transition: all 0.2s ease;
-            position: relative;
-            cursor: pointer;
-        }
-
-        .day-cell {
-            font-weight: 600;
-            color: var(--primary);
-            background: linear-gradient(90deg, rgb(68, 0, 255), transparent);
-            text-align: left;
-            text-shadow: 0 0 10px rgba(108,255,236,0.2);
-        }
-
-        .marked {
-            background: linear-gradient(45deg, rgba(16, 221, 194, 0.79), transparent);
-            box-shadow: inset 0 0 15px rgba(221, 255, 3, 0.916);
-        }
-
-        .marked::after {
-            content: '✓';
-            position:center;
-            right: 8px;
-            top: 50%;
-            transform: translateY(-50%);
-            color:rgb(10, 254, 10);
-            font-weight:bolder;
-            text-shadow: 0 0 10px var(--primary);
-            animation: checkPulse 1.5s infinite;
-        }
-
-        @keyframes checkPulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
-        }
-
-        .quantum-btn {
-            background: linear-gradient(45deg, var(--secondary), var(--accent));
-            color: white;
-            border: none;
-            padding: 1rem 2rem;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            box-shadow: 0 0 25px rgba(122,74,255,0.3);
-        }
-
-        .quantum-btn:hover {
-            transform: translateY(-2px) scale(1.05);
-            box-shadow: 0 0 35px rgba(255,97,215,0.5);
-        }
-
-        @media (max-width: 768px) {
-            body { padding: 1rem; }
-            .title h1 { font-size: 2rem; }
-            td { padding: 0.8rem; }
-            .quantum-btn { 
-                padding: 0.8rem 1.2rem;
-                font-size: 0.9rem;
-                bottom: 1rem;
-                right: 1rem;
-            }
-        }
-    </style>
+  </title>
+  <style>
+    /* Importing a modern monospaced font */
+    @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap');
+  
+    :root {
+      /* Base Colors & Effects */
+      --dark-bg: #000000;
+      --neon-purple: #0e4655;
+      --neon-pink: #00dbc9;
+      --neon-blue: #0cff04;
+      --accent: #00e5ff;
+      --glow: 0 0 20px rgba(255, 255, 255, 0.5);
+  
+      /* Typography & Sizing */
+      --font-primary: 'Fira Code', monospace;
+      --transition-speed: 0.3s;
+      --border-radius: 5px;
+      --panel-bg: rgba(0, 0, 0, 0.85);
+    }
+  
+    * {
+      box-sizing: border-box;
+    }
+  
+    body {
+      margin: 0;
+      background: var(--dark-bg);
+      min-height: 100vh;
+      font-family: var(--font-primary);
+      color: #ffffff;
+      overflow-x: hidden;
+      line-height: 1.6;
+      position: relative;
+    }
+  
+    /* Particle background container */
+    #particles-js {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+  
+    /* Subtle animated background effect using a radial gradient */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at center, rgba(255,255,255,0.05), transparent 70%);
+      z-index: -1;
+      animation: bgShift 10s ease infinite;
+    }
+  
+    @keyframes bgShift {
+      0% { transform: translate(-25%, -25%) scale(1); }
+      50% { transform: translate(-20%, -20%) scale(1.1); }
+      100% { transform: translate(-25%, -25%) scale(1); }
+    }
+  
+    .container {
+      position: relative;
+      z-index: 2;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+  
+    .panel {
+      background: var(--panel-bg);
+      border: 1px solid var(--neon-purple);
+      border-radius: 10px;
+      padding: 2rem;
+      margin: 2rem 0;
+      box-shadow: var(--glow);
+      animation: panelFadeIn 0.8s ease-out;
+    }
+  
+    @keyframes panelFadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+  
+    h1 {
+      text-align: center;
+      margin-bottom: 1rem;
+      font-size: 2.5rem;
+      text-shadow: 0 0 10px var(--neon-pink);
+      animation: textGlow 1.5s ease-in-out infinite alternate;
+    }
+  
+    @keyframes textGlow {
+      from {
+        text-shadow: 0 0 5px var(--neon-pink);
+      }
+      to {
+        text-shadow: 0 0 20px var(--neon-pink);
+      }
+    }
+  
+    h2 {
+      border-bottom: 1px solid var(--neon-purple);
+      padding-bottom: 0.5rem;
+      margin-bottom: 1rem;
+      font-size: 1.8rem;
+      position: relative;
+    }
+  
+    h2::after {
+      content: "";
+      position: absolute;
+      width: 50px;
+      height: 3px;
+      background: var(--neon-blue);
+      left: 0;
+      bottom: -5px;
+      animation: slideIn 1s ease-out;
+    }
+  
+    @keyframes slideIn {
+      from { transform: translateX(-100%); }
+      to { transform: translateX(0); }
+    }
+  
+    .cyber-line {
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--neon-purple), transparent);
+      margin: 2rem 0;
+    }
+  
+    .input-group {
+      display: grid;
+      grid-template-columns: 1fr auto auto auto;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+  
+    input, textarea, select {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid var(--neon-purple);
+      color: white;
+      padding: 12px;
+      border-radius: var(--border-radius);
+      transition: all var(--transition-speed) ease;
+      font-size: 1rem;
+    }
+  
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--neon-pink);
+      box-shadow: var(--glow);
+      outline: none;
+    }
+  
+    button {
+      background: linear-gradient(45deg, var(--neon-purple), var(--neon-pink));
+      border: none;
+      padding: 12px 24px;
+      color: white;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      text-transform: uppercase;
+      font-weight: bold;
+      letter-spacing: 1px;
+      font-size: 1rem;
+      box-shadow: var(--glow);
+    }
+  
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px var(--neon-blue);
+    }
+  
+    .empty {
+      text-align: center;
+      color: rgba(255, 255, 255, 0.6);
+      font-style: italic;
+      padding: 1rem;
+    }
+  
+    .task-list, .note-history {
+      display: grid;
+      gap: 1rem;
+    }
+  
+    .task-item, .note-item {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 1.5rem;
+      border-radius: 8px;
+      border-left: 4px solid var(--neon-purple);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      animation: taskAppear 0.5s ease;
+      position: relative;
+      overflow: hidden;
+    }
+  
+    @keyframes taskAppear {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  
+    /* Shine effect on task items when hovered */
+    .task-item::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(120deg, transparent, rgba(255,255,255,0.2), transparent);
+      transform: skewX(-25deg);
+    }
+  
+    .task-item:hover::before {
+      animation: shine 0.75s forwards;
+    }
+  
+    @keyframes shine {
+      from { left: -100%; }
+      to { left: 100%; }
+    }
+  
+    .priority-tag {
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.8em;
+      margin-bottom: 0.5rem;
+      display: inline-block;
+    }
+  
+    .low { background: rgba(0, 230, 118, 0.2); }
+    .medium { background: rgba(255, 214, 0, 0.2); }
+    .high { background: rgba(255, 23, 68, 0.2); }
+  
+    .deadline {
+      color: var(--accent);
+      font-size: 0.9em;
+      margin-top: 0.5rem;
+    }
+  
+    .progress-bar {
+      width: 100%;
+      height: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      margin-top: 0.5rem;
+    }
+  
+    .progress {
+      height: 100%;
+      background: linear-gradient(90deg, var(--neon-purple), var(--neon-pink));
+      width: 0;
+      transition: width 0.5s ease;
+    }
+  
+    .task-item button,
+    .note-item button {
+      background: rgba(255, 23, 68, 0.2);
+      border: 1px solid var(--neon-pink);
+      padding: 8px 16px;
+      border-radius: var(--border-radius);
+      transition: all var(--transition-speed) ease;
+      margin-left: 0.5rem;
+    }
+  
+    .task-item button:hover,
+    .note-item button:hover {
+      background: rgba(255, 23, 68, 0.5);
+      box-shadow: var(--glow);
+    }
+  
+    .reward-system {
+      margin-top: 2rem;
+      text-align: center;
+      animation: fadeIn 1s ease;
+    }
+  
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  
+    .reward-system h2 {
+      color: var(--neon-pink);
+      text-shadow: var(--glow);
+      margin-bottom: 1rem;
+    }
+  
+    .reward-points {
+      font-size: 1.5rem;
+      color: var(--accent);
+    }
+  
+    /* Task History Toggle Button */
+    #toggleHistoryBtn {
+      background: linear-gradient(45deg, var(--neon-pink), var(--neon-purple));
+      margin-bottom: 1rem;
+      width: 100%;
+    }
+  
+    /* Accordion effect for task history container */
+    .task-history {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease;
+    }
+    .task-history.open {
+      max-height: 1000px; /* adjust as needed */
+    }
+  
+    /* Different styling for aborted tasks */
+    .task-item.aborted {
+      border-left-color: #ff0000;
+      opacity: 0.85;
+    }
+  
+    /* Hover glow for task and note items */
+    .task-item:hover, .note-item:hover {
+      box-shadow: 0 0 30px var(--neon-blue);
+    }
+    
+    /* Additional Keyframe: Pulsate effect (apply the .pulsate class as needed) */
+    @keyframes pulsate {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.03); }
+      100% { transform: scale(1); }
+    }
+    
+    .pulsate {
+      animation: pulsate 1.5s infinite;
+    }
+    
+    /* Custom Scrollbar Styling for modern browsers */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: rgba(255,255,255,0.1);
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: var(--neon-purple);
+      border-radius: 4px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--neon-pink);
+    }
+  </style>
+  
+  <!-- Particles.js Library -->
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
 </head>
 <body>
-    <div class="cyber-grid"></div>
-    
-    <div class="container">
-        <div class="title">
-            <h1>QUANTUM PROGRESS MATRIX</h1>
-            <div class="matrix-terminal">
-                <div id="quote"></div>
-            </div>
-        </div>
+  <div id="particles-js"></div>
+  <div class="container">
+    <div class="panel">
+      <h1>MADE BY NOTURTYPE_ANASS</h1>
+      <div class="cyber-line"></div>
 
-        <div class="hologram-table">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Day</th>
-                        <th>Social Science</th>
-                        <th>Maths</th>
-                        <th>Science</th>
-                        <th>English</th>
-                        <th>Sanskrit</th>
-                        <th>Gujarati</th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody">
-                    <!-- Rows will be generated here -->
-                </tbody>
-            </table>
+      <!-- Active Missions Section -->
+      <div class="task-manager">
+        <h2>Active Missions</h2>
+        <div class="input-group">
+          <input type="text" id="taskInput" placeholder="Enter your mission...">
+          <select id="priority">
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+          </select>
+          <input type="number" id="taskTime" placeholder="Time (in minutes)" min="1">
+          <button id="addTaskBtn">Add Mission</button>
         </div>
+        <div class="task-list" id="taskList">
+          <!-- Active tasks will be rendered here -->
+        </div>
+      </div>
+
+      <div class="cyber-line"></div>
+
+      <!-- Task History Toggle Button -->
+      <button id="toggleHistoryBtn">Show Task History</button>
+      <!-- Task History Section -->
+      <div class="task-history" id="taskHistoryWrapper">
+        <h2>Task History</h2>
+        <div class="task-list" id="taskHistory">
+          <!-- Completed or aborted tasks will appear here -->
+        </div>
+      </div>
+
+      <div class="cyber-line"></div>
+
+      <!-- Note System Section -->
+      <div class="note-system">
+        <h2>Encrypted Notes</h2>
+        <div class="input-group" style="grid-template-columns: 1fr auto;">
+          <textarea id="noteInput" placeholder="Encrypted notes..."></textarea>
+          <button id="addNoteBtn">Add Note</button>
+        </div>
+        <div class="note-history" id="noteHistory">
+          <!-- Notes will be rendered here -->
+        </div>
+      </div>
+
+      <!-- Reward System Section -->
+      <div class="reward-system">
+        <h2>Reward Points</h2>
+        <div class="reward-points" id="rewardPoints">0</div>
+      </div>
     </div>
+  </div>
 
-    <button class="quantum-btn" onclick="resetProgress()">SYSTEM RESET</button>
+  <script>
+    class DarkProductivityApp {
+      constructor() {
+        this.state = {
+          tasks: JSON.parse(localStorage.getItem('tasks')) || [],
+          notes: JSON.parse(localStorage.getItem('notes')) || [],
+          rewardPoints: parseInt(localStorage.getItem('rewardPoints')) || 0,
+        };
 
-    <script>
-        const quotes = [
-            "Progress is progress, no matter how small.",
-            "Consistency is the key to mastery.",
-            "Every day is a new opportunity to grow.",
-            "Success is the sum of small efforts repeated.",
-            "The expert in anything was once a beginner."
-        ];
+        this.cacheDOM();
+        this.bindEvents();
+        this.updateUI();
+        this.updateRewardPointsDisplay();
+        this.startProgressUpdateLoop();
+      }
 
-        let savedProgress = JSON.parse(localStorage.getItem('quantum_progress')) || {};
-        const subjects = ['Social Science', 'Maths', 'Science', 'English', 'Sanskrit', 'Gujarati'];
-        const days = 30;
+      cacheDOM() {
+        // Active tasks elements
+        this.taskInput = document.getElementById('taskInput');
+        this.priority = document.getElementById('priority');
+        this.taskTime = document.getElementById('taskTime');
+        this.taskList = document.getElementById('taskList'); // Active missions
+        this.taskHistory = document.getElementById('taskHistory'); // Task history list
+        this.taskHistoryWrapper = document.getElementById('taskHistoryWrapper'); // Wrapper for toggle
+        // Note elements
+        this.noteInput = document.getElementById('noteInput');
+        this.noteHistory = document.getElementById('noteHistory');
+        // Buttons and reward display
+        this.addTaskBtn = document.getElementById('addTaskBtn');
+        this.addNoteBtn = document.getElementById('addNoteBtn');
+        this.toggleHistoryBtn = document.getElementById('toggleHistoryBtn');
+        this.rewardPointsDisplay = document.getElementById('rewardPoints');
+      }
 
-        // Initialize table
-        function initTable() {
-            const tbody = document.getElementById('tableBody');
-            
-            for (let day = 1; day <= days; day++) {
-                const row = document.createElement('tr');
-                row.innerHTML = `<td class="day-cell">Day ${day}</td>`;
-                
-                subjects.forEach(subject => {
-                    const cell = document.createElement('td');
-                    cell.dataset.day = day;
-                    cell.dataset.subject = subject;
-                    cell.className = savedProgress[`${day}-${subject}`] ? 'marked' : '';
-                    row.appendChild(cell);
-                });
-                
-                tbody.appendChild(row);
-            }
-        }
+      bindEvents() {
+        this.addTaskBtn.addEventListener('click', () => this.handleAddTask());
+        this.addNoteBtn.addEventListener('click', () => this.handleAddNote());
+        this.toggleHistoryBtn.addEventListener('click', () => this.toggleHistory());
 
-        // Toggle progress state
-        function toggleProgress(cell) {
-            cell.classList.toggle('marked');
-            const key = `${cell.dataset.day}-${cell.dataset.subject}`;
-            savedProgress[key] = cell.classList.contains('marked');
-            localStorage.setItem('quantum_progress', JSON.stringify(savedProgress));
-        }
-
-        // Reset all progress
-        function resetProgress() {
-            localStorage.removeItem('quantum_progress');
-            savedProgress = {};
-            document.querySelectorAll('td[data-day]').forEach(cell => {
-                cell.classList.remove('marked');
-            });
-        }
-
-        // Initialize click handlers
-        document.addEventListener('click', (e) => {
-            if (e.target.matches('td[data-day]')) {
-                toggleProgress(e.target);
-            }
+        // Add task on Enter key (if not typing in note textarea)
+        document.addEventListener('keypress', (e) => {
+          if (e.key === 'Enter' && document.activeElement !== this.noteInput) {
+            e.preventDefault();
+            this.handleAddTask();
+          }
         });
 
-        // Random quote display
-        document.getElementById('quote').textContent = quotes[Math.floor(Math.random() * quotes.length)];
+        // Delegate complete and abort actions for active tasks
+        this.taskList.addEventListener('click', (e) => {
+          if (e.target.classList.contains('complete-task')) {
+            const id = Number(e.target.dataset.id);
+            this.completeTask(id);
+          } else if (e.target.classList.contains('abort-task')) {
+            const id = Number(e.target.dataset.id);
+            this.abortTask(id);
+          }
+        });
 
-        // Initialize the table
-        initTable();
-    </script>
+        // Delegate deletion and detail toggling for tasks in history
+        this.taskHistory.addEventListener('click', (e) => {
+          if (e.target.classList.contains('delete-task')) {
+            const id = Number(e.target.dataset.id);
+            this.deleteTask(id);
+          } else {
+            const taskItem = e.target.closest('.task-item');
+            if (taskItem) {
+              taskItem.classList.toggle('expanded');
+            }
+          }
+        });
+
+        // Delegate note deletion
+        this.noteHistory.addEventListener('click', (e) => {
+          if (e.target.classList.contains('delete-note')) {
+            const id = Number(e.target.dataset.id);
+            this.deleteNote(id);
+          }
+        });
+      }
+
+      saveState() {
+        localStorage.setItem('tasks', JSON.stringify(this.state.tasks));
+        localStorage.setItem('notes', JSON.stringify(this.state.notes));
+        localStorage.setItem('rewardPoints', this.state.rewardPoints);
+      }
+
+      handleAddTask() {
+        const text = this.taskInput.value.trim();
+        const time = parseInt(this.taskTime.value);
+        if (!text || isNaN(time) || time <= 0) return;
+
+        const newTask = {
+          id: Date.now(),
+          text,
+          priority: this.priority.value,
+          time,
+          completed: false,
+          aborted: false,
+          progress: 0,
+          startTime: Date.now(),
+          endTime: Date.now() + time * 60000, // Convert minutes to ms
+          rewarded: false
+        };
+
+        this.state.tasks.push(newTask);
+        this.taskInput.value = '';
+        this.taskTime.value = '';
+        this.updateUI();
+        this.saveState();
+      }
+
+      completeTask(id) {
+        const task = this.state.tasks.find(t => t.id === id);
+        if (task && !task.completed && !task.aborted) {
+          task.completed = true;
+          task.progress = 100;
+          if (!task.rewarded) {
+            this.state.rewardPoints += 20;
+            task.rewarded = true;
+          }
+          this.updateUI();
+          this.updateRewardPointsDisplay();
+          this.saveState();
+        }
+      }
+
+      abortTask(id) {
+        const task = this.state.tasks.find(t => t.id === id);
+        if (task && !task.completed && !task.aborted) {
+          task.aborted = true;
+          task.abortTime = Date.now();
+          if (!task.rewarded) {
+            this.state.rewardPoints += 10;
+            task.rewarded = true;
+          }
+          this.updateUI();
+          this.updateRewardPointsDisplay();
+          this.saveState();
+        }
+      }
+
+      deleteTask(id) {
+        // Permanently remove task from state
+        this.state.tasks = this.state.tasks.filter(t => t.id !== id);
+        this.updateUI();
+        this.saveState();
+      }
+
+      handleAddNote() {
+        const text = this.noteInput.value.trim();
+        if (!text) return;
+
+        const newNote = {
+          id: Date.now(),
+          text,
+          timestamp: new Date().toLocaleString()
+        };
+
+        this.state.notes.unshift(newNote);
+        this.noteInput.value = '';
+        this.updateUI();
+        this.saveState();
+      }
+
+      deleteNote(id) {
+        this.state.notes = this.state.notes.filter(note => note.id !== id);
+        this.updateUI();
+        this.saveState();
+      }
+
+      updateRewardPointsDisplay() {
+        this.rewardPointsDisplay.textContent = this.state.rewardPoints;
+      }
+
+      getRemainingTimeText(task) {
+        const now = Date.now();
+        const minutesRemaining = Math.max(Math.floor((task.endTime - now) / 60000), 0);
+        return `${minutesRemaining} minute${minutesRemaining === 1 ? '' : 's'} remaining`;
+      }
+
+      renderActiveTasks() {
+        const activeTasks = this.state.tasks.filter(task => !task.completed && !task.aborted);
+        if (activeTasks.length === 0) {
+          this.taskList.innerHTML = `<p class="empty">No active missions. Add one!</p>`;
+          return;
+        }
+        this.taskList.innerHTML = activeTasks.map(task => `
+          <div class="task-item" data-id="${task.id}">
+            <div>
+              <div class="priority-tag ${task.priority}">${task.priority.toUpperCase()}</div>
+              <span>${task.text}</span>
+              <div class="deadline" id="deadline-${task.id}">
+                ${this.getRemainingTimeText(task)}
+              </div>
+              <div class="progress-bar">
+                <div class="progress" id="progress-${task.id}" style="width: ${task.progress}%"></div>
+              </div>
+            </div>
+            <div>
+              <button class="complete-task" data-id="${task.id}">✓</button>
+              <button class="abort-task" data-id="${task.id}">✕</button>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      renderTaskHistory() {
+        // Render tasks that are either completed or aborted
+        const historyTasks = this.state.tasks.filter(task => task.completed || task.aborted);
+        if (historyTasks.length === 0) {
+          this.taskHistory.innerHTML = `<p class="empty">No completed or aborted missions yet.</p>`;
+          return;
+        }
+        this.taskHistory.innerHTML = historyTasks.map(task => `
+          <div class="task-item ${task.completed ? 'completed' : 'aborted'}" data-id="${task.id}">
+            <div>
+              <div class="priority-tag ${task.priority}">${task.priority.toUpperCase()}</div>
+              <span>${task.text}</span>
+              <div class="deadline">
+                ${task.completed ? 'Completed' : 'Aborted'}
+              </div>
+              <div class="extra-details">
+                <div>Started: ${new Date(task.startTime).toLocaleString()}</div>
+                <div>
+                  ${task.completed 
+                    ? 'Completed: ' + new Date(task.endTime).toLocaleString() 
+                    : 'Aborted: ' + new Date(task.abortTime).toLocaleString()}
+                </div>
+              </div>
+            </div>
+            <div>
+              <button class="delete-task" data-id="${task.id}">✕</button>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      renderNotes() {
+        if (this.state.notes.length === 0) {
+          this.noteHistory.innerHTML = `<p class="empty">No encrypted notes yet.</p>`;
+          return;
+        }
+        this.noteHistory.innerHTML = this.state.notes.map(note => `
+          <div class="note-item" data-id="${note.id}">
+            <div>
+              <div class="timestamp">${note.timestamp}</div>
+              <div>${note.text}</div>
+            </div>
+            <button class="delete-note" data-id="${note.id}">✕</button>
+          </div>
+        `).join('');
+      }
+
+      updateUI() {
+        this.renderActiveTasks();
+        this.renderTaskHistory();
+        this.renderNotes();
+      }
+
+      toggleHistory() {
+        if (this.taskHistoryWrapper.classList.contains('open')) {
+          this.taskHistoryWrapper.classList.remove('open');
+          this.toggleHistoryBtn.textContent = "Show Task History";
+        } else {
+          this.taskHistoryWrapper.classList.add('open');
+          this.toggleHistoryBtn.textContent = "Hide Task History";
+        }
+      }
+
+      startProgressUpdateLoop() {
+        const updateProgress = () => {
+          const now = Date.now();
+          let stateUpdated = false;
+          this.state.tasks.forEach(task => {
+            if (!task.completed && !task.aborted) {
+              const totalTime = task.endTime - task.startTime;
+              const elapsed = now - task.startTime;
+              const progress = Math.min((elapsed / totalTime) * 100, 100);
+              if (progress !== task.progress) {
+                task.progress = progress;
+                stateUpdated = true;
+              }
+              const progressElem = document.getElementById(`progress-${task.id}`);
+              if (progressElem) {
+                progressElem.style.width = `${progress}%`;
+              }
+              const deadlineElem = document.getElementById(`deadline-${task.id}`);
+              if (deadlineElem) {
+                deadlineElem.textContent = progress < 100 ? this.getRemainingTimeText(task) : 'Completed';
+              }
+              if (progress >= 100 && !task.completed) {
+                task.completed = true;
+                if (!task.rewarded) {
+                  this.state.rewardPoints += 20;
+                  task.rewarded = true;
+                  this.updateRewardPointsDisplay();
+                }
+                stateUpdated = true;
+              }
+            }
+          });
+          if (stateUpdated) this.saveState();
+          requestAnimationFrame(updateProgress);
+        };
+        requestAnimationFrame(updateProgress);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const app = new DarkProductivityApp();
+      particlesJS('particles-js', {
+        particles: {
+          number: { value: 150 },
+          color: { value: '#8a2be2' },
+          shape: { type: 'circle' },
+          opacity: { value: 0.5 },
+          size: { value: 2 },
+          move: {
+            enable: true,
+            speed: 1.5,
+            direction: 'none',
+            random: true,
+            straight: false,
+            out_mode: 'bounce',
+            bounce: true
+          }
+        },
+        interactivity: {
+          detect_on: 'canvas',
+          events: {
+            onhover: { enable: true, mode: 'grab' },
+            onclick: { enable: true, mode: 'push' },
+            resize: true
+          }
+        }
+      });
+    });
+  </script>
+<!-- Code injected by live-server -->
+<script>
+	// <![CDATA[  <-- For SVG support
+	if ('WebSocket' in window) {
+		(function () {
+			function refreshCSS() {
+				var sheets = [].slice.call(document.getElementsByTagName("link"));
+				var head = document.getElementsByTagName("head")[0];
+				for (var i = 0; i < sheets.length; ++i) {
+					var elem = sheets[i];
+					var parent = elem.parentElement || head;
+					parent.removeChild(elem);
+					var rel = elem.rel;
+					if (elem.href && typeof rel != "string" || rel.length == 0 || rel.toLowerCase() == "stylesheet") {
+						var url = elem.href.replace(/(&|\?)_cacheOverride=\d+/, '');
+						elem.href = url + (url.indexOf('?') >= 0 ? '&' : '?') + '_cacheOverride=' + (new Date().valueOf());
+					}
+					parent.appendChild(elem);
+				}
+			}
+			var protocol = window.location.protocol === 'http:' ? 'ws://' : 'wss://';
+			var address = protocol + window.location.host + window.location.pathname + '/ws';
+			var socket = new WebSocket(address);
+			socket.onmessage = function (msg) {
+				if (msg.data == 'reload') window.location.reload();
+				else if (msg.data == 'refreshcss') refreshCSS();
+			};
+			if (sessionStorage && !sessionStorage.getItem('IsThisFirstTime_Log_From_LiveServer')) {
+				console.log('Live reload enabled.');
+				sessionStorage.setItem('IsThisFirstTime_Log_From_LiveServer', true);
+			}
+		})();
+	}
+	else {
+		console.error('Upgrade your browser. This Browser is NOT supported WebSocket for Live-Reloading.');
+	}
+	// ]]>
+</script>
 </body>
 </html>
