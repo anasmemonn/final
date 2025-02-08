@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-          <link rel="icon" href="isagi.jpg" type="image/jpg">
+  <link rel="icon" href="isagi.jpg" type="image/jpg">
   <meta charset="UTF-8">
   <title>FINAL TIMETABLE</title>
   <style>
@@ -1078,45 +1078,72 @@
           });
         }
   
+       
+       
+        
         startBeepReminder() {
-          setInterval(() => {
+          if (this.beepTimeout) {
+            clearTimeout(this.beepTimeout);
+          }
+        
+          const beepFunction = () => {
             const activeTasks = this.state.tasks.filter(task => !task.completed && !task.aborted);
+        
             if (activeTasks.length > 0) {
+              console.log("Beep! 🔊"); // Debugging ke liye
               this.playSound('beep.mp3');
             }
-          }, 5 * 60 * 1000);
+        
+            // अगला beep **सटीक 7 मिनट** बाद बजेगा
+            this.beepTimeout = setTimeout(beepFunction, 7 * 60 * 1000);
+          };
+        
+          // सबसे पहले function call करो
+          beepFunction();
+        }
+        
+        componentWillUnmount() {
+          if (this.beepTimeout) {
+            clearTimeout(this.beepTimeout);
+          }
         }
       }
-  
-      document.addEventListener('DOMContentLoaded', () => {
-        const app = new DarkProductivityApp();
-        particlesJS('particles-js', {
-          particles: {
-            number: { value: 150 },
-            color: { value: '#8a2be2' },
-            shape: { type: 'circle' },
-            opacity: { value: 0.5 },
-            size: { value: 2 },
-            move: {
-              enable: true,
-              speed: 1.5,
-              direction: 'none',
-              random: true,
-              straight: false,
-              out_mode: 'bounce',
-              bounce: true
-            }
-          },
-          interactivity: {
-            detect_on: 'canvas',
-            events: {
-              onhover: { enable: true, mode: 'grab' },
-              onclick: { enable: true, mode: 'push' },
-              resize: true
-            }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+          const app = new DarkProductivityApp();
+        
+          if (typeof particlesJS !== "undefined") {
+            particlesJS('particles-js', {
+              particles: {
+                number: { value: 150 },
+                color: { value: '#8a2be2' },
+                shape: { type: 'circle' },
+                opacity: { value: 0.5 },
+                size: { value: 2 },
+                move: {
+                  enable: true,
+                  speed: 1.5,
+                  direction: 'none',
+                  random: true,
+                  straight: false,
+                  out_mode: 'bounce',
+                  bounce: true
+                }
+              },
+              interactivity: {
+                detect_on: 'canvas',
+                events: {
+                  onhover: { enable: true, mode: 'grab' },
+                  onclick: { enable: true, mode: 'push' },
+                  resize: true
+                }
+              }
+            });
+          } else {
+            console.error("particlesJS is not loaded!");
           }
         });
-      });
+        
     </script>
 </body>
 </html>
