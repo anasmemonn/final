@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-      <link rel="icon" href="isagi.jpg" type="image/jpg">
+          <link rel="icon" href="isagi.jpg" type="image/jpg">
   <meta charset="UTF-8">
   <title>FINAL TIMETABLE</title>
   <style>
@@ -9,21 +9,61 @@
     @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap');
 
     :root {
-      /* Base Colors & Effects */
-      --dark-bg: #000000;
-      --neon-purple: #0e4655;
-      --neon-pink: #00dbc9;
-      --neon-blue: #0cff04;
-      --accent: #00e5ff;
-      --glow: 0 0 20px rgba(255, 255, 255, 0.5);
-
-      /* Typography & Sizing */
-      --font-primary: 'Fira Code', monospace;
+      /* === Futuristic Color Palette === */
+      --dark-bg: #000000; /* Deep space black */
+      --neon-purple: #8a2be2; /* Vibrant purple */
+      --neon-pink: #ff0000; /* Electric pink */
+      --neon-blue: #00ffff; /* Cyan blue */
+      --accent: #00e5ff; /* Bright teal */
+      --hologram-green: #39ff14; /* Matrix green */
+      --cyber-yellow: #ffd700; /* Futuristic gold */
+      --glow: 0 0 20px rgba(255, 255, 255, 0.5); /* Base glow effect */
+    
+      /* === Advanced Effects === */
+      --hologram-gradient: linear-gradient(
+        135deg,
+        var(--neon-purple) 0%,
+        var(--neon-pink) 50%,
+        var(--neon-blue) 100%
+      );
+      --neon-glow: 0 0 10px var(--neon-purple), 0 0 20px var(--neon-pink),
+        0 0 30px var(--neon-blue), 0 0 40px var(--accent);
+      --pulse-animation: pulse 2s infinite ease-in-out;
+      --scanline-animation: scanline 5s linear infinite;
+    
+      /* === Typography & Sizing === */
+      --font-primary: "Fira Code", monospace;
+      --font-secondary: "Orbitron", sans-serif; /* Futuristic font */
       --transition-speed: 0.3s;
-      --border-radius: 5px;
-      --panel-bg: rgba(0, 0, 0, 0.85);
+      --border-radius: 12px; /* Rounded futuristic edges */
+      --panel-bg: rgba(0, 0, 0, 0.9); /* Semi-transparent black */
+      --glass-effect: rgba(255, 255, 255, 0.1); /* Glassmorphism effect */
+      --blur-effect: blur(10px); /* Blur for glass effect */
     }
-
+    
+    /* === Keyframes for Animations === */
+    @keyframes pulse {
+      0% {
+        box-shadow: var(--neon-glow);
+      }
+      50% {
+        box-shadow: 0 0 30px var(--neon-purple), 0 0 50px var(--neon-pink),
+          0 0 70px var(--neon-blue), 0 0 90px var(--accent);
+      }
+      100% {
+        box-shadow: var(--neon-glow);
+      }
+    }
+    
+    @keyframes scanline {
+      0% {
+        background-position: 0 0;
+      }
+      100% {
+        background-position: 0 100%;
+      }
+    }
+    
     * { box-sizing: border-box; }
 
     body {
@@ -447,7 +487,7 @@
       <!-- Reward System Section -->
       <div class="reward-system">
         <h2>Reward Points</h2>
-        <div class="reward-points" id="rewardPoints">0</div>
+
         <div id="dailyPoints">Daily Points: 0/100</div>
       </div>
     </div>
@@ -678,7 +718,7 @@
         }
   
         updateRewardPointsDisplay() {
-          this.rewardPointsDisplay.textContent = this.state.rewardPoints;
+         
           this.dailyPointsDisplay.textContent = `Daily Points: ${this.state.dailyPoints}/100`;
           if (this.state.dailyPoints >= 100 && !this.state.dailyGoalAchieved) {
             this.showAchievement('Daily Goal Achieved!');
@@ -735,7 +775,8 @@
               const diff = task.actualCompletionTime - task.startTime;
               const minutes = Math.floor(diff / 60000);
               const seconds = Math.floor((diff % 60000) / 1000);
-              timingInfo = `Completed in ${minutes} min ${seconds} sec`;
+            timingInfo = `Completed in ${minutes} min ${seconds} sec from ${task.time} min`;
+
             } else if (task.aborted) {
               timingInfo = 'Aborted at ' + new Date(task.abortTime).toLocaleTimeString();
             }
