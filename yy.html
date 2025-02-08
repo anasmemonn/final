@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <link rel="icon" href="isagi.jpg" type="image/jpg">
+      <link rel="icon" href="isagi.jpg" type="image/jpg">
   <meta charset="UTF-8">
   <title>FINAL TIMETABLE</title>
   <style>
-    /* Importing a modern monospaced font */
+    /* Import a modern monospaced font */
     @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap');
-  
+
     :root {
       /* Base Colors & Effects */
       --dark-bg: #000000;
@@ -16,29 +16,27 @@
       --neon-blue: #0cff04;
       --accent: #00e5ff;
       --glow: 0 0 20px rgba(255, 255, 255, 0.5);
-  
+
       /* Typography & Sizing */
       --font-primary: 'Fira Code', monospace;
       --transition-speed: 0.3s;
       --border-radius: 5px;
       --panel-bg: rgba(0, 0, 0, 0.85);
     }
-  
-    * {
-      box-sizing: border-box;
-    }
-  
+
+    * { box-sizing: border-box; }
+
     body {
       margin: 0;
       background: var(--dark-bg);
       min-height: 100vh;
       font-family: var(--font-primary);
-      color: #ffffff;
+      color: #fff;
       overflow-x: hidden;
       line-height: 1.6;
       position: relative;
     }
-  
+
     /* Particle background container */
     #particles-js {
       position: fixed;
@@ -46,8 +44,8 @@
       height: 100%;
       z-index: 0;
     }
-  
-    /* Subtle animated background effect using a radial gradient */
+
+    /* Animated radial background */
     body::before {
       content: "";
       position: fixed;
@@ -59,13 +57,12 @@
       z-index: -1;
       animation: bgShift 10s ease infinite;
     }
-  
     @keyframes bgShift {
       0% { transform: translate(-25%, -25%) scale(1); }
       50% { transform: translate(-20%, -20%) scale(1.1); }
       100% { transform: translate(-25%, -25%) scale(1); }
     }
-  
+
     .container {
       position: relative;
       z-index: 2;
@@ -73,7 +70,7 @@
       margin: 0 auto;
       padding: 2rem;
     }
-  
+
     .panel {
       background: var(--panel-bg);
       border: 1px solid var(--neon-purple);
@@ -83,12 +80,11 @@
       box-shadow: var(--glow);
       animation: panelFadeIn 0.8s ease-out;
     }
-  
     @keyframes panelFadeIn {
       from { opacity: 0; transform: scale(0.95); }
       to { opacity: 1; transform: scale(1); }
     }
-  
+
     h1 {
       text-align: center;
       margin-bottom: 1rem;
@@ -96,12 +92,11 @@
       text-shadow: 0 0 10px var(--neon-pink);
       animation: textGlow 1.5s ease-in-out infinite alternate;
     }
-  
     @keyframes textGlow {
       from { text-shadow: 0 0 5px var(--neon-pink); }
       to { text-shadow: 0 0 20px var(--neon-pink); }
     }
-  
+
     h2 {
       border-bottom: 1px solid var(--neon-purple);
       padding-bottom: 0.5rem;
@@ -109,7 +104,6 @@
       font-size: 1.8rem;
       position: relative;
     }
-  
     h2::after {
       content: "";
       position: absolute;
@@ -120,27 +114,25 @@
       bottom: -5px;
       animation: slideIn 1s ease-out;
     }
-  
     @keyframes slideIn {
       from { transform: translateX(-100%); }
       to { transform: translateX(0); }
     }
-  
+
     .cyber-line {
       height: 2px;
       background: linear-gradient(90deg, transparent, var(--neon-purple), transparent);
       margin: 2rem 0;
     }
-  
+
     .input-group {
       display: grid;
       grid-template-columns: 1fr auto auto auto;
       gap: 1rem;
       margin-bottom: 2rem;
     }
-  
     input, textarea, select {
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(255,255,255,0.1);
       border: 1px solid var(--neon-purple);
       color: white;
       padding: 12px;
@@ -148,13 +140,11 @@
       transition: all var(--transition-speed) ease;
       font-size: 1rem;
     }
-  
     input:focus, textarea:focus, select:focus {
       border-color: var(--neon-pink);
       box-shadow: var(--glow);
       outline: none;
     }
-  
     button {
       background: linear-gradient(45deg, var(--neon-purple), var(--neon-pink));
       border: none;
@@ -169,26 +159,25 @@
       font-size: 1rem;
       box-shadow: var(--glow);
     }
-  
     button:hover {
       transform: scale(1.05);
       box-shadow: 0 0 25px var(--neon-blue);
     }
-  
+
     .empty {
       text-align: center;
-      color: rgba(255, 255, 255, 0.6);
+      color: rgba(255,255,255,0.6);
       font-style: italic;
       padding: 1rem;
     }
-  
+
     .task-list, .note-history {
       display: grid;
       gap: 1rem;
     }
-  
+
     .task-item, .note-item {
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(255,255,255,0.05);
       padding: 1.5rem;
       border-radius: 8px;
       border-left: 4px solid var(--neon-purple);
@@ -199,13 +188,12 @@
       position: relative;
       overflow: hidden;
     }
-  
     @keyframes taskAppear {
       from { opacity: 0; transform: translateY(20px); }
       to { opacity: 1; transform: translateY(0); }
     }
-  
-    /* Shine effect on task items when hovered */
+
+    /* Shine effect on task items */
     .task-item::before {
       content: "";
       position: absolute;
@@ -216,16 +204,14 @@
       background: linear-gradient(120deg, transparent, rgba(255,255,255,0.2), transparent);
       transform: skewX(-25deg);
     }
-  
     .task-item:hover::before {
       animation: shine 0.75s forwards;
     }
-  
     @keyframes shine {
       from { left: -100%; }
       to { left: 100%; }
     }
-  
+
     .priority-tag {
       padding: 4px 8px;
       border-radius: 4px;
@@ -233,175 +219,183 @@
       margin-bottom: 0.5rem;
       display: inline-block;
     }
-  
-    .low { background: rgba(0, 230, 118, 0.2); }
-    .medium { background: rgba(255, 214, 0, 0.2); }
-    .high { background: rgba(255, 23, 68, 0.2); }
-  
+    .low { background: rgba(0,230,118,0.2); }
+    .medium { background: rgba(255,214,0,0.2); }
+    .high { background: rgba(255,23,68,0.2); }
+
     .deadline {
       color: var(--accent);
       font-size: 0.9em;
       margin-top: 0.5rem;
     }
-  
+
     .progress-bar {
       width: 100%;
       height: 10px;
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(255,255,255,0.1);
       border-radius: var(--border-radius);
       overflow: hidden;
       margin-top: 0.5rem;
     }
-  
     .progress {
       height: 100%;
       background: linear-gradient(90deg, var(--neon-purple), var(--neon-pink));
       width: 0;
       transition: width 0.5s ease;
     }
-  
+
     .task-item button,
     .note-item button {
-      background: rgba(255, 23, 68, 0.2);
+      background: rgba(255,23,68,0.2);
       border: 1px solid var(--neon-pink);
       padding: 8px 16px;
       border-radius: var(--border-radius);
       transition: all var(--transition-speed) ease;
       margin-left: 0.5rem;
     }
-  
     .task-item button:hover,
     .note-item button:hover {
-      background: rgba(255, 23, 68, 0.5);
+      background: rgba(255,23,68,0.5);
       box-shadow: var(--glow);
     }
-  
+
     .reward-system {
       margin-top: 2rem;
       text-align: center;
       animation: fadeIn 1s ease;
     }
-  
     @keyframes fadeIn {
       from { opacity: 0; }
       to { opacity: 1; }
     }
-  
     .reward-system h2 {
       color: var(--neon-pink);
       text-shadow: var(--glow);
       margin-bottom: 1rem;
     }
-  
     .reward-points {
       font-size: 1.5rem;
       color: var(--accent);
     }
-    
     /* Daily points display */
     #dailyPoints {
       font-size: 1.2rem;
       color: var(--neon-blue);
       margin-top: 0.5rem;
     }
-  
-    /* Task History Toggle Button */
-    #toggleHistoryBtn {
-      background: linear-gradient(45deg, var(--neon-pink), var(--neon-purple));
-      margin-bottom: 1rem;
-      width: 100%;
+    
+    /* Center the toggle buttons */
+    #toggleHistoryBtn, #toggleNotesBtn {
+      display: block;
+      margin: 1rem auto;
     }
-  
-    /* Accordion effect for task history container */
+    
+    /* Settings Icon */
+    #settingsIcon {
+      position: fixed;
+      top: 750px;
+      right: 10px;
+      font-size: 2rem;
+      cursor: pointer;
+      z-index: 1001;
+    }
+    
+    /* Settings container */
+    #settingsContainer {
+      display: none;
+      position: fixed;
+      top: 50px;
+      right: 10px;
+      background: var(--panel-bg);
+      border: 1px solid var(--neon-purple);
+      padding: 1rem;
+      border-radius: 8px;
+      z-index: 1000;
+    }
+    #settingsContainer label {
+      display: block;
+      margin-bottom: 0.5rem;
+    }
+    #settingsContainer button {
+      margin-top: 0.5rem;
+    }
+    
+    /* Accordion effect for task history */
     .task-history {
       max-height: 0;
       overflow: hidden;
       transition: max-height 0.4s ease;
     }
     .task-history.open {
-      max-height: 1000px; /* adjust as needed */
+      max-height: 1000px;
     }
-  
-    /* Different styling for aborted tasks */
+    
+    /* Aborted task styling */
     .task-item.aborted {
       border-left-color: #ff0000;
       opacity: 0.85;
     }
-  
-    /* Hover glow for task and note items */
+    
+    /* Hover glow */
     .task-item:hover, .note-item:hover {
       box-shadow: 0 0 30px var(--neon-blue);
     }
     
-    /* Additional Keyframe: Pulsate effect (apply the .pulsate class as needed) */
     @keyframes pulsate {
       0% { transform: scale(1); }
       50% { transform: scale(1.03); }
       100% { transform: scale(1); }
     }
-    
     .pulsate {
       animation: pulsate 1.5s infinite;
     }
     
-    /* Custom Scrollbar Styling for modern browsers */
-    ::-webkit-scrollbar {
-      width: 8px;
-    }
-    
-    ::-webkit-scrollbar-track {
-      background: rgba(255,255,255,0.1);
-    }
-    
+    /* Custom Scrollbar Styling */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: rgba(255,255,255,0.1); }
     ::-webkit-scrollbar-thumb {
       background: var(--neon-purple);
       border-radius: 4px;
     }
+    ::-webkit-scrollbar-thumb:hover { background: var(--neon-pink); }
     
-    ::-webkit-scrollbar-thumb:hover {
-      background: var(--neon-pink);
-    }
-
     /* Responsive adjustments for mobile devices */
     @media (max-width: 600px) {
-      .container {
-        padding: 1rem;
-      }
-      h1 {
-        font-size: 2rem;
-      }
-      h2 {
-        font-size: 1.5rem;
-      }
-      .input-group {
-        grid-template-columns: 1fr auto;
-      }
-      button {
-        padding: 10px 20px;
-        font-size: 0.9rem;
-      }
-      .task-item, .note-item {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      .task-item > div:last-child, .note-item > button {
-        margin-top: 0.5rem;
-      }
+      .container { padding: 1rem; }
+      h1 { font-size: 2rem; }
+      h2 { font-size: 1.5rem; }
+      .input-group { grid-template-columns: 1fr auto; }
+      button { padding: 10px 20px; font-size: 0.9rem; }
+      .task-item, .note-item { flex-direction: column; align-items: flex-start; }
+      .task-item > div:last-child, .note-item > button { margin-top: 0.5rem; }
     }
   </style>
   
+  
   <!-- Particles.js Library -->
   <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-  <!-- Canvas-confetti Library for celebration -->
+  <!-- Canvas-confetti Library for celebrations -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
 </head>
 <body>
+  <!-- Settings Icon -->
+  <div id="settingsIcon">⚙️</div>
+  <!-- Settings Panel -->
+  <div id="settingsContainer">
+    <label>
+      <input type="checkbox" id="voiceToggle" checked>
+      Enable Voice Notifications
+    </label>
+    <button id="clearHistoryBtn">Clear Task History</button>
+    <button id="resetDailyBtn">Reset Daily Points</button>
+  </div>
+  
   <div id="particles-js"></div>
   <div class="container">
     <div class="panel">
       <h1>MADE BY NOTURTYPE_ANASS</h1>
       <div class="cyber-line"></div>
-
+      
       <!-- Active Missions Section -->
       <div class="task-manager">
         <h2>Active Missions</h2>
@@ -416,24 +410,23 @@
           <button id="addTaskBtn">Add Mission</button>
         </div>
         <div class="task-list" id="taskList">
-          <!-- Active tasks will be rendered here -->
+          <!-- Active tasks rendered here -->
         </div>
       </div>
-
+      
       <div class="cyber-line"></div>
-
-      <!-- Task History Toggle Button -->
-      <button id="toggleHistoryBtn">Show Task History</button>
+      
       <!-- Task History Section -->
+      <button id="toggleHistoryBtn">Show Task History</button>
       <div class="task-history" id="taskHistoryWrapper">
         <h2>Task History</h2>
         <div class="task-list" id="taskHistory">
-          <!-- Completed or aborted tasks will appear here -->
+          <!-- Completed/aborted tasks rendered here -->
         </div>
       </div>
-
+      
       <div class="cyber-line"></div>
-
+      
       <!-- Notes Section (hidden by default) -->
       <button id="toggleNotesBtn">Show Notes</button>
       <div id="notesContainer" style="display: none;">
@@ -444,11 +437,13 @@
             <button id="addNoteBtn">Add Note</button>
           </div>
           <div class="note-history" id="noteHistory">
-            <!-- Notes will be rendered here with only a toggle (Show/Hide) -->
+            <!-- Notes rendered here with Show/Hide toggle -->
           </div>
         </div>
       </div>
-
+      
+      <div class="cyber-line"></div>
+      
       <!-- Reward System Section -->
       <div class="reward-system">
         <h2>Reward Points</h2>
@@ -458,576 +453,629 @@
     </div>
   </div>
 
-  <script>
-    class DarkProductivityApp {
-      constructor() {
-        this.state = {
-          tasks: JSON.parse(localStorage.getItem('tasks')) || [],
-          notes: JSON.parse(localStorage.getItem('notes')) || [],
-          rewardPoints: parseInt(localStorage.getItem('rewardPoints')) || 0,
-          dailyPoints: parseInt(localStorage.getItem('dailyPoints')) || 0,
-          dailyDate: localStorage.getItem('dailyDate') || new Date().toLocaleDateString(),
-          dailyGoalAchieved: false
-        };
-
-        // Reset daily points if the date has changed
-        const today = new Date().toLocaleDateString();
-        if (this.state.dailyDate !== today) {
-          this.state.dailyPoints = 0;
-          this.state.dailyDate = today;
-          this.state.dailyGoalAchieved = false;
+    <script>
+      class DarkProductivityApp {
+        constructor() {
+          this.state = {
+            tasks: JSON.parse(localStorage.getItem('tasks')) || [],
+            notes: JSON.parse(localStorage.getItem('notes')) || [],
+            rewardPoints: parseInt(localStorage.getItem('rewardPoints')) || 0,
+            dailyPoints: parseInt(localStorage.getItem('dailyPoints')) || 0,
+            dailyDate: localStorage.getItem('dailyDate') || new Date().toLocaleDateString(),
+            dailyGoalAchieved: false
+          };
+          this.config = {
+            voiceEnabled: JSON.parse(localStorage.getItem('voiceEnabled')) ?? true
+          };
+  
+          // Reset daily points if date changes
+          const today = new Date().toLocaleDateString();
+          if (this.state.dailyDate !== today) {
+            this.state.dailyPoints = 0;
+            this.state.dailyDate = today;
+            this.state.dailyGoalAchieved = false;
+            this.saveState();
+          }
+  
+          this.cacheDOM();
+          this.bindEvents();
+          this.updateUI();
+          this.updateRewardPointsDisplay();
+          this.startProgressUpdateLoop();
+          this.startBeepReminder();
+          this.initBackgroundAudio();
+          this.requestNotificationPermission();
+          this.setupVisibilityChange();
+        }
+  
+        cacheDOM() {
+          this.taskInput = document.getElementById('taskInput');
+          this.priority = document.getElementById('priority');
+          this.taskTime = document.getElementById('taskTime');
+          this.taskList = document.getElementById('taskList');
+          this.taskHistory = document.getElementById('taskHistory');
+          this.taskHistoryWrapper = document.getElementById('taskHistoryWrapper');
+          this.noteInput = document.getElementById('noteInput');
+          this.noteHistory = document.getElementById('noteHistory');
+          this.addTaskBtn = document.getElementById('addTaskBtn');
+          this.addNoteBtn = document.getElementById('addNoteBtn');
+          this.toggleHistoryBtn = document.getElementById('toggleHistoryBtn');
+          this.toggleNotesBtn = document.getElementById('toggleNotesBtn');
+          this.settingsIcon = document.getElementById('settingsIcon');
+          this.settingsContainer = document.getElementById('settingsContainer');
+          this.clearHistoryBtn = document.getElementById('clearHistoryBtn');
+          this.resetDailyBtn = document.getElementById('resetDailyBtn');
+          this.voiceToggle = document.getElementById('voiceToggle');
+          this.rewardPointsDisplay = document.getElementById('rewardPoints');
+          this.dailyPointsDisplay = document.getElementById('dailyPoints');
+          this.notesContainer = document.getElementById('notesContainer');
+        }
+  
+        bindEvents() {
+          this.addTaskBtn.addEventListener('click', () => this.handleAddTask());
+          this.addNoteBtn.addEventListener('click', () => this.handleAddNote());
+          this.toggleHistoryBtn.addEventListener('click', () => this.toggleHistory());
+          this.toggleNotesBtn.addEventListener('click', () => this.toggleNotes());
+          this.settingsIcon.addEventListener('click', () => this.toggleSettings());
+          this.clearHistoryBtn.addEventListener('click', () => this.clearHistory());
+          this.resetDailyBtn.addEventListener('click', () => this.resetDailyPoints());
+          this.voiceToggle.addEventListener('change', () => {
+            this.config.voiceEnabled = this.voiceToggle.checked;
+            localStorage.setItem('voiceEnabled', JSON.stringify(this.config.voiceEnabled));
+          });
+  
+          // Delegate actions for active tasks
+          this.taskList.addEventListener('click', (e) => {
+            if (e.target.classList.contains('complete-task')) {
+              const id = Number(e.target.dataset.id);
+              this.playSound('timer.mp3');
+              this.completeTask(id, true);
+            } else if (e.target.classList.contains('abort-task')) {
+              const id = Number(e.target.dataset.id);
+              this.abortTask(id);
+            } else if (e.target.classList.contains('edit-task')) {
+              const id = Number(e.target.dataset.id);
+              this.editTask(id);
+            } else if (e.target.classList.contains('save-task')) {
+              const id = Number(e.target.dataset.id);
+              this.saveEditedTask(id);
+            }
+          });
+  
+          // Delegate delete event for task history items
+          this.taskHistory.addEventListener('click', (e) => {
+            if (e.target.classList.contains('delete-task')) {
+              const id = Number(e.target.dataset.id);
+              this.deleteTask(id);
+            }
+          });
+  
+          // Delegate note toggle events
+          this.noteHistory.addEventListener('click', (e) => {
+            if (e.target.classList.contains('toggle-note')) {
+              const id = Number(e.target.dataset.id);
+              this.toggleNoteDecryption(id);
+            }
+          });
+  
+          // Add task on Enter key (if not in note input)
+          document.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && document.activeElement !== this.noteInput) {
+              e.preventDefault();
+              this.handleAddTask();
+            }
+          });
+        }
+  
+        saveState() {
+          localStorage.setItem('tasks', JSON.stringify(this.state.tasks));
+          localStorage.setItem('notes', JSON.stringify(this.state.notes));
+          localStorage.setItem('rewardPoints', this.state.rewardPoints);
+          localStorage.setItem('dailyPoints', this.state.dailyPoints);
+          localStorage.setItem('dailyDate', this.state.dailyDate);
+        }
+  
+        handleAddTask() {
+          const text = this.taskInput.value.trim();
+          const time = parseInt(this.taskTime.value);
+          if (!text || isNaN(time) || time <= 0) return;
+          const newTask = {
+            id: Date.now(),
+            text,
+            priority: this.priority.value,
+            time,
+            completed: false,
+            aborted: false,
+            progress: 0,
+            startTime: Date.now(),
+            endTime: Date.now() + time * 60000,
+            rewarded: false,
+            prompted: false,
+            beep50: false,
+            beep70: false,
+            beep90: false
+          };
+          this.state.tasks.push(newTask);
+          this.taskInput.value = '';
+          this.taskTime.value = '';
+          this.updateUI();
+          this.saveState();
+          this.playSound('timer.mp3');
+          this.showAchievement('Timer started! Good luck!');
+        }
+  
+        completeTask(id, manual = false) {
+          const task = this.state.tasks.find(t => t.id === id);
+          if (task && !task.completed && !task.aborted) {
+            task.completed = true;
+            task.progress = 100;
+            task.actualCompletionTime = Date.now();
+            if (!task.rewarded) {
+              this.state.rewardPoints += 20;
+              this.state.dailyPoints += 20;
+              task.rewarded = true;
+            }
+            this.updateUI();
+            this.updateRewardPointsDisplay();
+            this.saveState();
+            this.playSound('timer.mp3');
+            this.showCelebration('Mission Accomplished!');
+          }
+        }
+  
+        abortTask(id) {
+          const task = this.state.tasks.find(t => t.id === id);
+          if (task && !task.completed && !task.aborted) {
+            task.aborted = true;
+            task.abortTime = Date.now();
+            if (!task.rewarded) {
+              this.state.rewardPoints -= 20;
+              this.state.dailyPoints -= 20;
+              task.rewarded = true;
+            }
+            this.updateUI();
+            this.updateRewardPointsDisplay();
+            this.saveState();
+          }
+        }
+  
+        deleteTask(id) {
+          // Remove the task with the specified id
+          this.state.tasks = this.state.tasks.filter(t => t.id !== id);
+          this.updateUI();
           this.saveState();
         }
-        
-        this.cacheDOM();
-        this.bindEvents();
-        this.updateUI();
-        this.updateRewardPointsDisplay();
-        this.startProgressUpdateLoop();
-        this.initBackgroundAudio();
-        this.requestNotificationPermission(); // request notification permission upfront
-      }
-
-      cacheDOM() {
-        // Active tasks elements
-        this.taskInput = document.getElementById('taskInput');
-        this.priority = document.getElementById('priority');
-        this.taskTime = document.getElementById('taskTime');
-        this.taskList = document.getElementById('taskList'); // Active missions
-        this.taskHistory = document.getElementById('taskHistory'); // Task history list
-        this.taskHistoryWrapper = document.getElementById('taskHistoryWrapper'); // Wrapper for toggle
-        // Note elements
-        this.noteInput = document.getElementById('noteInput');
-        this.noteHistory = document.getElementById('noteHistory');
-        // Buttons and reward display
-        this.addTaskBtn = document.getElementById('addTaskBtn');
-        this.addNoteBtn = document.getElementById('addNoteBtn');
-        this.toggleHistoryBtn = document.getElementById('toggleHistoryBtn');
-        this.toggleNotesBtn = document.getElementById('toggleNotesBtn');
-        this.rewardPointsDisplay = document.getElementById('rewardPoints');
-        this.dailyPointsDisplay = document.getElementById('dailyPoints');
-        this.notesContainer = document.getElementById('notesContainer');
-      }
-
-      bindEvents() {
-        this.addTaskBtn.addEventListener('click', () => this.handleAddTask());
-        this.addNoteBtn.addEventListener('click', () => this.handleAddNote());
-        this.toggleHistoryBtn.addEventListener('click', () => this.toggleHistory());
-        this.toggleNotesBtn.addEventListener('click', () => this.toggleNotes());
-
-        // Add task on Enter key (if not typing in note textarea)
-        document.addEventListener('keypress', (e) => {
-          if (e.key === 'Enter' && document.activeElement !== this.noteInput) {
-            e.preventDefault();
-            this.handleAddTask();
+  
+        handleAddNote() {
+          const text = this.noteInput.value.trim();
+          if (!text) return;
+          const encryptedText = btoa(text);
+          const newNote = {
+            id: Date.now(),
+            text: encryptedText,
+            timestamp: new Date().toLocaleString(),
+            showDecrypted: false 
+          };
+          this.state.notes.unshift(newNote);
+          this.noteInput.value = '';
+          this.updateUI();
+          this.saveState();
+        }
+  
+        deleteNote(id) {
+          this.state.notes = this.state.notes.filter(note => note.id !== id);
+          this.updateUI();
+          this.saveState();
+        }
+  
+        toggleNoteDecryption(id) {
+          const note = this.state.notes.find(note => note.id === id);
+          if (note) {
+            note.showDecrypted = !note.showDecrypted;
+            this.updateUI();
+            this.saveState();
           }
-        });
-
-        // Delegate complete and abort actions for active tasks
-        this.taskList.addEventListener('click', (e) => {
-          if (e.target.classList.contains('complete-task')) {
-            const id = Number(e.target.dataset.id);
-            // On manual completion, play timer.mp3 sound
-            this.playSound('timer.mp3');
-            this.completeTask(id, true);
-          } else if (e.target.classList.contains('abort-task')) {
-            const id = Number(e.target.dataset.id);
-            this.abortTask(id);
+        }
+  
+        updateRewardPointsDisplay() {
+          this.rewardPointsDisplay.textContent = this.state.rewardPoints;
+          this.dailyPointsDisplay.textContent = `Daily Points: ${this.state.dailyPoints}/100`;
+          if (this.state.dailyPoints >= 100 && !this.state.dailyGoalAchieved) {
+            this.showAchievement('Daily Goal Achieved!');
+            this.state.dailyGoalAchieved = true;
           }
-        });
-
-        // Delegate deletion and detail toggling for tasks in history
-        this.taskHistory.addEventListener('click', (e) => {
-          if (e.target.classList.contains('delete-task')) {
-            const id = Number(e.target.dataset.id);
-            this.deleteTask(id);
+        }
+  
+        getRemainingTimeText(task) {
+          const now = Date.now();
+          const remaining = Math.max(task.endTime - now, 0);
+          const minutes = Math.floor(remaining / 60000);
+          const seconds = Math.floor((remaining % 60000) / 1000);
+          return `${minutes} min ${seconds} sec remaining`;
+        }
+  
+        renderActiveTasks() {
+          const activeTasks = this.state.tasks.filter(task => !task.completed && !task.aborted);
+          if (activeTasks.length === 0) {
+            this.taskList.innerHTML = `<p class="empty">No active missions. Add one!</p>`;
+            return;
+          }
+          this.taskList.innerHTML = activeTasks.map(task => `
+            <div class="task-item" data-id="${task.id}">
+              <div>
+                <div class="priority-tag ${task.priority}">${task.priority.toUpperCase()}</div>
+                <span class="task-text" id="taskText-${task.id}">${task.text}</span>
+                <input type="text" class="edit-input" id="editInput-${task.id}" style="display:none;" value="${task.text}">
+                <div class="deadline" id="deadline-${task.id}">
+                  ${this.getRemainingTimeText(task)}
+                </div>
+                <div class="progress-bar">
+                  <div class="progress" id="progress-${task.id}" style="width: ${task.progress}%"></div>
+                </div>
+              </div>
+              <div>
+                <button class="complete-task" data-id="${task.id}">✓</button>
+                <button class="abort-task" data-id="${task.id}">✕</button>
+                <button class="edit-task" data-id="${task.id}">Edit</button>
+                <button class="save-task" data-id="${task.id}" style="display:none;">Save</button>
+              </div>
+            </div>
+          `).join('');
+        }
+  
+        renderTaskHistory() {
+          const historyTasks = this.state.tasks.filter(task => task.completed || task.aborted);
+          if (historyTasks.length === 0) {
+            this.taskHistory.innerHTML = `<p class="empty">No completed or aborted missions yet.</p>`;
+            return;
+          }
+          this.taskHistory.innerHTML = historyTasks.map(task => {
+            let timingInfo = '';
+            if (task.completed && task.actualCompletionTime) {
+              const diff = task.actualCompletionTime - task.startTime;
+              const minutes = Math.floor(diff / 60000);
+              const seconds = Math.floor((diff % 60000) / 1000);
+              timingInfo = `Completed in ${minutes} min ${seconds} sec`;
+            } else if (task.aborted) {
+              timingInfo = 'Aborted at ' + new Date(task.abortTime).toLocaleTimeString();
+            }
+            return `
+            <div class="task-item ${task.completed ? 'completed' : 'aborted'}" data-id="${task.id}">
+              <div>
+                <div class="priority-tag ${task.priority}">${task.priority.toUpperCase()}</div>
+                <span>${task.text}</span>
+                <div class="extra-details">
+                  <div>Started: ${new Date(task.startTime).toLocaleString()}</div>
+                  <div>${timingInfo}</div>
+                </div>
+              </div>
+              <div>
+                <button class="delete-task" data-id="${task.id}">✕</button>
+              </div>
+            </div>
+          `;
+          }).join('');
+        }
+  
+        renderNotes() {
+          if (this.state.notes.length === 0) {
+            this.noteHistory.innerHTML = `<p class="empty">No encrypted notes yet.</p>`;
+            return;
+          }
+          this.noteHistory.innerHTML = this.state.notes.map(note => `
+            <div class="note-item" data-id="${note.id}">
+              <div>
+                <div class="timestamp">${note.timestamp}</div>
+                <div>${note.showDecrypted ? atob(note.text) : note.text}</div>
+              </div>
+              <button class="toggle-note" data-id="${note.id}">${note.showDecrypted ? 'Hide' : 'Show'}</button>
+            </div>
+          `).join('');
+        }
+  
+        updateUI() {
+          this.renderActiveTasks();
+          this.renderTaskHistory();
+          this.renderNotes();
+        }
+  
+        toggleHistory() {
+          if (this.taskHistoryWrapper.classList.contains('open')) {
+            this.taskHistoryWrapper.classList.remove('open');
+            this.toggleHistoryBtn.textContent = "Show Task History";
           } else {
-            const taskItem = e.target.closest('.task-item');
-            if (taskItem) {
-              taskItem.classList.toggle('expanded');
+            this.taskHistoryWrapper.classList.add('open');
+            this.toggleHistoryBtn.textContent = "Hide Task History";
+          }
+        }
+  
+        toggleNotes() {
+          if (this.notesContainer.style.display === "none") {
+            this.notesContainer.style.display = "block";
+            this.toggleNotesBtn.textContent = "Hide Notes";
+          } else {
+            this.notesContainer.style.display = "none";
+            this.toggleNotesBtn.textContent = "Show Notes";
+          }
+        }
+  
+        toggleSettings() {
+          if (this.settingsContainer.style.display === "none") {
+            this.settingsContainer.style.display = "block";
+          } else {
+            this.settingsContainer.style.display = "none";
+          }
+        }
+  
+        clearHistory() {
+          // Remove all completed and aborted tasks
+          this.state.tasks = this.state.tasks.filter(task => !task.completed && !task.aborted);
+          this.updateUI();
+          this.saveState();
+          this.showAchievement('Task history cleared!');
+        }
+  
+        resetDailyPoints() {
+          this.state.dailyPoints = 0;
+          this.state.dailyGoalAchieved = false;
+          this.updateRewardPointsDisplay();
+          this.saveState();
+          this.showAchievement('Daily points reset!');
+        }
+  
+        editTask(id) {
+          const taskTextElem = document.getElementById(`taskText-${id}`);
+          const editInput = document.getElementById(`editInput-${id}`);
+          const editBtn = document.querySelector(`.edit-task[data-id="${id}"]`);
+          const saveBtn = document.querySelector(`.save-task[data-id="${id}"]`);
+          if (taskTextElem && editInput && editBtn && saveBtn) {
+            taskTextElem.style.display = "none";
+            editInput.style.display = "inline-block";
+            editBtn.style.display = "none";
+            saveBtn.style.display = "inline-block";
+          }
+        }
+  
+        saveEditedTask(id) {
+          const editInput = document.getElementById(`editInput-${id}`);
+          const taskTextElem = document.getElementById(`taskText-${id}`);
+          const editBtn = document.querySelector(`.edit-task[data-id="${id}"]`);
+          const saveBtn = document.querySelector(`.save-task[data-id="${id}"]`);
+          if (editInput && taskTextElem && editBtn && saveBtn) {
+            const newText = editInput.value.trim();
+            if (newText) {
+              const task = this.state.tasks.find(t => t.id === id);
+              task.text = newText;
+              this.saveState();
+              this.updateUI();
             }
           }
-        });
-
-        // Delegate note toggle (Show/Hide) for encrypted notes
-        this.noteHistory.addEventListener('click', (e) => {
-          if (e.target.classList.contains('toggle-note')) {
-            const id = Number(e.target.dataset.id);
-            this.toggleNoteDecryption(id);
-          }
-        });
-      }
-
-      saveState() {
-        localStorage.setItem('tasks', JSON.stringify(this.state.tasks));
-        localStorage.setItem('notes', JSON.stringify(this.state.notes));
-        localStorage.setItem('rewardPoints', this.state.rewardPoints);
-        localStorage.setItem('dailyPoints', this.state.dailyPoints);
-        localStorage.setItem('dailyDate', this.state.dailyDate);
-      }
-
-      handleAddTask() {
-        const text = this.taskInput.value.trim();
-        const time = parseInt(this.taskTime.value);
-        if (!text || isNaN(time) || time <= 0) return;
-
-        // Initialize beep flags for progress thresholds
-        const newTask = {
-          id: Date.now(),
-          text,
-          priority: this.priority.value,
-          time,
-          completed: false,
-          aborted: false,
-          progress: 0,
-          startTime: Date.now(),
-          endTime: Date.now() + time * 60000, // Scheduled end time (in ms)
-          rewarded: false,
-          prompted: false, // flag to indicate if confirmation has been asked
-          beep50: false,
-          beep70: false,
-          beep90: false
-        };
-
-        this.state.tasks.push(newTask);
-        this.taskInput.value = '';
-        this.taskTime.value = '';
-        this.updateUI();
-        this.saveState();
-
-        // Play timer.mp3 sound and show achievement on task start
-        this.playSound('timer.mp3');
-        this.showAchievement('Timer started! Good luck!');
-      }
-
-      completeTask(id, manual = false) {
-        const task = this.state.tasks.find(t => t.id === id);
-        if (task && !task.completed && !task.aborted) {
-          task.completed = true;
-          task.progress = 100;
-          task.actualCompletionTime = Date.now();
-          if (!task.rewarded) {
-            this.state.rewardPoints += 20;
-            this.state.dailyPoints += 20;
-            task.rewarded = true;
-          }
-          this.updateUI();
-          this.updateRewardPointsDisplay();
-          this.saveState();
-
-          // On mission complete, play timer.mp3 sound if not already played
-          this.playSound('timer.mp3');
-          // Show the tagda celebration animation
-          this.showCelebration('Mission Accomplished!');
         }
-      }
-
-      abortTask(id) {
-        const task = this.state.tasks.find(t => t.id === id);
-        if (task && !task.completed && !task.aborted) {
-          task.aborted = true;
-          task.abortTime = Date.now();
-          if (!task.rewarded) {
-            // Deduct 20 points for not completing the task
-            this.state.rewardPoints -= 20;
-            this.state.dailyPoints -= 20;
-            task.rewarded = true;
-          }
-          this.updateUI();
-          this.updateRewardPointsDisplay();
-          this.saveState();
-        }
-      }
-
-      deleteTask(id) {
-        // Permanently remove task from state
-        this.state.tasks = this.state.tasks.filter(t => t.id !== id);
-        this.updateUI();
-        this.saveState();
-      }
-
-      handleAddNote() {
-        const text = this.noteInput.value.trim();
-        if (!text) return;
-        // Encrypt the note using Base64 (for demonstration purposes)
-        const encryptedText = btoa(text);
-        const newNote = {
-          id: Date.now(),
-          text: encryptedText,
-          timestamp: new Date().toLocaleString(),
-          showDecrypted: false 
-        };
-
-        this.state.notes.unshift(newNote);
-        this.noteInput.value = '';
-        this.updateUI();
-        this.saveState();
-      }
-
-      deleteNote(id) {
-        this.state.notes = this.state.notes.filter(note => note.id !== id);
-        this.updateUI();
-        this.saveState();
-      }
-
-      toggleNoteDecryption(id) {
-        const note = this.state.notes.find(note => note.id === id);
-        if (note) {
-          note.showDecrypted = !note.showDecrypted;
-          this.updateUI();
-          this.saveState();
-        }
-      }
-
-      updateRewardPointsDisplay() {
-        this.rewardPointsDisplay.textContent = this.state.rewardPoints;
-        this.dailyPointsDisplay.textContent = `Daily Points: ${this.state.dailyPoints}/100`;
-
-        // If daily goal reached and not already celebrated, show a notification
-        if (this.state.dailyPoints >= 100 && !this.state.dailyGoalAchieved) {
-          this.showAchievement('Daily Goal Achieved!');
-          this.state.dailyGoalAchieved = true;
-        }
-      }
-
-      getRemainingTimeText(task) {
-        const now = Date.now();
-        const minutesRemaining = Math.max(Math.floor((task.endTime - now) / 60000), 0);
-        return `${minutesRemaining} minute${minutesRemaining === 1 ? '' : 's'} remaining`;
-      }
-
-      renderActiveTasks() {
-        const activeTasks = this.state.tasks.filter(task => !task.completed && !task.aborted);
-        if (activeTasks.length === 0) {
-          this.taskList.innerHTML = `<p class="empty">No active missions. Add one!</p>`;
-          return;
-        }
-        this.taskList.innerHTML = activeTasks.map(task => `
-          <div class="task-item" data-id="${task.id}">
-            <div>
-              <div class="priority-tag ${task.priority}">${task.priority.toUpperCase()}</div>
-              <span>${task.text}</span>
-              <div class="deadline" id="deadline-${task.id}">
-                ${this.getRemainingTimeText(task)}
-              </div>
-              <div class="progress-bar">
-                <div class="progress" id="progress-${task.id}" style="width: ${task.progress}%"></div>
-              </div>
-            </div>
-            <div>
-              <button class="complete-task" data-id="${task.id}">✓</button>
-              <button class="abort-task" data-id="${task.id}">✕</button>
-            </div>
-          </div>
-        `).join('');
-      }
-
-      renderTaskHistory() {
-        const historyTasks = this.state.tasks.filter(task => task.completed || task.aborted);
-        if (historyTasks.length === 0) {
-          this.taskHistory.innerHTML = `<p class="empty">No completed or aborted missions yet.</p>`;
-          return;
-        }
-        this.taskHistory.innerHTML = historyTasks.map(task => {
-          let timingInfo = '';
-          if (task.completed && task.actualCompletionTime) {
-            const diff = task.actualCompletionTime - task.startTime;
-            const minutes = Math.floor(diff / 60000);
-            const seconds = Math.floor((diff % 60000) / 1000);
-            timingInfo = `Completed in ${minutes} min ${seconds} sec`;
-          } else if (task.aborted) {
-            timingInfo = 'Aborted at ' + new Date(task.abortTime).toLocaleTimeString();
-          }
-          return `
-          <div class="task-item ${task.completed ? 'completed' : 'aborted'}" data-id="${task.id}">
-            <div>
-              <div class="priority-tag ${task.priority}">${task.priority.toUpperCase()}</div>
-              <span>${task.text}</span>
-              <div class="extra-details">
-                <div>Started: ${new Date(task.startTime).toLocaleString()}</div>
-                <div>${timingInfo}</div>
-              </div>
-            </div>
-            <div>
-              <button class="delete-task" data-id="${task.id}">✕</button>
-            </div>
-          </div>
-        `;
-        }).join('');
-      }
-
-      renderNotes() {
-        if (this.state.notes.length === 0) {
-          this.noteHistory.innerHTML = `<p class="empty">No encrypted notes yet.</p>`;
-          return;
-        }
-        this.noteHistory.innerHTML = this.state.notes.map(note => `
-          <div class="note-item" data-id="${note.id}">
-            <div>
-              <div class="timestamp">${note.timestamp}</div>
-              <div>${note.showDecrypted ? atob(note.text) : note.text}</div>
-            </div>
-            <button class="toggle-note" data-id="${note.id}">${note.showDecrypted ? 'Hide' : 'Show'}</button>
-          </div>
-        `).join('');
-      }
-
-      updateUI() {
-        this.renderActiveTasks();
-        this.renderTaskHistory();
-        this.renderNotes();
-      }
-
-      toggleHistory() {
-        if (this.taskHistoryWrapper.classList.contains('open')) {
-          this.taskHistoryWrapper.classList.remove('open');
-          this.toggleHistoryBtn.textContent = "Show Task History";
-        } else {
-          this.taskHistoryWrapper.classList.add('open');
-          this.toggleHistoryBtn.textContent = "Hide Task History";
-        }
-      }
-
-      toggleNotes() {
-        if (this.notesContainer.style.display === "none") {
-          this.notesContainer.style.display = "block";
-          this.toggleNotesBtn.textContent = "Hide Notes";
-        } else {
-          this.notesContainer.style.display = "none";
-          this.toggleNotesBtn.textContent = "Show Notes";
-        }
-      }
-
-      startProgressUpdateLoop() {
-        const updateProgress = () => {
-          const now = Date.now();
-          let stateUpdated = false;
-          this.state.tasks.forEach(task => {
-            if (!task.completed && !task.aborted) {
-              const totalTime = task.endTime - task.startTime;
-              const elapsed = now - task.startTime;
-              const progress = Math.min((elapsed / totalTime) * 100, 100);
-              if (progress !== task.progress) {
-                task.progress = progress;
-                stateUpdated = true;
-              }
-              const progressElem = document.getElementById(`progress-${task.id}`);
-              if (progressElem) {
-                progressElem.style.width = `${progress}%`;
-              }
-              const deadlineElem = document.getElementById(`deadline-${task.id}`);
-              if (deadlineElem) {
-                deadlineElem.textContent = progress < 100 ? this.getRemainingTimeText(task) : 'Completed';
-              }
-              // Check progress thresholds and speak a message when crossing them:
-              if (!task.beep50 && progress >= 50) {
-                task.beep50 = true;
-                this.speakMessage(' hey anas... You are at 50% you can do it ');
-              }
-              if (!task.beep70 && progress >= 70) {
-                task.beep70 = true;
-                this.speakMessage('hey anas.... You are at 70% you can do it');
-              }
-              if (!task.beep90 && progress >= 90) {
-                task.beep90 = true;
-                this.speakMessage('YOU ARE AT FINISHING JUST ONE MORE STEP');
-              }
-              if (!task.beep99 && progress >= 99) {
-                task.beep90 = true;
-                this.speakMessage('3...2...1..BOOOOOM');
-              }
-              // When the timer is done and the user hasn't been prompted yet...
-              if (progress >= 100 && !task.completed && !task.prompted) {
-                task.prompted = true; // ensure we only ask once
-
-                // Play timer completion sound and send notification
-                this.playSound('timer.mp3');
-                if (Notification.permission === "granted") {
-                  new Notification("Task Timer Finished", { 
-                    body: `Task: ${task.text}\nDid you complete the task?`
-                  });
+  
+        startProgressUpdateLoop() {
+          const updateProgress = () => {
+            const now = Date.now();
+            let stateUpdated = false;
+            this.state.tasks.forEach(task => {
+              if (!task.completed && !task.aborted) {
+                const totalTime = task.endTime - task.startTime;
+                const elapsed = now - task.startTime;
+                const progress = Math.min((elapsed / totalTime) * 100, 100);
+                if (progress !== task.progress) {
+                  task.progress = progress;
+                  stateUpdated = true;
                 }
-                // Ask the user whether they completed the task
-                const userConfirmed = confirm(`The timer for "${task.text}" is finished.\nDid you complete the task?`);
-                if (userConfirmed) {
-                  this.completeTask(task.id);
-                } else {
-                  // Deduct 20 points if not completed
-                  this.state.rewardPoints -= 20;
-                  this.state.dailyPoints -= 20;
-                  task.aborted = true;
-                  task.abortTime = Date.now();
-                  this.updateUI();
-                  this.updateRewardPointsDisplay();
-                  this.saveState();
+                const progressElem = document.getElementById(`progress-${task.id}`);
+                if (progressElem) {
+                  progressElem.style.width = `${progress}%`;
+                }
+                const deadlineElem = document.getElementById(`deadline-${task.id}`);
+                if (deadlineElem) {
+                  deadlineElem.textContent = progress < 100 ? this.getRemainingTimeText(task) : 'Completed';
+                }
+             
+                if (this.config.voiceEnabled) {
+                  if (!task.beep50 && progress >= 50) {
+                    task.beep50 = true;
+                    this.speakMessage('Hey ANAS You are at 50% YOU CAN DO IT');
+                  }
+                  if (!task.beep70 && progress >= 70) {
+                    task.beep70 = true;
+                    this.speakMessage(' Hey ANAS You are at 70% YOU CAN DO IT');
+                  }
+                  if (!task.beep90 && progress >= 90) {
+                    task.beep90 = true;
+                    this.speakMessage('Hey ANAS You are at 90% AND YOU ARE AT FINISHING TIME');
+                  }
+                }
+                if (progress >= 100 && !task.completed && !task.prompted) {
+                  task.prompted = true;
+                  this.playSound('timer.mp3');
+                  if (Notification.permission === "granted") {
+                    new Notification("Task Timer Finished", { 
+                      body: `Task: ${task.text}\nDid you complete the task?`
+                    });
+                  }
+                  const userConfirmed = confirm(`The timer for "${task.text}" is finished.\nDid you complete the task?`);
+                  if (userConfirmed) {
+                    this.completeTask(task.id);
+                  } else {
+                    this.state.rewardPoints -= 20;
+                    this.state.dailyPoints -= 20;
+                    task.aborted = true;
+                    task.abortTime = Date.now();
+                    this.updateUI();
+                    this.updateRewardPointsDisplay();
+                    this.saveState();
+                  }
+                }
+              }
+            });
+
+            if (stateUpdated) this.saveState();
+            requestAnimationFrame(updateProgress);
+          };
+          requestAnimationFrame(updateProgress);
+        }
+  
+        playSound(src) {
+          const audio = new Audio(src);
+          audio.loop = false;
+          audio.play();
+        }
+  
+        speakMessage(message) {
+          const utterance = new SpeechSynthesisUtterance(message);
+          utterance.rate = 1;
+          speechSynthesis.speak(utterance);
+        }
+  
+        showAchievement(message) {
+          const achievement = document.createElement('div');
+          achievement.textContent = message;
+          achievement.style.position = 'fixed';
+          achievement.style.top = '20px';
+          achievement.style.right = '20px';
+          achievement.style.background = 'var(--neon-pink)';
+          achievement.style.padding = '10px 20px';
+          achievement.style.borderRadius = '5px';
+          achievement.style.boxShadow = 'var(--glow)';
+          achievement.style.zIndex = 1000;
+          document.body.appendChild(achievement);
+          setTimeout(() => achievement.remove(), 3000);
+        }
+  
+        showCelebration(message) {
+          for (let i = 0; i < 3; i++) {
+            setTimeout(() => {
+              confetti({
+                particleCount: 100,
+                spread: 120,
+                origin: { x: Math.random(), y: Math.random() }
+              });
+            }, i * 200);
+          }
+          const flash = document.createElement('div');
+          flash.style.position = 'fixed';
+          flash.style.top = '0';
+          flash.style.left = '0';
+          flash.style.width = '100%';
+          flash.style.height = '100%';
+          flash.style.background = 'rgba(255,255,255,0.3)';
+          flash.style.zIndex = '999';
+          flash.style.opacity = '1';
+          flash.style.transition = 'opacity 1s ease-out';
+          document.body.appendChild(flash);
+          setTimeout(() => { flash.style.opacity = '0'; }, 100);
+          setTimeout(() => { flash.remove(); }, 1100);
+          
+          const celebration = document.createElement('div');
+          celebration.textContent = message;
+          celebration.style.position = 'fixed';
+          celebration.style.top = '50%';
+          celebration.style.left = '50%';
+          celebration.style.transform = 'translate(-50%, -50%) scale(0)';
+          celebration.style.background = 'linear-gradient(45deg, #ff0080, #ff8c00)';
+          celebration.style.padding = '40px 60px';
+          celebration.style.borderRadius = '15px';
+          celebration.style.boxShadow = '0 0 40px rgba(255,255,255,0.8)';
+          celebration.style.zIndex = '1000';
+          celebration.style.fontSize = '3rem';
+          celebration.style.color = '#ffffff';
+          celebration.style.transition = 'transform 0.5s ease-out, opacity 0.5s ease-out';
+          celebration.style.opacity = '0';
+          document.body.appendChild(celebration);
+          setTimeout(() => {
+            celebration.style.transform = 'translate(-50%, -50%) scale(1)';
+            celebration.style.opacity = '1';
+          }, 100);
+          setTimeout(() => {
+            celebration.style.transform = 'translate(-50%, -50%) scale(0.5)';
+            celebration.style.opacity = '0';
+          }, 2000);
+          setTimeout(() => { celebration.remove(); }, 2500);
+        }
+  
+        requestNotificationPermission() {
+          if ("Notification" in window && Notification.permission !== "granted") {
+            Notification.requestPermission();
+          }
+        }
+  
+        initBackgroundAudio() {
+          if (window.AudioContext || window.webkitAudioContext) {
+            try {
+              const AudioContext = window.AudioContext || window.webkitAudioContext;
+              const audioCtx = new AudioContext();
+              if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+              }
+            } catch (e) {
+              console.error("AudioContext initialization failed:", e);
+            }
+          }
+        }
+  
+        setupVisibilityChange() {
+          document.addEventListener('visibilitychange', () => {
+            if (document.visibilityState === 'hidden') {
+              if (Notification.permission === "granted") {
+                new Notification("You're off-task", {
+                  body: "Come back and complete your missions!"
+                });
+              }
+            }
+            if (document.visibilityState === 'visible') {
+              if (window.AudioContext || window.webkitAudioContext) {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                const audioCtx = new AudioContext();
+                if (audioCtx.state === 'suspended') {
+                  audioCtx.resume();
                 }
               }
             }
           });
-          if (stateUpdated) this.saveState();
-          requestAnimationFrame(updateProgress);
-        };
-        requestAnimationFrame(updateProgress);
-      }
-
-      // Function to play a sound given its source (used for timer.mp3)
-      playSound(src) {
-        const audio = new Audio(src);
-        audio.play();
-      }
-
-      // Function to speak a message using the Web Speech API
-      speakMessage(message) {
-        const utterance = new SpeechSynthesisUtterance(message);
-        utterance.rate = 1; // Adjust the rate if desired
-        speechSynthesis.speak(utterance);
-      }
-
-      // Function to show an achievement notification
-      showAchievement(message) {
-        const achievement = document.createElement('div');
-        achievement.textContent = message;
-        achievement.style.position = 'fixed';
-        achievement.style.top = '20px';
-        achievement.style.right = '20px';
-        achievement.style.background = 'var(--neon-pink)';
-        achievement.style.padding = '10px 20px';
-        achievement.style.borderRadius = '5px';
-        achievement.style.boxShadow = 'var(--glow)';
-        achievement.style.zIndex = 1000;
-        document.body.appendChild(achievement);
-        setTimeout(() => {
-          achievement.remove();
-        }, 3000);
-      }
-
-      // Function to show a tagda celebration animation with confetti, flash overlay, and animated overlay
-      showCelebration(message) {
-        // Trigger multiple confetti bursts
-        for (let i = 0; i < 3; i++) {
-          setTimeout(() => {
-            confetti({
-              particleCount: 100,
-              spread: 120,
-              origin: { x: Math.random(), y: Math.random() }
-            });
-          }, i * 200);
         }
-        // Full-screen flash overlay
-        const flash = document.createElement('div');
-        flash.style.position = 'fixed';
-        flash.style.top = '0';
-        flash.style.left = '0';
-        flash.style.width = '100%';
-        flash.style.height = '100%';
-        flash.style.background = 'rgba(255,255,255,0.3)';
-        flash.style.zIndex = '999';
-        flash.style.opacity = '1';
-        flash.style.transition = 'opacity 1s ease-out';
-        document.body.appendChild(flash);
-        setTimeout(() => {
-          flash.style.opacity = '0';
-        }, 100);
-        setTimeout(() => {
-          flash.remove();
-        }, 1100);
-        // Animated celebration overlay
-        const celebration = document.createElement('div');
-        celebration.textContent = message;
-        celebration.style.position = 'fixed';
-        celebration.style.top = '50%';
-        celebration.style.left = '50%';
-        celebration.style.transform = 'translate(-50%, -50%) scale(0)';
-        celebration.style.background = 'linear-gradient(45deg, #ff0080, #ff8c00)';
-        celebration.style.padding = '40px 60px';
-        celebration.style.borderRadius = '15px';
-        celebration.style.boxShadow = '0 0 40px rgba(255, 255, 255, 0.8)';
-        celebration.style.zIndex = '1000';
-        celebration.style.fontSize = '3rem';
-        celebration.style.color = '#ffffff';
-        celebration.style.transition = 'transform 0.5s ease-out, opacity 0.5s ease-out';
-        celebration.style.opacity = '0';
-        document.body.appendChild(celebration);
-        setTimeout(() => {
-          celebration.style.transform = 'translate(-50%, -50%) scale(1)';
-          celebration.style.opacity = '1';
-        }, 100);
-        setTimeout(() => {
-          celebration.style.transform = 'translate(-50%, -50%) scale(0.5)';
-          celebration.style.opacity = '0';
-        }, 2000);
-        setTimeout(() => {
-          celebration.remove();
-        }, 2500);
-      }
-
-      // Request notification permission from the user (this helps our voice notifications work even in the background)
-      requestNotificationPermission() {
-        if ("Notification" in window && Notification.permission !== "granted") {
-          Notification.requestPermission();
-        }
-      }
-      
-      // Attempt to initialize (or resume) an AudioContext so that voice notifications work even if you switch tabs.
-      initBackgroundAudio() {
-        if (window.AudioContext || window.webkitAudioContext) {
-          try {
-            const AudioContext = window.AudioContext || window.webkitAudioContext;
-            const audioCtx = new AudioContext();
-            // Some browsers require a user gesture to resume the context.
-            if (audioCtx.state === 'suspended') {
-              audioCtx.resume();
+  
+        startBeepReminder() {
+          setInterval(() => {
+            const activeTasks = this.state.tasks.filter(task => !task.completed && !task.aborted);
+            if (activeTasks.length > 0) {
+              this.playSound('beep.mp3');
             }
-          } catch (e) {
-            console.error("AudioContext initialization failed:", e);
-          }
+          }, 5 * 60 * 1000);
         }
       }
-
-      // Function to play a beep sound every 5 minutes if there is an active task
-      startBeepReminder() {
-        setInterval(() => {
-          const activeTasks = this.state.tasks.filter(task => !task.completed && !task.aborted);
-          if (activeTasks.length > 0) {
-            this.playSound('beep.mp3');
+  
+      document.addEventListener('DOMContentLoaded', () => {
+        const app = new DarkProductivityApp();
+        particlesJS('particles-js', {
+          particles: {
+            number: { value: 150 },
+            color: { value: '#8a2be2' },
+            shape: { type: 'circle' },
+            opacity: { value: 0.5 },
+            size: { value: 2 },
+            move: {
+              enable: true,
+              speed: 1.5,
+              direction: 'none',
+              random: true,
+              straight: false,
+              out_mode: 'bounce',
+              bounce: true
+            }
+          },
+          interactivity: {
+            detect_on: 'canvas',
+            events: {
+              onhover: { enable: true, mode: 'grab' },
+              onclick: { enable: true, mode: 'push' },
+              resize: true
+            }
           }
-        }, 5 * 60 * 1000);
-      }
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      const app = new DarkProductivityApp();
-      app.startBeepReminder();
-      // Request notification and try to initialize audio immediately
-      app.requestNotificationPermission();
-      app.initBackgroundAudio();
-      particlesJS('particles-js', {
-        particles: {
-          number: { value: 150 },
-          color: { value: '#8a2be2' },
-          shape: { type: 'circle' },
-          opacity: { value: 0.5 },
-          size: { value: 2 },
-          move: {
-            enable: true,
-            speed: 1.5,
-            direction: 'none',
-            random: true,
-            straight: false,
-            out_mode: 'bounce',
-            bounce: true
-          }
-        },
-        interactivity: {
-          detect_on: 'canvas',
-          events: {
-            onhover: { enable: true, mode: 'grab' },
-            onclick: { enable: true, mode: 'push' },
-            resize: true
-          }
-        }
+        });
       });
-    });
-  </script>
+    </script>
 </body>
 </html>
