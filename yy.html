@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-	    <link rel="icon" href="isagi.jpg" type="image/jpg">
 <head>
+  <link rel="icon" href="isagi.jpg" type="image/jpg">
   <meta charset="UTF-8">
   <title>FINAL TIMETABLE</title>
   <style>
@@ -361,6 +361,33 @@
     ::-webkit-scrollbar-thumb:hover {
       background: var(--neon-pink);
     }
+
+    /* Responsive adjustments for mobile devices */
+    @media (max-width: 600px) {
+      .container {
+        padding: 1rem;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+      h2 {
+        font-size: 1.5rem;
+      }
+      .input-group {
+        grid-template-columns: 1fr auto;
+      }
+      button {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+      }
+      .task-item, .note-item {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .task-item > div:last-child, .note-item > button {
+        margin-top: 0.5rem;
+      }
+    }
   </style>
   
   <!-- Particles.js Library -->
@@ -407,15 +434,18 @@
 
       <div class="cyber-line"></div>
 
-      <!-- Note System Section -->
-      <div class="note-system">
-        <h2>Encrypted Notes</h2>
-        <div class="input-group" style="grid-template-columns: 1fr auto;">
-          <textarea id="noteInput" placeholder="Encrypted notes..."></textarea>
-          <button id="addNoteBtn">Add Note</button>
-        </div>
-        <div class="note-history" id="noteHistory">
-          <!-- Notes will be rendered here -->
+      <!-- Notes Section (hidden by default) -->
+      <button id="toggleNotesBtn">Show Notes</button>
+      <div id="notesContainer" style="display: none;">
+        <div class="note-system">
+          <h2>Encrypted Notes</h2>
+          <div class="input-group" style="grid-template-columns: 1fr auto;">
+            <textarea id="noteInput" placeholder="Enter your note..."></textarea>
+            <button id="addNoteBtn">Add Note</button>
+          </div>
+          <div class="note-history" id="noteHistory">
+            <!-- Notes will be rendered here with only a toggle (Show/Hide) -->
+          </div>
         </div>
       </div>
 
@@ -454,6 +484,8 @@
         this.updateUI();
         this.updateRewardPointsDisplay();
         this.startProgressUpdateLoop();
+        this.initBackgroundAudio();
+        this.requestNotificationPermission(); // request notification permission upfront
       }
 
       cacheDOM() {
@@ -471,14 +503,17 @@
         this.addTaskBtn = document.getElementById('addTaskBtn');
         this.addNoteBtn = document.getElementById('addNoteBtn');
         this.toggleHistoryBtn = document.getElementById('toggleHistoryBtn');
+        this.toggleNotesBtn = document.getElementById('toggleNotesBtn');
         this.rewardPointsDisplay = document.getElementById('rewardPoints');
         this.dailyPointsDisplay = document.getElementById('dailyPoints');
+        this.notesContainer = document.getElementById('notesContainer');
       }
 
       bindEvents() {
         this.addTaskBtn.addEventListener('click', () => this.handleAddTask());
         this.addNoteBtn.addEventListener('click', () => this.handleAddNote());
         this.toggleHistoryBtn.addEventListener('click', () => this.toggleHistory());
+        this.toggleNotesBtn.addEventListener('click', () => this.toggleNotes());
 
         // Add task on Enter key (if not typing in note textarea)
         document.addEventListener('keypress', (e) => {
@@ -492,6 +527,8 @@
         this.taskList.addEventListener('click', (e) => {
           if (e.target.classList.contains('complete-task')) {
             const id = Number(e.target.dataset.id);
+            // On manual completion, play timer.mp3 sound
+            this.playSound('timer.mp3');
             this.completeTask(id, true);
           } else if (e.target.classList.contains('abort-task')) {
             const id = Number(e.target.dataset.id);
@@ -512,12 +549,9 @@
           }
         });
 
-        // Delegate note deletion and decryption toggle for encrypted notes
+        // Delegate note toggle (Show/Hide) for encrypted notes
         this.noteHistory.addEventListener('click', (e) => {
-          if (e.target.classList.contains('delete-note')) {
-            const id = Number(e.target.dataset.id);
-            this.deleteNote(id);
-          } else if (e.target.classList.contains('toggle-note')) {
+          if (e.target.classList.contains('toggle-note')) {
             const id = Number(e.target.dataset.id);
             this.toggleNoteDecryption(id);
           }
@@ -561,11 +595,9 @@
         this.updateUI();
         this.saveState();
 
-        // Play sound and achievement on first timer start
+        // Play timer.mp3 sound and show achievement on task start
         this.playSound('timer.mp3');
         this.showAchievement('Timer started! Good luck!');
-        // Request notification permission
-        this.requestNotificationPermission();
       }
 
       completeTask(id, manual = false) {
@@ -583,6 +615,8 @@
           this.updateRewardPointsDisplay();
           this.saveState();
 
+          // On mission complete, play timer.mp3 sound if not already played
+          this.playSound('timer.mp3');
           // Show the tagda celebration animation
           this.showCelebration('Mission Accomplished!');
         }
@@ -733,8 +767,7 @@
               <div class="timestamp">${note.timestamp}</div>
               <div>${note.showDecrypted ? atob(note.text) : note.text}</div>
             </div>
-        
-            <button class="delete-note" data-id="${note.id}">✕</button>
+            <button class="toggle-note" data-id="${note.id}">${note.showDecrypted ? 'Hide' : 'Show'}</button>
           </div>
         `).join('');
       }
@@ -752,6 +785,16 @@
         } else {
           this.taskHistoryWrapper.classList.add('open');
           this.toggleHistoryBtn.textContent = "Hide Task History";
+        }
+      }
+
+      toggleNotes() {
+        if (this.notesContainer.style.display === "none") {
+          this.notesContainer.style.display = "block";
+          this.toggleNotesBtn.textContent = "Hide Notes";
+        } else {
+          this.notesContainer.style.display = "none";
+          this.toggleNotesBtn.textContent = "Show Notes";
         }
       }
 
@@ -779,15 +822,19 @@
               // Check progress thresholds and speak a message when crossing them:
               if (!task.beep50 && progress >= 50) {
                 task.beep50 = true;
-                this.speakMessage('You are at 50% come on lets....do it');
+                this.speakMessage(' hey anas... You are at 50% you can do it ');
               }
               if (!task.beep70 && progress >= 70) {
                 task.beep70 = true;
-                this.speakMessage('You are at 70% u can..... do it');
+                this.speakMessage('hey anas.... You are at 70% you can do it');
               }
               if (!task.beep90 && progress >= 90) {
                 task.beep90 = true;
-                this.speakMessage('You are at 90% just one more step');
+                this.speakMessage('YOU ARE AT FINISHING JUST ONE MORE STEP');
+              }
+              if (!task.beep99 && progress >= 99) {
+                task.beep90 = true;
+                this.speakMessage('3...2...1..BOOOOOM');
               }
               // When the timer is done and the user hasn't been prompted yet...
               if (progress >= 100 && !task.completed && !task.prompted) {
@@ -823,7 +870,7 @@
         requestAnimationFrame(updateProgress);
       }
 
-      // Function to play a sound given its source (used for timer.mp3 and periodic reminders)
+      // Function to play a sound given its source (used for timer.mp3)
       playSound(src) {
         const audio = new Audio(src);
         audio.play();
@@ -914,10 +961,26 @@
         }, 2500);
       }
 
-      // Request notification permission from the user
+      // Request notification permission from the user (this helps our voice notifications work even in the background)
       requestNotificationPermission() {
         if ("Notification" in window && Notification.permission !== "granted") {
           Notification.requestPermission();
+        }
+      }
+      
+      // Attempt to initialize (or resume) an AudioContext so that voice notifications work even if you switch tabs.
+      initBackgroundAudio() {
+        if (window.AudioContext || window.webkitAudioContext) {
+          try {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            const audioCtx = new AudioContext();
+            // Some browsers require a user gesture to resume the context.
+            if (audioCtx.state === 'suspended') {
+              audioCtx.resume();
+            }
+          } catch (e) {
+            console.error("AudioContext initialization failed:", e);
+          }
         }
       }
 
@@ -935,6 +998,9 @@
     document.addEventListener('DOMContentLoaded', () => {
       const app = new DarkProductivityApp();
       app.startBeepReminder();
+      // Request notification and try to initialize audio immediately
+      app.requestNotificationPermission();
+      app.initBackgroundAudio();
       particlesJS('particles-js', {
         particles: {
           number: { value: 150 },
