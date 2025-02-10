@@ -109,6 +109,16 @@
       backdrop-filter: var(--blur-effect);
       animation: var(--pulse-animation);
     }
+    .app-container {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      background: #2a2a2a;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+      position: relative;
+      z-index: 1;
+    }
     
     .button {
       background: var(--neon-pink);
@@ -252,29 +262,42 @@ button:hover {
     }
 
     .container {
-      max-height: 1000px; /* जितना कंटेंट दिखाना हो उतना सेट करें */
-      overflow-y: auto; /* सिर्फ Y-स्क्रॉल को एक्टिवेट करें */
-      scrollbar-width: thin; /* फायरफॉक्स के लिए */
+      max-height: 1000px;               /* जितना कंटेंट दिखाना हो उतना सेट करें */
+      overflow-y: auto;                 /* सिर्फ Y-स्क्रॉल को एक्टिवेट करें */
+      scrollbar-width: thin;            /* फायरफॉक्स के लिए */
       scrollbar-color: var(--neon-purple) var(--dark-bg); /* कस्टम स्क्रॉलबार */
       
-      width: 100%; /* कंटेनर की चौड़ाई कम करें */
-      max-width: 1500px; /* मैक्सिमम चौड़ाई सेट करें */
-      margin: auto; /* सेंटर में लाने के लिए */
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      width: 70%;                       /* पूरा available width लें */
+      height: 100vh;                    /* full viewport height */
+      margin: 0 auto;                   /* दोनों साइड से equal margin = center horizontally */
+      
+      display: block;                   /* Display ko block set karenge */
+      padding: 20px 40px;               /* दोनों साइड से padding */
+      border-radius: 15px;              /* गोल कोने */
+      background: var(--light-bg);      /* हल्का बैकग्राउंड */
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* हल्का शैडो */
+      box-sizing: border-box;           /* padding को width में शामिल करें */
     }
+    
+    /* Mobile-friendly adjustments */
+    @media (max-width: 768px) {
+      .container {
+        width: 95%;   /* मोबाइल पर 95% width */
+        padding: 15px; /* छोटे padding for mobile */
+      }
+    }
+    
     
     /* कस्टम स्क्रॉलबार स्टाइल (क्रोम, एज, सफारी के लिए) */
     .container::-webkit-scrollbar {
       width: 10px;
+      overflow-y: auto;
     }
     
     .container::-webkit-scrollbar-thumb {
       background: var(--neon-purple);
       border-radius: 10px;
     }
-    
 
     .panel {
       background: var(--panel-bg);
@@ -526,26 +549,30 @@ button:hover {
       margin-top: 0.5rem;
     }
     
-    /* Accordion effect for task history */
-    .task-history {
-      max-height: 0;
-      overflow: hidden;
-      transition: max-height 0.4s ease;
-    }
-    .task-history.open {
-      max-height: 1000px;
-    }
-    
-    /* Aborted task styling */
-    .task-item.aborted {
-      border-left-color: #ff0000;
-      opacity: 0.85;
-    }
-    
-    /* Hover glow */
-    .task-item:hover, .note-item:hover {
-      box-shadow: 0 0 30px var(--neon-blue);
-    }
+/* Accordion effect for task history */
+.task-history {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease;
+}
+.task-history.open {
+  max-height: 1000px;
+  overflow-y: auto;  /* Enables scrolling inside when content exceeds 1000px */
+  size:small;
+}
+
+/* Aborted task styling */
+.task-item.aborted {
+  border-left-color: #ff0000;
+  opacity: 0.85;
+}
+
+/* Hover glow */
+.task-item:hover,
+.note-item:hover {
+  box-shadow: 0 0 30px var(--neon-blue);
+}
+
     
     @keyframes pulsate {
       0% { transform: scale(1); }
@@ -556,14 +583,14 @@ button:hover {
       animation: pulsate 1.5s infinite;
     }
     
-    /* Custom Scrollbar Styling */
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: rgba(255,255,255,0.1); }
-    ::-webkit-scrollbar-thumb {
-      background: var(--neon-purple);
-      border-radius: 4px;
-    }
-    ::-webkit-scrollbar-thumb:hover { background: var(--neon-pink); }
+   /* Custom Scrollbar Styling */
+   ::-webkit-scrollbar { width: 8px; }
+   ::-webkit-scrollbar-track { background: rgba(255,255,255,0.1); }
+   ::-webkit-scrollbar-thumb {
+     background: var(--neon-purple);
+     border-radius: 4px;
+   }
+   ::-webkit-scrollbar-thumb:hover { background: var(--neon-pink); }
     
     /* Responsive adjustments for mobile devices */
     @media (max-width: 600px) {
@@ -661,7 +688,7 @@ button:hover {
   <script>
     class DarkProductivityApp {
       constructor() {
-        // ऑडियो फाइलों को प्री-लोड करें
+        // Preload audio files (adjust paths as needed)
         this.sounds = {
           fifty: new Audio('50.mp3'),
           seventy: new Audio('70.mp3'),
@@ -669,7 +696,8 @@ button:hover {
           beep: new Audio('beep.mp3'),
           timer: new Audio('timer.mp3')
         };
-  
+
+        // Initialize state from localStorage or defaults
         this.state = {
           tasks: JSON.parse(localStorage.getItem('tasks')) || [],
           notes: JSON.parse(localStorage.getItem('notes')) || [],
@@ -678,15 +706,15 @@ button:hover {
           dailyDate: localStorage.getItem('dailyDate') || new Date().toLocaleDateString(),
           dailyGoalAchieved: false
         };
-  
-        // यदि localStorage में voiceEnabled की कोई value न हो तो डिफ़ॉल्ट true रखें
+
+        // Configuration
         this.config = {
           voiceEnabled: (localStorage.getItem('voiceEnabled') === null)
             ? true
             : JSON.parse(localStorage.getItem('voiceEnabled'))
         };
-  
-        // दिन बदलने पर daily points रीसेट करें
+
+        // Reset daily points if the day has changed
         const today = new Date().toLocaleDateString();
         if (this.state.dailyDate !== today) {
           this.state.dailyPoints = 0;
@@ -694,18 +722,24 @@ button:hover {
           this.state.dailyGoalAchieved = false;
           this.saveState();
         }
-  
+
+        // History load threshold
+        this.maxHistoryCount = 20;
+
+        // For controlling task history display (toggle button)
+        this.historyExpanded = false;
+
         this.cacheDOM();
         this.bindEvents();
         this.updateUI();
         this.updateRewardPointsDisplay();
-        this.startProgressUpdateLoop(); // अपडेटेड लूप (setInterval का उपयोग)
+        this.startProgressUpdateLoop();
         this.startBeepReminder();
         this.initBackgroundAudio();
         this.requestNotificationPermission();
         this.setupVisibilityChange();
       }
-  
+
       cacheDOM() {
         this.taskInput = document.getElementById('taskInput');
         this.priority = document.getElementById('priority');
@@ -726,7 +760,7 @@ button:hover {
         this.voiceToggle = document.getElementById('voiceToggle');
         this.dailyPointsDisplay = document.getElementById('dailyPoints');
       }
-  
+
       bindEvents() {
         this.addTaskBtn.addEventListener('click', () => this.handleAddTask());
         this.addNoteBtn.addEventListener('click', () => this.handleAddNote());
@@ -739,8 +773,8 @@ button:hover {
           this.config.voiceEnabled = this.voiceToggle.checked;
           localStorage.setItem('voiceEnabled', JSON.stringify(this.config.voiceEnabled));
         });
-  
-        // Active tasks पर बटन क्लिक के लिए डेलीगेट करें
+
+        // Delegate active task actions
         this.taskList.addEventListener('click', (e) => {
           if (e.target.classList.contains('complete-task')) {
             const id = Number(e.target.dataset.id);
@@ -755,26 +789,32 @@ button:hover {
           } else if (e.target.classList.contains('save-task')) {
             const id = Number(e.target.dataset.id);
             this.saveEditedTask(id);
+          } else if (e.target.classList.contains('pause-task')) {
+            const id = Number(e.target.dataset.id);
+            this.pauseTask(id);
+          } else if (e.target.classList.contains('resume-task')) {
+            const id = Number(e.target.dataset.id);
+            this.resumeTask(id);
           }
         });
-  
-        // Task history से डिलीट करने के लिए डेलीगेट करें
+
+        // Delegate deletion in history
         this.taskHistory.addEventListener('click', (e) => {
           if (e.target.classList.contains('delete-task')) {
             const id = Number(e.target.dataset.id);
             this.deleteTask(id);
           }
         });
-  
-        // Notes के लिए toggle event
+
+        // Toggle note decryption
         this.noteHistory.addEventListener('click', (e) => {
           if (e.target.classList.contains('toggle-note')) {
             const id = Number(e.target.dataset.id);
             this.toggleNoteDecryption(id);
           }
         });
-  
-        // Note input के अलावा Enter key पर टास्क जोड़ें
+
+        // Add task on Enter (unless in note input)
         document.addEventListener('keypress', (e) => {
           if (e.key === 'Enter' && document.activeElement !== this.noteInput) {
             e.preventDefault();
@@ -782,7 +822,7 @@ button:hover {
           }
         });
       }
-  
+
       saveState() {
         localStorage.setItem('tasks', JSON.stringify(this.state.tasks));
         localStorage.setItem('notes', JSON.stringify(this.state.notes));
@@ -790,7 +830,7 @@ button:hover {
         localStorage.setItem('dailyPoints', this.state.dailyPoints);
         localStorage.setItem('dailyDate', this.state.dailyDate);
       }
-  
+
       handleAddTask() {
         const text = this.taskInput.value.trim();
         const time = parseInt(this.taskTime.value);
@@ -799,7 +839,7 @@ button:hover {
           id: Date.now(),
           text,
           priority: this.priority.value,
-          time,
+          time, // in minutes
           completed: false,
           aborted: false,
           progress: 0,
@@ -809,7 +849,11 @@ button:hover {
           prompted: false,
           beep50: false,
           beep70: false,
-          beep90: false
+          beep90: false,
+          // Pause/Resume properties
+          paused: false,
+          pauseStart: null,
+          progressAtPause: null
         };
         this.state.tasks.push(newTask);
         this.taskInput.value = '';
@@ -819,7 +863,7 @@ button:hover {
         this.playSound('timer');
         this.showAchievement('Timer started! Good luck!');
       }
-  
+
       completeTask(id, manual = false) {
         const task = this.state.tasks.find(t => t.id === id);
         if (task && !task.completed && !task.aborted) {
@@ -838,7 +882,7 @@ button:hover {
           this.showCelebration('Mission Accomplished!');
         }
       }
-  
+
       abortTask(id) {
         const task = this.state.tasks.find(t => t.id === id);
         if (task && !task.completed && !task.aborted) {
@@ -854,13 +898,13 @@ button:hover {
           this.saveState();
         }
       }
-  
+
       deleteTask(id) {
         this.state.tasks = this.state.tasks.filter(t => t.id !== id);
         this.updateUI();
         this.saveState();
       }
-  
+
       handleAddNote() {
         const text = this.noteInput.value.trim();
         if (!text) return;
@@ -876,13 +920,13 @@ button:hover {
         this.updateUI();
         this.saveState();
       }
-  
+
       deleteNote(id) {
         this.state.notes = this.state.notes.filter(note => note.id !== id);
         this.updateUI();
         this.saveState();
       }
-  
+
       toggleNoteDecryption(id) {
         const note = this.state.notes.find(note => note.id === id);
         if (note) {
@@ -891,7 +935,7 @@ button:hover {
           this.saveState();
         }
       }
-  
+
       updateRewardPointsDisplay() {
         this.dailyPointsDisplay.textContent = `Daily Points: ${this.state.dailyPoints}/100`;
         if (this.state.dailyPoints >= 100 && !this.state.dailyGoalAchieved) {
@@ -899,16 +943,16 @@ button:hover {
           this.state.dailyGoalAchieved = true;
         }
       }
-  
-      // यदि बचा हुआ समय 1 मिनट से कम है तो "X seconds left" और अन्यथा "X minutes Y seconds left" बोले
+
       getRemainingTimeText(task) {
+        if (task.paused) return "Paused";
         const now = Date.now();
         const remaining = Math.max(task.endTime - now, 0);
         const minutes = Math.floor(remaining / 60000);
         const seconds = Math.floor((remaining % 60000) / 1000);
         return minutes === 0 ? `${seconds} seconds left` : `${minutes} minutes ${seconds} seconds left`;
       }
-  
+
       renderActiveTasks() {
         const activeTasks = this.state.tasks.filter(task => !task.completed && !task.aborted);
         if (activeTasks.length === 0) {
@@ -928,50 +972,90 @@ button:hover {
                 <div class="progress" id="progress-${task.id}" style="width: ${task.progress}%"></div>
               </div>
             </div>
-            <div>
+            <div class="task-actions">
               <button class="complete-task" data-id="${task.id}">✓</button>
               <button class="abort-task" data-id="${task.id}">✕</button>
               <button class="edit-task" data-id="${task.id}">Edit</button>
               <button class="save-task" data-id="${task.id}" style="display:none;">Save</button>
+              ${task.paused 
+                ? `<button class="resume-task" data-id="${task.id}">Resume</button>` 
+                : `<button class="pause-task" data-id="${task.id}">Pause</button>`}
             </div>
           </div>
         `).join('');
       }
-  
+
       renderTaskHistory() {
-        const historyTasks = this.state.tasks.filter(task => task.completed || task.aborted);
-        if (historyTasks.length === 0) {
-          this.taskHistory.innerHTML = `<p class="empty">No completed or aborted missions yet.</p>`;
-          return;
-        }
-        this.taskHistory.innerHTML = historyTasks.map(task => {
-          let timingInfo = '';
-          if (task.completed && task.actualCompletionTime) {
+        // Separate history into Completed and Aborted tasks, sorted by start time (latest first)
+        const completedTasks = this.state.tasks.filter(task => task.completed)
+                                  .sort((a, b) => b.startTime - a.startTime);
+        const abortedTasks = this.state.tasks.filter(task => task.aborted)
+                                  .sort((a, b) => b.startTime - a.startTime);
+
+        let html = `<h3>Completed Missions</h3>`;
+        if (completedTasks.length === 0) {
+          html += `<p class="empty">No completed missions yet.</p>`;
+        } else {
+          html += completedTasks.map(task => {
             const diff = task.actualCompletionTime - task.startTime;
             const minutes = Math.floor(diff / 60000);
             const seconds = Math.floor((diff % 60000) / 1000);
-            timingInfo = `Completed in ${minutes} min ${seconds} sec from ${task.time} min`;
-          } else if (task.aborted) {
-            timingInfo = 'Aborted at ' + new Date(task.abortTime).toLocaleTimeString();
-          }
-          return `
-          <div class="task-item ${task.completed ? 'completed' : 'aborted'}" data-id="${task.id}">
-            <div>
-              <div class="priority-tag ${task.priority}">${task.priority.toUpperCase()}</div>
-              <span>${task.text}</span>
-              <div class="extra-details">
-                <div>Started: ${new Date(task.startTime).toLocaleString()}</div>
-                <div>${timingInfo}</div>
+            const timingInfo = `Completed in ${minutes} min ${seconds} sec (planned: ${task.time} min)`;
+            return `
+              <div class="task-item completed" data-id="${task.id}">
+                <div>
+                  <div class="priority-tag ${task.priority}">${task.priority.toUpperCase()}</div>
+                  <span>${task.text}</span>
+                  <div class="extra-details">
+                    <div>Started: ${new Date(task.startTime).toLocaleString()}</div>
+                    <div>${timingInfo}</div>
+                  </div>
+                </div>
+                <div>
+                  <button class="delete-task" data-id="${task.id}">✕</button>
+                </div>
               </div>
-            </div>
-            <div>
-              <button class="delete-task" data-id="${task.id}">✕</button>
-            </div>
-          </div>
-        `;
-        }).join('');
+            `;
+          }).join('');
+        }
+
+        html += `<h3>Aborted Missions</h3>`;
+        if (abortedTasks.length === 0) {
+          html += `<p class="empty">No aborted missions yet.</p>`;
+        } else {
+          html += abortedTasks.map(task => {
+            const timingInfo = 'Aborted at ' + new Date(task.abortTime).toLocaleTimeString();
+            return `
+              <div class="task-item aborted" data-id="${task.id}">
+                <div>
+                  <div class="priority-tag ${task.priority}">${task.priority.toUpperCase()}</div>
+                  <span>${task.text}</span>
+                  <div class="extra-details">
+                    <div>Started: ${new Date(task.startTime).toLocaleString()}</div>
+                    <div>${timingInfo}</div>
+                  </div>
+                </div>
+                <div>
+                  <button class="delete-task" data-id="${task.id}">✕</button>
+                </div>
+              </div>
+            `;
+          }).join('');
+        }
+
+        // If too many history items exist, show a download & clear button
+        const totalHistory = completedTasks.length + abortedTasks.length;
+        if (totalHistory > this.maxHistoryCount) {
+          html += `<button id="downloadHistoryBtn" class="download-history-btn">Download and Clear History</button>`;
+        }
+        this.taskHistory.innerHTML = html;
+
+        const downloadBtn = document.getElementById('downloadHistoryBtn');
+        if (downloadBtn) {
+          downloadBtn.addEventListener('click', () => this.downloadAndClearHistory());
+        }
       }
-  
+
       renderNotes() {
         if (this.state.notes.length === 0) {
           this.noteHistory.innerHTML = `<p class="empty">No encrypted notes yet.</p>`;
@@ -987,13 +1071,13 @@ button:hover {
           </div>
         `).join('');
       }
-  
+
       updateUI() {
         this.renderActiveTasks();
         this.renderTaskHistory();
         this.renderNotes();
       }
-  
+
       toggleHistory() {
         if (this.taskHistoryWrapper.classList.contains('open')) {
           this.taskHistoryWrapper.classList.remove('open');
@@ -1003,7 +1087,7 @@ button:hover {
           this.toggleHistoryBtn.textContent = "Hide Task History";
         }
       }
-  
+
       toggleNotes() {
         const notesContainer = document.getElementById("notesContainer");
         if (notesContainer.style.display === "none") {
@@ -1014,7 +1098,7 @@ button:hover {
           this.toggleNotesBtn.textContent = "Show Notes";
         }
       }
-  
+
       toggleSettings() {
         if (this.settingsContainer.style.display === "none") {
           this.settingsContainer.style.display = "block";
@@ -1022,14 +1106,16 @@ button:hover {
           this.settingsContainer.style.display = "none";
         }
       }
-  
+
       clearHistory() {
+        // Remove all tasks that are completed or aborted
         this.state.tasks = this.state.tasks.filter(task => !task.completed && !task.aborted);
+        this.historyExpanded = false;
         this.updateUI();
         this.saveState();
         this.showAchievement('Task history cleared!');
       }
-  
+
       resetDailyPoints() {
         this.state.dailyPoints = 0;
         this.state.dailyGoalAchieved = false;
@@ -1037,7 +1123,7 @@ button:hover {
         this.saveState();
         this.showAchievement('Daily points reset!');
       }
-  
+
       editTask(id) {
         const taskTextElem = document.getElementById(`taskText-${id}`);
         const editInput = document.getElementById(`editInput-${id}`);
@@ -1050,7 +1136,7 @@ button:hover {
           saveBtn.style.display = "inline-block";
         }
       }
-  
+
       saveEditedTask(id) {
         const editInput = document.getElementById(`editInput-${id}`);
         const taskTextElem = document.getElementById(`taskText-${id}`);
@@ -1066,72 +1152,126 @@ button:hover {
           }
         }
       }
-  
-      // अपडेटेड प्रगति अपडेट लूप: setInterval का उपयोग (500ms में एक बार)
+
+      // Pause / Resume functionality
+
+      pauseTask(id) {
+        const task = this.state.tasks.find(t => t.id === id);
+        if (task && !task.paused && !task.completed && !task.aborted) {
+          task.paused = true;
+          task.pauseStart = Date.now();
+          task.progressAtPause = ((Date.now() - task.startTime) / (task.endTime - task.startTime)) * 100;
+          this.updateUI();
+          this.saveState();
+          this.showAchievement('Timer paused.');
+        }
+      }
+
+      resumeTask(id) {
+        const task = this.state.tasks.find(t => t.id === id);
+        if (task && task.paused && !task.completed && !task.aborted) {
+          const pauseDuration = Date.now() - task.pauseStart;
+          task.endTime += pauseDuration;
+          task.paused = false;
+          task.pauseStart = null;
+          task.progressAtPause = null;
+          this.updateUI();
+          this.saveState();
+          this.showAchievement('Timer resumed.');
+        }
+      }
+
+      // If history (completed + aborted) exceeds threshold, download & clear it
+      downloadAndClearHistory() {
+        const historyData = this.state.tasks.filter(task => task.completed || task.aborted);
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(historyData, null, 2));
+        const downloadAnchorNode = document.createElement('a');
+        downloadAnchorNode.setAttribute("href", dataStr);
+        downloadAnchorNode.setAttribute("download", "history_" + new Date().toISOString() + ".json");
+        document.body.appendChild(downloadAnchorNode);
+        downloadAnchorNode.click();
+        downloadAnchorNode.remove();
+
+        // Remove history tasks from state
+        this.state.tasks = this.state.tasks.filter(task => !(task.completed || task.aborted));
+        this.saveState();
+        this.updateUI();
+        this.showAchievement('History downloaded and cleared!');
+      }
+
       startProgressUpdateLoop() {
         setInterval(() => {
           const now = Date.now();
           this.state.tasks.forEach(task => {
             if (!task.completed && !task.aborted) {
-              const totalTime = task.endTime - task.startTime;
-              const elapsed = now - task.startTime;
-              const progress = Math.min((elapsed / totalTime) * 100, 100);
-              task.progress = progress;
-              const progressElem = document.getElementById(`progress-${task.id}`);
-              if (progressElem) {
-                progressElem.style.width = `${progress}%`;
-              }
-              const deadlineElem = document.getElementById(`deadline-${task.id}`);
-              if (deadlineElem) {
-                deadlineElem.textContent = progress < 100 ? this.getRemainingTimeText(task) : 'Completed';
-              }
-              if (this.config.voiceEnabled) {
-                if (!task.beep50 && progress >= 50) {
-                  task.beep50 = true;
-                  console.log(`50% reached for task ${task.id}.`);
-                  this.playSound('fifty');
+              if (task.paused) {
+                // Keep progress frozen when paused
+                if (task.progressAtPause !== null) {
+                  task.progress = task.progressAtPause;
                 }
-                if (!task.beep70 && progress >= 70) {
-                  task.beep70 = true;
-                  console.log(`70% reached for task ${task.id}.`);
-                  this.playSound('seventy');
+                const deadlineElem = document.getElementById(`deadline-${task.id}`);
+                if (deadlineElem) {
+                  deadlineElem.textContent = "Paused";
                 }
-                if (!task.beep90 && progress >= 90) {
-                  task.beep90 = true;
-                  console.log(`90% reached for task ${task.id}.`);
-                  this.playSound('ninety');
+              } else {
+                const totalTime = task.endTime - task.startTime;
+                const elapsed = now - task.startTime;
+                const progress = Math.min((elapsed / totalTime) * 100, 100);
+                task.progress = progress;
+                const progressElem = document.getElementById(`progress-${task.id}`);
+                if (progressElem) {
+                  progressElem.style.width = `${progress}%`;
                 }
-              }
-              if (progress >= 100 && !task.completed && !task.prompted) {
-                task.prompted = true;
-                this.playSound('timer');
-                if (Notification.permission === "granted") {
-                  new Notification("Task Timer Finished", { 
-                    body: `Task: ${task.text}\nDid you complete the task?`
-                  });
+                const deadlineElem = document.getElementById(`deadline-${task.id}`);
+                if (deadlineElem) {
+                  deadlineElem.textContent = progress < 100 ? this.getRemainingTimeText(task) : 'Completed';
                 }
-                const userConfirmed = confirm(`The timer for "${task.text}" is finished.\nDid you complete the task?`);
-                if (userConfirmed) {
-                  this.completeTask(task.id);
-                } else {
-                  this.state.rewardPoints -= 20;
-                  this.state.dailyPoints -= 20;
-                  task.aborted = true;
-                  task.abortTime = Date.now();
-                  this.updateUI();
-                  this.updateRewardPointsDisplay();
-                  this.saveState();
+                if (this.config.voiceEnabled) {
+                  if (!task.beep50 && progress >= 50) {
+                    task.beep50 = true;
+                    console.log(`50% reached for task ${task.id}.`);
+                    this.playSound('fifty');
+                  }
+                  if (!task.beep70 && progress >= 70) {
+                    task.beep70 = true;
+                    console.log(`70% reached for task ${task.id}.`);
+                    this.playSound('seventy');
+                  }
+                  if (!task.beep90 && progress >= 90) {
+                    task.beep90 = true;
+                    console.log(`90% reached for task ${task.id}.`);
+                    this.playSound('ninety');
+                  }
+                }
+                if (progress >= 100 && !task.completed && !task.prompted) {
+                  task.prompted = true;
+                  this.playSound('timer');
+                  if (Notification.permission === "granted") {
+                    new Notification("Task Timer Finished", { 
+                      body: `Task: ${task.text}\nDid you complete the task?`
+                    });
+                  }
+                  const userConfirmed = confirm(`The timer for "${task.text}" is finished.\nDid you complete the task?`);
+                  if (userConfirmed) {
+                    this.completeTask(task.id);
+                  } else {
+                    this.state.rewardPoints -= 20;
+                    this.state.dailyPoints -= 20;
+                    task.aborted = true;
+                    task.abortTime = Date.now();
+                    this.updateUI();
+                    this.updateRewardPointsDisplay();
+                    this.saveState();
+                  }
                 }
               }
             }
           });
-        }, 500); // 500ms में एक बार अपडेट करें
+        }, 500);
       }
-  
-      // playSound अब प्री-लोडेड ऑडियो से काम करता है
+
       playSound(name) {
         if (this.sounds[name]) {
-          // साउंड को शुरुआत से प्ले करने के लिए currentTime सेट करें
           this.sounds[name].currentTime = 0;
           this.sounds[name].play().catch((error) => {
             console.error("Error playing sound:", error);
@@ -1140,22 +1280,22 @@ button:hover {
           console.warn("Sound not found:", name);
         }
       }
-  
+
       showAchievement(message) {
         const achievement = document.createElement('div');
         achievement.textContent = message;
         achievement.style.position = 'fixed';
         achievement.style.top = '20px';
         achievement.style.right = '20px';
-        achievement.style.background = 'var(--neon-pink)';
+        achievement.style.background = '#ff69b4';
         achievement.style.padding = '10px 20px';
         achievement.style.borderRadius = '5px';
-        achievement.style.boxShadow = 'var(--glow)';
+        achievement.style.boxShadow = '0 0 10px rgba(255,105,180,0.7)';
         achievement.style.zIndex = 1000;
         document.body.appendChild(achievement);
         setTimeout(() => achievement.remove(), 3000);
       }
-  
+
       showCelebration(message) {
         for (let i = 0; i < 3; i++) {
           setTimeout(() => {
@@ -1179,7 +1319,7 @@ button:hover {
         document.body.appendChild(flash);
         setTimeout(() => { flash.style.opacity = '0'; }, 100);
         setTimeout(() => { flash.remove(); }, 1100);
-  
+
         const celebration = document.createElement('div');
         celebration.textContent = message;
         celebration.style.position = 'fixed';
@@ -1206,13 +1346,13 @@ button:hover {
         }, 2000);
         setTimeout(() => { celebration.remove(); }, 2500);
       }
-  
+
       requestNotificationPermission() {
         if ("Notification" in window && Notification.permission !== "granted") {
           Notification.requestPermission();
         }
       }
-  
+
       initBackgroundAudio() {
         if (window.AudioContext || window.webkitAudioContext) {
           try {
@@ -1226,7 +1366,7 @@ button:hover {
           }
         }
       }
-  
+
       setupVisibilityChange() {
         document.addEventListener('visibilitychange', () => {
           if (document.visibilityState === 'hidden') {
@@ -1247,33 +1387,32 @@ button:hover {
           }
         });
       }
-  
+
       startBeepReminder() {
         if (this.beepTimeout) {
           clearTimeout(this.beepTimeout);
         }
-      
         const beepFunction = () => {
           const activeTasks = this.state.tasks.filter(task => !task.completed && !task.aborted);
           if (activeTasks.length > 0) {
             console.log("Beep! 🔊");
             this.playSound('beep');
           }
-          this.beepTimeout = setTimeout(beepFunction, 7 * 60 * 1000); // 7 मिनट बाद अगला beep
+          this.beepTimeout = setTimeout(beepFunction, 7 * 60 * 1000);
         };
         beepFunction();
       }
-  
+
       componentWillUnmount() {
         if (this.beepTimeout) {
           clearTimeout(this.beepTimeout);
         }
       }
     }
-  
+
     document.addEventListener('DOMContentLoaded', () => {
       const app = new DarkProductivityApp();
-  
+
       if (typeof particlesJS !== "undefined") {
         particlesJS('particles-js', {
           particles: {
@@ -1305,7 +1444,7 @@ button:hover {
         console.error("particlesJS is not loaded!");
       }
     });
-    
+
     document.addEventListener("visibilitychange", () => {
       if (document.hidden) {
           console.log("Page is in background");
@@ -1313,7 +1452,7 @@ button:hover {
           console.log("Page is active");
       }
     });
-    
+
     document.addEventListener("click", () => {
       Notification.requestPermission().then(permission => {
           if (permission === "granted") {
@@ -1321,7 +1460,10 @@ button:hover {
           }
       });
     });
+    
   </script>
+  
+  
   
   
   
