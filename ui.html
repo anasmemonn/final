@@ -7,39 +7,32 @@
   <style>
     /* Import a modern monospaced font */
     @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap');
+  
     :root {
       /* === Futuristic Color Palette === */
       --dark-bg: #000000; /* Deep space black */
-      --neon-purple: #00c7ea; /* More vibrant purple */
-      --neon-magenta: #FF00FF; /* Replaced pink with neon magenta */
-      --neon-blue: #dae40da9; /* Cyan blue */
-      --accent: #00ffcc; /* Bright teal */
-      --hologram-green: #39ff14; /* More intense matrix green */
+      --neon-purple: #e2a82b; /* Vibrant purple */
+      --neon-pink: #ff0000; /* Electric pink */
+      --neon-blue: #00ffff; /* Cyan blue */
+      --accent: #00e5ff; /* Bright teal */
+      --hologram-green: #39ff14; /* Matrix green */
       --cyber-yellow: #ffd700; /* Futuristic gold */
-      --glow: 0 0 20px rgba(229, 253, 10, 0.8); /* Base glow effect with transparency */
-    
+      --glow: 0 0 20px rgba(255, 255, 255, 0.5); /* Base glow effect */
+  
       /* === Advanced Effects === */
       --hologram-gradient: linear-gradient(
         135deg,
         var(--neon-purple) 0%,
-        var(--neon-magenta) 25%, /* Updated to neon magenta */
-        var(--neon-blue) 50%,
-        var(--accent) 75%,
-        var(--hologram-green) 100%
+        var(--neon-pink) 50%,
+        var(--neon-blue) 100%
       );
-      --hologram-texture: repeating-linear-gradient(
-        45deg,
-        transparent,
-        transparent 10px,
-        rgba(255, 255, 255, 0.1) 10px,
-        rgba(255, 255, 255, 0.1) 20px
-      );
-      --neon-glow: 0 0 10px var(--neon-purple), 0 0 20px var(--neon-magenta), /* Updated to neon magenta */
+      --neon-glow: 0 0 10px var(--neon-purple), 0 0 20px var(--neon-pink),
         0 0 30px var(--neon-blue), 0 0 40px var(--accent);
       --pulse-animation: pulse 2s infinite ease-in-out;
       --scanline-animation: scanline 5s linear infinite;
+      /* ---- Added from Code 1 ---- */
       --flicker-animation: flicker 3s infinite;
-    
+  
       /* === Typography & Sizing === */
       --font-primary: "Fira Code", monospace;
       --font-secondary: "Orbitron", sans-serif; /* Futuristic font */
@@ -47,158 +40,9 @@
       --border-radius: 12px; /* Rounded futuristic edges */
       --panel-bg: rgba(0, 0, 0, 0.9); /* Semi-transparent black */
       --glass-effect: rgba(255, 255, 255, 0.1); /* Glassmorphism effect */
-      --glass-border: 1px solid rgba(255, 255, 255, 0.2); /* Glass border */
       --blur-effect: blur(10px); /* Blur for glass effect */
-    
-      /* === Additional Effects === */
-      --text-glow: 0 0 5px var(--neon-blue), 0 0 10px var(--neon-blue), 0 0 20px var(--neon-blue), 0 0 40px var(--accent);
-      --button-glow: 0 0 10px var(--neon-magenta), 0 0 20px var(--neon-magenta), 0 0 40px var(--neon-magenta), 0 0 60px var(--neon-purple); /* Updated to neon magenta */
-      --hover-glow: 0 0 15px var(--neon-purple), 0 0 30px var(--neon-purple), 0 0 60px var(--neon-purple), 0 0 90px var(--neon-blue);
-      --neon-border: 2px solid var(--neon-purple);
-      --neon-shadow: 0 0 20px var(--neon-purple), 0 0 40px var(--neon-magenta), 0 0 60px var(--neon-blue); /* Updated to neon magenta */
     }
-    
-    /* === Keyframes for Animations === */
-    @keyframes pulse {
-      0% {
-        transform: scale(1);
-        opacity: 1;
-        box-shadow: 0 0 10px var(--neon-purple);
-      }
-      50% {
-        transform: scale(1.05);
-        opacity: 0.7;
-        box-shadow: 0 0 20px var(--neon-pink);
-      }
-      100% {
-        transform: scale(1);
-        opacity: 1;
-        box-shadow: 0 0 10px var(--neon-blue);
-      }
-    }
-    
-    @keyframes scanline {
-      0% {
-        background-position: 0 0;
-        opacity: 0.8;
-      }
-      50% {
-        opacity: 0.5;
-      }
-      100% {
-        background-position: 100% 100%;
-        opacity: 0.8;
-      }
-    }
-    
-    @keyframes flicker {
-      0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
-        opacity: 1;
-      }
-      20%, 24%, 55% {
-        opacity: 0.5;
-      }
-    }
-    
-    /* === Example Usage === */
-    .panel {
-      background: var(--hologram-gradient), var(--hologram-texture);
-      border: var(--neon-border);
-      box-shadow: var(--neon-glow), var(--neon-shadow);
-      border-radius: var(--border-radius);
-      backdrop-filter: var(--blur-effect);
-      animation: var(--pulse-animation);
-    }
-    .app-container {
-      max-width: 800px;
-      margin: 20px auto;
-      padding: 20px;
-      background: #2a2a2a;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.5);
-      position: relative;
-      z-index: 1;
-    }
-    
-    .button {
-      background: var(--neon-pink);
-      border: var(--neon-border);
-      box-shadow: var(--button-glow);
-      color: var(--dark-bg);
-      font-family: var(--font-secondary);
-      font-size: 1.2rem;
-      padding: 10px 20px;
-      border-radius: var(--border-radius);
-      transition: box-shadow var(--transition-speed);
-    }
-    
-    .button:hover {
-      box-shadow: var(--hover-glow);
-      animation: var(--flicker-animation);
-    }
-    
-    .text-glow {
-      text-shadow: var(--text-glow);
-      font-family: var(--font-primary);
-    }
-    
-    .glass-panel {
-      background: var(--glass-effect);
-      border: var(--glass-border);
-      backdrop-filter: var(--blur-effect);
-      border-radius: var(--border-radius);
-      padding: 20px;
-    }
-
-/* === Example Usage === */
-body {
-  background-color: var(--dark-bg);
-  color: var(--neon-blue);
-  font-family: var(--font-primary);
-  margin: 0;
-  padding: 0;
-}
-
-h1, h2, h3 {
-  font-family: var(--font-secondary);
-  text-shadow: var(--text-glow);
-}
-
-button {
-  background: var(--hologram-gradient);
-  border: none;
-  border-radius: var(--border-radius);
-  color: var(--dark-bg);
-  padding: 10px 20px;
-  font-family: var(--font-secondary);
-  font-size: 1rem;
-  cursor: pointer;
-  transition: var(--transition-speed);
-  box-shadow: var(--button-glow);
-}
-
-button:hover {
-  box-shadow: var(--hover-glow);
-  transform: scale(1.05);
-}
-
-.panel {
-  background: var(--panel-bg);
-  backdrop-filter: var(--blur-effect);
-  border-radius: var(--border-radius);
-  padding: 20px;
-  margin: 20px;
-  box-shadow: var(--neon-glow);
-}
-
-.glass-effect {
-  background: var(--glass-effect);
-  backdrop-filter: var(--blur-effect);
-  border-radius: var(--border-radius);
-  padding: 20px;
-  margin: 20px;
-  box-shadow: var(--neon-glow);
-}
+  
     /* === Keyframes for Animations === */
     @keyframes pulse {
       0% {
@@ -212,7 +56,7 @@ button:hover {
         box-shadow: var(--neon-glow);
       }
     }
-    
+  
     @keyframes scanline {
       0% {
         background-position: 0 0;
@@ -221,9 +65,21 @@ button:hover {
         background-position: 0 100%;
       }
     }
-    
-    * { box-sizing: border-box; }
-
+  
+    /* ---- Added from Code 1 ---- */
+    @keyframes flicker {
+      0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% {
+        opacity: 1;
+      }
+      20%, 24%, 55% {
+        opacity: 0.5;
+      }
+    }
+  
+    * {
+      box-sizing: border-box;
+    }
+  
     body {
       margin: 0;
       background: var(--dark-bg);
@@ -234,7 +90,7 @@ button:hover {
       line-height: 1.6;
       position: relative;
     }
-
+  
     /* Particle background container */
     #particles-js {
       position: fixed;
@@ -242,7 +98,7 @@ button:hover {
       height: 100%;
       z-index: 0;
     }
-
+  
     /* Animated radial background */
     body::before {
       content: "";
@@ -256,49 +112,25 @@ button:hover {
       animation: bgShift 10s ease infinite;
     }
     @keyframes bgShift {
-      0% { transform: translate(-25%, -25%) scale(1); }
-      50% { transform: translate(-20%, -20%) scale(1.1); }
-      100% { transform: translate(-25%, -25%) scale(1); }
-    }
-
-    .container {
-      max-height: 1000px;               /* जितना कंटेंट दिखाना हो उतना सेट करें */
-      overflow-y: auto;                 /* सिर्फ Y-स्क्रॉल को एक्टिवेट करें */
-      scrollbar-width: thin;            /* फायरफॉक्स के लिए */
-      scrollbar-color: var(--neon-purple) var(--dark-bg); /* कस्टम स्क्रॉलबार */
-      
-      width: 70%;                       /* पूरा available width लें */
-      height: 100vh;                    /* full viewport height */
-      margin: 0 auto;                   /* दोनों साइड से equal margin = center horizontally */
-      
-      display: block;                   /* Display ko block set karenge */
-      padding: 20px 40px;               /* दोनों साइड से padding */
-      border-radius: 15px;              /* गोल कोने */
-      background: var(--light-bg);      /* हल्का बैकग्राउंड */
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* हल्का शैडो */
-      box-sizing: border-box;           /* padding को width में शामिल करें */
-    }
-    
-    /* Mobile-friendly adjustments */
-    @media (max-width: 768px) {
-      .container {
-        width: 95%;   /* मोबाइल पर 95% width */
-        padding: 15px; /* छोटे padding for mobile */
+      0% {
+        transform: translate(-25%, -25%) scale(1);
+      }
+      50% {
+        transform: translate(-20%, -20%) scale(1.1);
+      }
+      100% {
+        transform: translate(-25%, -25%) scale(1);
       }
     }
-    
-    
-    /* कस्टम स्क्रॉलबार स्टाइल (क्रोम, एज, सफारी के लिए) */
-    .container::-webkit-scrollbar {
-      width: 10px;
-      overflow-y: auto;
+  
+    .container {
+      position: relative;
+      z-index: 2;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
     }
-    
-    .container::-webkit-scrollbar-thumb {
-      background: var(--neon-purple);
-      border-radius: 10px;
-    }
-
+  
     .panel {
       background: var(--panel-bg);
       border: 1px solid var(--neon-purple);
@@ -309,10 +141,16 @@ button:hover {
       animation: panelFadeIn 0.8s ease-out;
     }
     @keyframes panelFadeIn {
-      from { opacity: 0; transform: scale(0.95); }
-      to { opacity: 1; transform: scale(1); }
+      from {
+        opacity: 0;
+        transform: scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
     }
-
+  
     h1 {
       text-align: center;
       margin-bottom: 1rem;
@@ -321,10 +159,14 @@ button:hover {
       animation: textGlow 1.5s ease-in-out infinite alternate;
     }
     @keyframes textGlow {
-      from { text-shadow: 0 0 5px var(--neon-pink); }
-      to { text-shadow: 0 0 20px var(--neon-pink); }
+      from {
+        text-shadow: 0 0 5px var(--neon-pink);
+      }
+      to {
+        text-shadow: 0 0 20px var(--neon-pink);
+      }
     }
-
+  
     h2 {
       border-bottom: 1px solid var(--neon-purple);
       padding-bottom: 0.5rem;
@@ -343,23 +185,29 @@ button:hover {
       animation: slideIn 1s ease-out;
     }
     @keyframes slideIn {
-      from { transform: translateX(-100%); }
-      to { transform: translateX(0); }
+      from {
+        transform: translateX(-100%);
+      }
+      to {
+        transform: translateX(0);
+      }
     }
-
+  
     .cyber-line {
       height: 2px;
       background: linear-gradient(90deg, transparent, var(--neon-purple), transparent);
       margin: 2rem 0;
     }
-
+  
     .input-group {
       display: grid;
       grid-template-columns: 1fr auto auto auto;
       gap: 1rem;
       margin-bottom: 2rem;
     }
-    input, textarea, select {
+    input,
+    textarea,
+    select {
       background: rgba(255,255,255,0.1);
       border: 1px solid var(--neon-purple);
       color: white;
@@ -368,7 +216,9 @@ button:hover {
       transition: all var(--transition-speed) ease;
       font-size: 1rem;
     }
-    input:focus, textarea:focus, select:focus {
+    input:focus,
+    textarea:focus,
+    select:focus {
       border-color: var(--neon-pink);
       box-shadow: var(--glow);
       outline: none;
@@ -390,21 +240,25 @@ button:hover {
     button:hover {
       transform: scale(1.05);
       box-shadow: 0 0 25px var(--neon-blue);
+      /* ---- Added from Code 1: Flicker effect on hover ---- */
+      animation: var(--flicker-animation);
     }
-
+  
     .empty {
       text-align: center;
       color: rgba(255,255,255,0.6);
       font-style: italic;
       padding: 1rem;
     }
-
-    .task-list, .note-history {
+  
+    .task-list,
+    .note-history {
       display: grid;
       gap: 1rem;
     }
-
-    .task-item, .note-item {
+  
+    .task-item,
+    .note-item {
       background: rgba(255,255,255,0.05);
       padding: 1.5rem;
       border-radius: 8px;
@@ -417,10 +271,16 @@ button:hover {
       overflow: hidden;
     }
     @keyframes taskAppear {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
-
+  
     /* Shine effect on task items */
     .task-item::before {
       content: "";
@@ -436,10 +296,14 @@ button:hover {
       animation: shine 0.75s forwards;
     }
     @keyframes shine {
-      from { left: -100%; }
-      to { left: 100%; }
+      from {
+        left: -100%;
+      }
+      to {
+        left: 100%;
+      }
     }
-
+  
     .priority-tag {
       padding: 4px 8px;
       border-radius: 4px;
@@ -447,16 +311,22 @@ button:hover {
       margin-bottom: 0.5rem;
       display: inline-block;
     }
-    .low { background: rgba(0, 177, 92, 0.95); }
-    .medium { background: rgba(190, 29, 0, 0.2); }
-    .high { background: rgba(255,23,68,0.2); }
-
+    .low {
+      background: rgba(0,230,118,0.2);
+    }
+    .medium {
+      background: rgba(255,214,0,0.2);
+    }
+    .high {
+      background: rgba(255,23,68,0.2);
+    }
+  
     .deadline {
       color: var(--accent);
       font-size: 0.9em;
       margin-top: 0.5rem;
     }
-
+  
     .progress-bar {
       width: 100%;
       height: 10px;
@@ -471,7 +341,7 @@ button:hover {
       width: 0;
       transition: width 0.5s ease;
     }
-
+  
     .task-item button,
     .note-item button {
       background: rgba(255,23,68,0.2);
@@ -486,15 +356,19 @@ button:hover {
       background: rgba(255,23,68,0.5);
       box-shadow: var(--glow);
     }
-
+  
     .reward-system {
       margin-top: 2rem;
       text-align: center;
       animation: fadeIn 1s ease;
     }
     @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
     }
     .reward-system h2 {
       color: var(--neon-pink);
@@ -511,30 +385,30 @@ button:hover {
       color: var(--neon-blue);
       margin-top: 0.5rem;
     }
-    
+  
     /* Center the toggle buttons */
-    #toggleHistoryBtn, #toggleNotesBtn {
+    #toggleHistoryBtn,
+    #toggleNotesBtn {
       display: block;
       margin: 1rem auto;
     }
-    
+  
     /* Settings Icon */
     #settingsIcon {
       position: fixed;
-      top: 800px;
+      top: 750px;
       right: 10px;
       font-size: 2rem;
       cursor: pointer;
       z-index: 1001;
-      grid-auto-flow: 1px;
     }
-    
+  
     /* Settings container */
     #settingsContainer {
       display: none;
       position: fixed;
-      top: 90px;
-      right: -10px;
+      top: 50px;
+      right: 10px;
       background: var(--panel-bg);
       border: 1px solid var(--neon-purple);
       padding: 1rem;
@@ -548,61 +422,91 @@ button:hover {
     #settingsContainer button {
       margin-top: 0.5rem;
     }
+  
+    /* Accordion effect for task history */
+    .task-history {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease;
+    }
     
-/* Accordion effect for task history */
-.task-history {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.4s ease;
-}
-.task-history.open {
-  max-height: 1000px;
-  overflow-y: auto;  /* Enables scrolling inside when content exceeds 1000px */
-  size:small;
-}
-
-/* Aborted task styling */
-.task-item.aborted {
-  border-left-color: #ff0000;
-  opacity: 0.85;
-}
-
-/* Hover glow */
-.task-item:hover,
-.note-item:hover {
-  box-shadow: 0 0 30px var(--neon-blue);
-}
-
+    .task-history.open {
+      max-height: 1000px;
+      overflow-y: auto;  /* Yeh property scrolling enable karti hai */
+    }
     
+    /* Aborted task styling */
+    .task-item.aborted {
+      border-left-color: #ff0000;
+      opacity: 0.85;
+    }
+  
+    /* Hover glow */
+    .task-item:hover,
+    .note-item:hover {
+      box-shadow: 0 0 30px var(--neon-blue);
+    }
+  
     @keyframes pulsate {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.03); }
-      100% { transform: scale(1); }
+      0% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.03);
+      }
+      100% {
+        transform: scale(1);
+      }
     }
     .pulsate {
       animation: pulsate 1.5s infinite;
     }
-    
-   /* Custom Scrollbar Styling */
-   ::-webkit-scrollbar { width: 8px; }
-   ::-webkit-scrollbar-track { background: rgba(255,255,255,0.1); }
-   ::-webkit-scrollbar-thumb {
-     background: var(--neon-purple);
-     border-radius: 4px;
-   }
-   ::-webkit-scrollbar-thumb:hover { background: var(--neon-pink); }
-    
+  
+    /* Custom Scrollbar Styling */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(255,255,255,0.1);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: var(--neon-purple);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--neon-pink);
+    }
+  
     /* Responsive adjustments for mobile devices */
     @media (max-width: 600px) {
-      .container { padding: 1rem; }
-      h1 { font-size: 2rem; }
-      h2 { font-size: 1.5rem; }
-      .input-group { grid-template-columns: 1fr auto; }
-      button { padding: 10px 20px; font-size: 0.9rem; }
-      .task-item, .note-item { flex-direction: column; align-items: flex-start; }
-      .task-item > div:last-child, .note-item > button { margin-top: 0.5rem; }
+      .container {
+        padding: 1rem;
+      }
+      h1 {
+        font-size: 2rem;
+      }
+      h2 {
+        font-size: 1.5rem;
+      }
+      .input-group {
+        grid-template-columns: 1fr auto;
+      }
+      button {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+      }
+      .task-item,
+      .note-item {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .task-item > div:last-child,
+      .note-item > button {
+        margin-top: 0.5rem;
+      }
     }
   </style>
+  
   
   
   <!-- Particles.js Library -->
@@ -688,31 +592,14 @@ button:hover {
   <script>
     class DarkProductivityApp {
       constructor() {
-        // Preload audio files (adjust paths as needed)
-        this.sounds = {
-          fifty: new Audio('50.mp3'),
-          seventy: new Audio('70.mp3'),
-          ninety: new Audio('90.mp3'),
-          beep: new Audio('beep.mp3'),
-          timer: new Audio('timer.mp3'),
-          reminder: new Audio('reminder.mp3')  // Naya reminder sound
-        };
-  
-        // Initialize state from localStorage or defaults
+        // Initial state loading from localStorage or defaults
         this.state = {
           tasks: JSON.parse(localStorage.getItem('tasks')) || [],
           notes: JSON.parse(localStorage.getItem('notes')) || [],
-          rewardPoints: parseInt(localStorage.getItem('rewardPoints')) || 0,
-          dailyPoints: parseInt(localStorage.getItem('dailyPoints')) || 0,
+          rewardPoints: Number(localStorage.getItem('rewardPoints')) || 0,
+          dailyPoints: Number(localStorage.getItem('dailyPoints')) || 0,
           dailyDate: localStorage.getItem('dailyDate') || new Date().toLocaleDateString(),
           dailyGoalAchieved: false
-        };
-  
-        // Configuration
-        this.config = {
-          voiceEnabled: (localStorage.getItem('voiceEnabled') === null)
-            ? true
-            : JSON.parse(localStorage.getItem('voiceEnabled'))
         };
   
         // Reset daily points if the day has changed
@@ -734,13 +621,28 @@ button:hover {
         this.beepTimeout = null;
         this.pausedReminderTimeout = null;
   
+        // Default configuration
+        this.config = {
+          voiceEnabled: JSON.parse(localStorage.getItem('voiceEnabled')) || false
+        };
+  
+        // Sounds (assuming you have corresponding audio files loaded)
+        this.sounds = {
+          timer: new Audio('timer.mp3'),
+          fifty: new Audio('50.mp3'),
+          seventy: new Audio('70.mp3'),
+          ninety: new Audio('90.mp3'),
+          beep: new Audio('beep.mp3'),
+          reminder: new Audio('reminder.mp3')
+        };
+  
         this.cacheDOM();
         this.bindEvents();
         this.updateUI();
         this.updateRewardPointsDisplay();
         this.startProgressUpdateLoop();
-        this.startBeepReminder();       // Beep reminder har 7 minute (sirf non-paused tasks ke liye)
-        this.startPausedReminder();     // Paused reminder har 3 minute (jab koi task paused ho)
+        this.startBeepReminder();       // Beep reminder every 7 minutes (only for non-paused tasks)
+        this.startPausedReminder();     // Paused reminder every 3 minutes (if any task is paused)
         this.initBackgroundAudio();
         this.requestNotificationPermission();
         this.setupVisibilityChange();
@@ -845,12 +747,14 @@ button:hover {
           id: Date.now(),
           text,
           priority: this.priority.value,
-          time, // in minutes
+          time, // in minutes (for display purposes)
           completed: false,
           aborted: false,
           progress: 0,
-          startTime: Date.now(),
-          endTime: Date.now() + time * 60000,
+          startTime: Date.now(), // initial creation time
+          totalDuration: time * 60000, // total active time required in ms
+          activeDuration: 0, // accumulated active (non-paused) time in ms
+          lastActiveTimestamp: Date.now(), // for tracking active intervals
           rewarded: false,
           prompted: false,
           beep50: false,
@@ -858,8 +762,7 @@ button:hover {
           beep90: false,
           // Pause/Resume properties
           paused: false,
-          pauseStart: null,
-          progressAtPause: null
+          pauseStart: null
         };
         this.state.tasks.push(newTask);
         this.taskInput.value = '';
@@ -950,10 +853,10 @@ button:hover {
         }
       }
   
+      // Updated: Calculate remaining time based on activeDuration and totalDuration
       getRemainingTimeText(task) {
         if (task.paused) return "Paused";
-        const now = Date.now();
-        const remaining = Math.max(task.endTime - now, 0);
+        const remaining = Math.max(task.totalDuration - task.activeDuration, 0);
         const minutes = Math.floor(remaining / 60000);
         const seconds = Math.floor((remaining % 60000) / 1000);
         return minutes === 0 ? `${seconds} seconds left` : `${minutes} minutes ${seconds} seconds left`;
@@ -1159,14 +1062,15 @@ button:hover {
         }
       }
   
-      // Pause / Resume functionality
+      // Pause / Resume functionality using activeDuration tracking
   
       pauseTask(id) {
         const task = this.state.tasks.find(t => t.id === id);
         if (task && !task.paused && !task.completed && !task.aborted) {
+          // Add the elapsed active time before pausing
+          task.activeDuration += Date.now() - task.lastActiveTimestamp;
           task.paused = true;
           task.pauseStart = Date.now();
-          task.progressAtPause = ((Date.now() - task.startTime) / (task.endTime - task.startTime)) * 100;
           this.updateUI();
           this.saveState();
           this.showAchievement('Timer paused.');
@@ -1176,11 +1080,9 @@ button:hover {
       resumeTask(id) {
         const task = this.state.tasks.find(t => t.id === id);
         if (task && task.paused && !task.completed && !task.aborted) {
-          const pauseDuration = Date.now() - task.pauseStart;
-          task.endTime += pauseDuration;
           task.paused = false;
+          task.lastActiveTimestamp = Date.now();
           task.pauseStart = null;
-          task.progressAtPause = null;
           this.updateUI();
           this.saveState();
           this.showAchievement('Timer resumed.');
@@ -1205,25 +1107,24 @@ button:hover {
         this.showAchievement('History downloaded and cleared!');
       }
   
+      // Updated progress loop using activeDuration (ignores paused time)
       startProgressUpdateLoop() {
         setInterval(() => {
           const now = Date.now();
           this.state.tasks.forEach(task => {
             if (!task.completed && !task.aborted) {
               if (task.paused) {
-                // Jab task paused ho, to progress ko freeze karke "Paused" dikhayenge
-                if (task.progressAtPause !== null) {
-                  task.progress = task.progressAtPause;
-                }
                 const deadlineElem = document.getElementById(`deadline-${task.id}`);
                 if (deadlineElem) {
                   deadlineElem.textContent = "Paused";
                 }
               } else {
-                const totalTime = task.endTime - task.startTime;
-                const elapsed = now - task.startTime;
-                const progress = Math.min((elapsed / totalTime) * 100, 100);
+                // Update activeDuration based on non-paused time
+                task.activeDuration += now - task.lastActiveTimestamp;
+                task.lastActiveTimestamp = now;
+                const progress = Math.min((task.activeDuration / task.totalDuration) * 100, 100);
                 task.progress = progress;
+  
                 const progressElem = document.getElementById(`progress-${task.id}`);
                 if (progressElem) {
                   progressElem.style.width = `${progress}%`;
@@ -1276,7 +1177,7 @@ button:hover {
         }, 500);
       }
   
-      // Modified beep reminder: sirf non-paused tasks ke liye har 7 minute beep bajayega
+      // Modified beep reminder: only for non-paused tasks every 7 minutes
       startBeepReminder() {
         if (this.beepTimeout) {
           clearTimeout(this.beepTimeout);
@@ -1292,7 +1193,7 @@ button:hover {
         beepFunction();
       }
   
-      // Naya paused reminder: agar koi task paused hai to har 3 minute reminder.mp3 bajayega
+      // Paused reminder: if any task is paused, play reminder every 3 minutes
       startPausedReminder() {
         if (this.pausedReminderTimeout) {
           clearTimeout(this.pausedReminderTimeout);
