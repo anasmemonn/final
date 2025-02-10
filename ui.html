@@ -592,7 +592,7 @@
   <script>
     class DarkProductivityApp {
       constructor() {
-        // Preload audio files (ensure paths are correct)
+        // Preload audio files
         this.sounds = {
           fifty: new Audio('progress1.mp3'),
           seventy: new Audio('progress2.mp3'),
@@ -601,7 +601,15 @@
           timer: new Audio('timer.mp3'),
           reminder: new Audio('reminder.mp3')
         };
-
+  
+        // Initially mute the progress audio files to bypass Chrome autoplay restrictions
+        this.sounds.fifty.muted = true;
+        this.sounds.seventy.muted = true;
+        this.sounds.ninety.muted = true;
+  
+        // Flag to check if audio has been unlocked
+        this.audioUnlocked = false;
+  
         // Initialize state from localStorage or defaults
         this.state = {
           tasks: JSON.parse(localStorage.getItem('tasks')) || [],
@@ -611,14 +619,14 @@
           dailyDate: localStorage.getItem('dailyDate') || new Date().toLocaleDateString(),
           dailyGoalAchieved: false
         };
-
+  
         // Configuration – voiceEnabled true by default
         this.config = {
           voiceEnabled: (localStorage.getItem('voiceEnabled') === null)
             ? true
             : JSON.parse(localStorage.getItem('voiceEnabled'))
         };
-
+  
         // Reset daily points if the day has changed
         const today = new Date().toLocaleDateString();
         if (this.state.dailyDate !== today) {
@@ -627,13 +635,13 @@
           this.state.dailyGoalAchieved = false;
           this.saveState();
         }
-
+  
         // History load threshold
         this.maxHistoryCount = 20;
-
+  
         // For controlling task history display (toggle button)
         this.historyExpanded = false;
-
+  
         this.cacheDOM();
         this.bindEvents();
         this.updateUI();
@@ -645,7 +653,25 @@
         this.requestNotificationPermission();
         this.setupVisibilityChange();
       }
-
+  
+      // Method to unlock audio on first user interaction
+      unlockAudio() {
+        if (this.audioUnlocked) return;
+        Object.keys(this.sounds).forEach(key => {
+          let sound = this.sounds[key];
+          // Play and immediately pause to unlock the audio element, then unmute it
+          sound.play().then(() => {
+            sound.pause();
+            sound.currentTime = 0;
+            sound.muted = false;
+          }).catch(err => {
+            console.log(`Audio unlock failed for ${key}:`, err);
+          });
+        });
+        this.audioUnlocked = true;
+        console.log("Audio unlocked!");
+      }
+  
       cacheDOM() {
         this.taskInput = document.getElementById('taskInput');
         this.priority = document.getElementById('priority');
@@ -666,7 +692,7 @@
         this.voiceToggle = document.getElementById('voiceToggle');
         this.dailyPointsDisplay = document.getElementById('dailyPoints');
       }
-
+  
       bindEvents() {
         this.addTaskBtn.addEventListener('click', () => this.handleAddTask());
         this.addNoteBtn.addEventListener('click', () => this.handleAddNote());
@@ -679,7 +705,7 @@
           this.config.voiceEnabled = this.voiceToggle.checked;
           localStorage.setItem('voiceEnabled', JSON.stringify(this.config.voiceEnabled));
         });
-
+  
         // Delegate active task actions
         this.taskList.addEventListener('click', (e) => {
           if (e.target.classList.contains('complete-task')) {
@@ -703,7 +729,7 @@
             this.resumeTask(id);
           }
         });
-
+  
         // Delegate deletion in history
         this.taskHistory.addEventListener('click', (e) => {
           if (e.target.classList.contains('delete-task')) {
@@ -711,7 +737,7 @@
             this.deleteTask(id);
           }
         });
-
+  
         // Toggle note decryption
         this.noteHistory.addEventListener('click', (e) => {
           if (e.target.classList.contains('toggle-note')) {
@@ -719,7 +745,7 @@
             this.toggleNoteDecryption(id);
           }
         });
-
+  
         // Add task on Enter (unless in note input)
         document.addEventListener('keypress', (e) => {
           if (e.key === 'Enter' && document.activeElement !== this.noteInput) {
@@ -728,7 +754,7 @@
           }
         });
       }
-
+  
       saveState() {
         localStorage.setItem('tasks', JSON.stringify(this.state.tasks));
         localStorage.setItem('notes', JSON.stringify(this.state.notes));
@@ -736,7 +762,7 @@
         localStorage.setItem('dailyPoints', this.state.dailyPoints);
         localStorage.setItem('dailyDate', this.state.dailyDate);
       }
-
+  
       handleAddTask() {
         const text = this.taskInput.value.trim();
         const time = parseInt(this.taskTime.value);
@@ -772,7 +798,7 @@
         this.playSound('timer');
         this.showAchievement('Timer started! Good luck!');
       }
-
+  
       completeTask(id, manual = false) {
         const task = this.state.tasks.find(t => t.id === id);
         if (task && !task.completed && !task.aborted) {
@@ -791,7 +817,7 @@
           this.showCelebration('Mission Accomplished!');
         }
       }
-
+  
       abortTask(id) {
         const task = this.state.tasks.find(t => t.id === id);
         if (task && !task.completed && !task.aborted) {
@@ -807,13 +833,13 @@
           this.saveState();
         }
       }
-
+  
       deleteTask(id) {
         this.state.tasks = this.state.tasks.filter(t => t.id !== id);
         this.updateUI();
         this.saveState();
       }
-
+  
       handleAddNote() {
         const text = this.noteInput.value.trim();
         if (!text) return;
@@ -829,13 +855,13 @@
         this.updateUI();
         this.saveState();
       }
-
+  
       deleteNote(id) {
         this.state.notes = this.state.notes.filter(note => note.id !== id);
         this.updateUI();
         this.saveState();
       }
-
+  
       toggleNoteDecryption(id) {
         const note = this.state.notes.find(note => note.id === id);
         if (note) {
@@ -844,7 +870,7 @@
           this.saveState();
         }
       }
-
+  
       updateRewardPointsDisplay() {
         this.dailyPointsDisplay.textContent = `Daily Points: ${this.state.dailyPoints}/100`;
         if (this.state.dailyPoints >= 100 && !this.state.dailyGoalAchieved) {
@@ -852,7 +878,7 @@
           this.state.dailyGoalAchieved = true;
         }
       }
-
+  
       getRemainingTimeText(task) {
         if (task.paused) return "Paused";
         const remaining = Math.max(task.totalDuration - task.activeDuration, 0);
@@ -860,7 +886,7 @@
         const seconds = Math.floor((remaining % 60000) / 1000);
         return minutes === 0 ? `${seconds} seconds left` : `${minutes} minutes ${seconds} seconds left`;
       }
-
+  
       renderActiveTasks() {
         const activeTasks = this.state.tasks.filter(task => !task.completed && !task.aborted);
         if (activeTasks.length === 0) {
@@ -892,13 +918,13 @@
           </div>
         `).join('');
       }
-
+  
       renderTaskHistory() {
         const completedTasks = this.state.tasks.filter(task => task.completed)
                                   .sort((a, b) => b.startTime - a.startTime);
         const abortedTasks = this.state.tasks.filter(task => task.aborted)
                                   .sort((a, b) => b.startTime - a.startTime);
-
+  
         let html = `<h3>Completed Missions</h3>`;
         if (completedTasks.length === 0) {
           html += `<p class="empty">No completed missions yet.</p>`;
@@ -925,7 +951,7 @@
             `;
           }).join('');
         }
-
+  
         html += `<h3>Aborted Missions</h3>`;
         if (abortedTasks.length === 0) {
           html += `<p class="empty">No aborted missions yet.</p>`;
@@ -949,19 +975,19 @@
             `;
           }).join('');
         }
-
+  
         const totalHistory = completedTasks.length + abortedTasks.length;
         if (totalHistory > this.maxHistoryCount) {
           html += `<button id="downloadHistoryBtn" class="download-history-btn">Download and Clear History</button>`;
         }
         this.taskHistory.innerHTML = html;
-
+  
         const downloadBtn = document.getElementById('downloadHistoryBtn');
         if (downloadBtn) {
           downloadBtn.addEventListener('click', () => this.downloadAndClearHistory());
         }
       }
-
+  
       renderNotes() {
         if (this.state.notes.length === 0) {
           this.noteHistory.innerHTML = `<p class="empty">No encrypted notes yet.</p>`;
@@ -977,13 +1003,13 @@
           </div>
         `).join('');
       }
-
+  
       updateUI() {
         this.renderActiveTasks();
         this.renderTaskHistory();
         this.renderNotes();
       }
-
+  
       toggleHistory() {
         if (this.taskHistoryWrapper.classList.contains('open')) {
           this.taskHistoryWrapper.classList.remove('open');
@@ -993,7 +1019,7 @@
           this.toggleHistoryBtn.textContent = "Hide Task History";
         }
       }
-
+  
       toggleNotes() {
         const notesContainer = document.getElementById("notesContainer");
         if (notesContainer.style.display === "none") {
@@ -1004,7 +1030,7 @@
           this.toggleNotesBtn.textContent = "Show Notes";
         }
       }
-
+  
       toggleSettings() {
         if (this.settingsContainer.style.display === "none") {
           this.settingsContainer.style.display = "block";
@@ -1012,7 +1038,7 @@
           this.settingsContainer.style.display = "none";
         }
       }
-
+  
       clearHistory() {
         this.state.tasks = this.state.tasks.filter(task => !task.completed && !task.aborted);
         this.historyExpanded = false;
@@ -1020,7 +1046,7 @@
         this.saveState();
         this.showAchievement('Task history cleared!');
       }
-
+  
       resetDailyPoints() {
         this.state.dailyPoints = 0;
         this.state.dailyGoalAchieved = false;
@@ -1028,7 +1054,7 @@
         this.saveState();
         this.showAchievement('Daily points reset!');
       }
-
+  
       editTask(id) {
         const taskTextElem = document.getElementById(`taskText-${id}`);
         const editInput = document.getElementById(`editInput-${id}`);
@@ -1041,7 +1067,7 @@
           saveBtn.style.display = "inline-block";
         }
       }
-
+  
       saveEditedTask(id) {
         const editInput = document.getElementById(`editInput-${id}`);
         const taskTextElem = document.getElementById(`taskText-${id}`);
@@ -1057,7 +1083,7 @@
           }
         }
       }
-
+  
       // Pause / Resume functionality using activeDuration tracking
       pauseTask(id) {
         const task = this.state.tasks.find(t => t.id === id);
@@ -1069,7 +1095,7 @@
           this.showAchievement('Timer paused.');
         }
       }
-
+  
       resumeTask(id) {
         const task = this.state.tasks.find(t => t.id === id);
         if (task && task.paused && !task.completed && !task.aborted) {
@@ -1082,7 +1108,7 @@
           this.showAchievement('Timer resumed.');
         }
       }
-
+  
       // Download & clear history if threshold exceeded
       downloadAndClearHistory() {
         const historyData = this.state.tasks.filter(task => task.completed || task.aborted);
@@ -1093,13 +1119,13 @@
         document.body.appendChild(downloadAnchorNode);
         downloadAnchorNode.click();
         downloadAnchorNode.remove();
-
+  
         this.state.tasks = this.state.tasks.filter(task => !(task.completed || task.aborted));
         this.saveState();
         this.updateUI();
         this.showAchievement('History downloaded and cleared!');
       }
-
+  
       // Update loop using activeDuration tracking
       startProgressUpdateLoop() {
         setInterval(() => {
@@ -1164,9 +1190,6 @@
                   if (userConfirmed) {
                     this.completeTask(task.id);
                   } else {
-                    // Do not auto-abort; let the task remain for user action.
-                    // The task remains in a finished state (progress 100) and awaits user manual abort if desired.
-                    // Optionally, you can show a message here.
                     alert("Task remains unfinished. You can manually abort it if needed.");
                   }
                 }
@@ -1175,7 +1198,7 @@
           });
         }, 500);
       }
-
+  
       startBeepReminder() {
         if (this.beepTimeout) {
           clearTimeout(this.beepTimeout);
@@ -1190,7 +1213,7 @@
         };
         beepFunction();
       }
-
+  
       startPausedReminder() {
         // Plays reminder sound every 3 minutes if any task is paused
         if (this.pausedReminderTimeout) {
@@ -1206,7 +1229,7 @@
         };
         reminderFunction();
       }
-
+  
       playSound(name) {
         if (this.sounds[name]) {
           this.sounds[name].currentTime = 0;
@@ -1217,7 +1240,7 @@
           console.warn("Sound not found:", name);
         }
       }
-
+  
       showAchievement(message) {
         const achievement = document.createElement('div');
         achievement.textContent = message;
@@ -1232,7 +1255,7 @@
         document.body.appendChild(achievement);
         setTimeout(() => achievement.remove(), 3000);
       }
-
+  
       showCelebration(message) {
         for (let i = 0; i < 3; i++) {
           setTimeout(() => {
@@ -1256,7 +1279,7 @@
         document.body.appendChild(flash);
         setTimeout(() => { flash.style.opacity = '0'; }, 100);
         setTimeout(() => { flash.remove(); }, 1100);
-
+  
         const celebration = document.createElement('div');
         celebration.textContent = message;
         celebration.style.position = 'fixed';
@@ -1283,13 +1306,13 @@
         }, 2000);
         setTimeout(() => { celebration.remove(); }, 2500);
       }
-
+  
       requestNotificationPermission() {
         if ("Notification" in window && Notification.permission !== "granted") {
           Notification.requestPermission();
         }
       }
-
+  
       initBackgroundAudio() {
         if (window.AudioContext || window.webkitAudioContext) {
           try {
@@ -1303,7 +1326,7 @@
           }
         }
       }
-
+  
       setupVisibilityChange() {
         document.addEventListener('visibilitychange', () => {
           if (document.visibilityState === 'hidden') {
@@ -1324,32 +1347,25 @@
           }
         });
       }
-
-      startBeepReminder() {
-        if (this.beepTimeout) {
-          clearTimeout(this.beepTimeout);
-        }
-        const beepFunction = () => {
-          const activeTasks = this.state.tasks.filter(task => !task.completed && !task.aborted);
-          if (activeTasks.length > 0) {
-            console.log("Beep! 🔊");
-            this.playSound('beep');
-          }
-          this.beepTimeout = setTimeout(beepFunction, 7 * 60 * 1000);
-        };
-        beepFunction();
-      }
-
+  
       componentWillUnmount() {
         if (this.beepTimeout) {
           clearTimeout(this.beepTimeout);
         }
       }
     }
-
+  
+    // DOMContentLoaded: Initialize the app and ensure audio unlock on first user interaction
     document.addEventListener('DOMContentLoaded', () => {
       const app = new DarkProductivityApp();
-
+  
+      // On first user interaction (click or touchstart), unlock audio elements
+      const unlockHandler = () => {
+        app.unlockAudio();
+      };
+      document.body.addEventListener('click', unlockHandler, { once: true });
+      document.body.addEventListener('touchstart', unlockHandler, { once: true });
+  
       if (typeof particlesJS !== "undefined") {
         particlesJS('particles-js', {
           particles: {
@@ -1381,7 +1397,7 @@
         console.error("particlesJS is not loaded!");
       }
     });
-
+  
     document.addEventListener("visibilitychange", () => {
       if (document.hidden) {
           console.log("Page is in background");
@@ -1389,7 +1405,7 @@
           console.log("Page is active");
       }
     });
-
+  
     document.addEventListener("click", () => {
       Notification.requestPermission().then(permission => {
           if (permission === "granted") {
@@ -1398,6 +1414,8 @@
       });
     });
   </script>
+  
+  
   
   
   
