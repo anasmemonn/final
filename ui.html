@@ -592,16 +592,33 @@
   <script>
     class DarkProductivityApp {
       constructor() {
-        // Initial state loading from localStorage or defaults
+        // Preload audio files (adjust paths as needed)
+        this.sounds = {
+          fifty: new Audio('50.mp3'),
+          seventy: new Audio('70.mp3'),
+          ninety: new Audio('90.mp3'),
+          beep: new Audio('beep.mp3'),
+          timer: new Audio('timer.mp3'),
+          reminder: new Audio('reminder.mp3')
+        };
+
+        // Initialize state from localStorage or defaults
         this.state = {
           tasks: JSON.parse(localStorage.getItem('tasks')) || [],
           notes: JSON.parse(localStorage.getItem('notes')) || [],
-          rewardPoints: Number(localStorage.getItem('rewardPoints')) || 0,
-          dailyPoints: Number(localStorage.getItem('dailyPoints')) || 0,
+          rewardPoints: parseInt(localStorage.getItem('rewardPoints')) || 0,
+          dailyPoints: parseInt(localStorage.getItem('dailyPoints')) || 0,
           dailyDate: localStorage.getItem('dailyDate') || new Date().toLocaleDateString(),
           dailyGoalAchieved: false
         };
-  
+
+        // Configuration – voiceEnabled true by default
+        this.config = {
+          voiceEnabled: (localStorage.getItem('voiceEnabled') === null)
+            ? true
+            : JSON.parse(localStorage.getItem('voiceEnabled'))
+        };
+
         // Reset daily points if the day has changed
         const today = new Date().toLocaleDateString();
         if (this.state.dailyDate !== today) {
@@ -610,44 +627,25 @@
           this.state.dailyGoalAchieved = false;
           this.saveState();
         }
-  
+
         // History load threshold
         this.maxHistoryCount = 20;
-  
+
         // For controlling task history display (toggle button)
         this.historyExpanded = false;
-  
-        // Timeouts for beep and paused reminder
-        this.beepTimeout = null;
-        this.pausedReminderTimeout = null;
-  
-        // Default configuration
-        this.config = {
-          voiceEnabled: JSON.parse(localStorage.getItem('voiceEnabled')) || false
-        };
-  
-        // Sounds (assuming you have corresponding audio files loaded)
-        this.sounds = {
-          timer: new Audio('timer.mp3'),
-          fifty: new Audio('50.mp3'),
-          seventy: new Audio('70.mp3'),
-          ninety: new Audio('90.mp3'),
-          beep: new Audio('beep.mp3'),
-          reminder: new Audio('reminder.mp3')
-        };
-  
+
         this.cacheDOM();
         this.bindEvents();
         this.updateUI();
         this.updateRewardPointsDisplay();
         this.startProgressUpdateLoop();
-        this.startBeepReminder();       // Beep reminder every 7 minutes (only for non-paused tasks)
-        this.startPausedReminder();     // Paused reminder every 3 minutes (if any task is paused)
+        this.startBeepReminder();
+        this.startPausedReminder();  // Paused reminder every 3 minutes
         this.initBackgroundAudio();
         this.requestNotificationPermission();
         this.setupVisibilityChange();
       }
-  
+
       cacheDOM() {
         this.taskInput = document.getElementById('taskInput');
         this.priority = document.getElementById('priority');
@@ -668,7 +666,7 @@
         this.voiceToggle = document.getElementById('voiceToggle');
         this.dailyPointsDisplay = document.getElementById('dailyPoints');
       }
-  
+
       bindEvents() {
         this.addTaskBtn.addEventListener('click', () => this.handleAddTask());
         this.addNoteBtn.addEventListener('click', () => this.handleAddNote());
@@ -681,7 +679,7 @@
           this.config.voiceEnabled = this.voiceToggle.checked;
           localStorage.setItem('voiceEnabled', JSON.stringify(this.config.voiceEnabled));
         });
-  
+
         // Delegate active task actions
         this.taskList.addEventListener('click', (e) => {
           if (e.target.classList.contains('complete-task')) {
@@ -705,7 +703,7 @@
             this.resumeTask(id);
           }
         });
-  
+
         // Delegate deletion in history
         this.taskHistory.addEventListener('click', (e) => {
           if (e.target.classList.contains('delete-task')) {
@@ -713,7 +711,7 @@
             this.deleteTask(id);
           }
         });
-  
+
         // Toggle note decryption
         this.noteHistory.addEventListener('click', (e) => {
           if (e.target.classList.contains('toggle-note')) {
@@ -721,7 +719,7 @@
             this.toggleNoteDecryption(id);
           }
         });
-  
+
         // Add task on Enter (unless in note input)
         document.addEventListener('keypress', (e) => {
           if (e.key === 'Enter' && document.activeElement !== this.noteInput) {
@@ -730,7 +728,7 @@
           }
         });
       }
-  
+
       saveState() {
         localStorage.setItem('tasks', JSON.stringify(this.state.tasks));
         localStorage.setItem('notes', JSON.stringify(this.state.notes));
@@ -738,22 +736,23 @@
         localStorage.setItem('dailyPoints', this.state.dailyPoints);
         localStorage.setItem('dailyDate', this.state.dailyDate);
       }
-  
+
       handleAddTask() {
         const text = this.taskInput.value.trim();
         const time = parseInt(this.taskTime.value);
         if (!text || isNaN(time) || time <= 0) return;
+        // Use activeDuration tracking
         const newTask = {
           id: Date.now(),
           text,
           priority: this.priority.value,
-          time, // in minutes (for display purposes)
+          time, // in minutes
           completed: false,
           aborted: false,
           progress: 0,
-          startTime: Date.now(), // initial creation time
-          totalDuration: time * 60000, // total active time required in ms
-          activeDuration: 0, // accumulated active (non-paused) time in ms
+          startTime: Date.now(),
+          totalDuration: time * 60000, // total required active time
+          activeDuration: 0,             // accumulated active time
           lastActiveTimestamp: Date.now(), // for tracking active intervals
           rewarded: false,
           prompted: false,
@@ -772,7 +771,7 @@
         this.playSound('timer');
         this.showAchievement('Timer started! Good luck!');
       }
-  
+
       completeTask(id, manual = false) {
         const task = this.state.tasks.find(t => t.id === id);
         if (task && !task.completed && !task.aborted) {
@@ -791,7 +790,7 @@
           this.showCelebration('Mission Accomplished!');
         }
       }
-  
+
       abortTask(id) {
         const task = this.state.tasks.find(t => t.id === id);
         if (task && !task.completed && !task.aborted) {
@@ -807,13 +806,13 @@
           this.saveState();
         }
       }
-  
+
       deleteTask(id) {
         this.state.tasks = this.state.tasks.filter(t => t.id !== id);
         this.updateUI();
         this.saveState();
       }
-  
+
       handleAddNote() {
         const text = this.noteInput.value.trim();
         if (!text) return;
@@ -829,13 +828,13 @@
         this.updateUI();
         this.saveState();
       }
-  
+
       deleteNote(id) {
         this.state.notes = this.state.notes.filter(note => note.id !== id);
         this.updateUI();
         this.saveState();
       }
-  
+
       toggleNoteDecryption(id) {
         const note = this.state.notes.find(note => note.id === id);
         if (note) {
@@ -844,7 +843,7 @@
           this.saveState();
         }
       }
-  
+
       updateRewardPointsDisplay() {
         this.dailyPointsDisplay.textContent = `Daily Points: ${this.state.dailyPoints}/100`;
         if (this.state.dailyPoints >= 100 && !this.state.dailyGoalAchieved) {
@@ -852,16 +851,16 @@
           this.state.dailyGoalAchieved = true;
         }
       }
-  
-      // Updated: Calculate remaining time based on activeDuration and totalDuration
+
       getRemainingTimeText(task) {
         if (task.paused) return "Paused";
+        // Calculate remaining active time (in seconds and minutes)
         const remaining = Math.max(task.totalDuration - task.activeDuration, 0);
         const minutes = Math.floor(remaining / 60000);
         const seconds = Math.floor((remaining % 60000) / 1000);
         return minutes === 0 ? `${seconds} seconds left` : `${minutes} minutes ${seconds} seconds left`;
       }
-  
+
       renderActiveTasks() {
         const activeTasks = this.state.tasks.filter(task => !task.completed && !task.aborted);
         if (activeTasks.length === 0) {
@@ -893,14 +892,14 @@
           </div>
         `).join('');
       }
-  
+
       renderTaskHistory() {
         // Separate history into Completed and Aborted tasks, sorted by start time (latest first)
         const completedTasks = this.state.tasks.filter(task => task.completed)
                                   .sort((a, b) => b.startTime - a.startTime);
         const abortedTasks = this.state.tasks.filter(task => task.aborted)
                                   .sort((a, b) => b.startTime - a.startTime);
-  
+
         let html = `<h3>Completed Missions</h3>`;
         if (completedTasks.length === 0) {
           html += `<p class="empty">No completed missions yet.</p>`;
@@ -927,7 +926,7 @@
             `;
           }).join('');
         }
-  
+
         html += `<h3>Aborted Missions</h3>`;
         if (abortedTasks.length === 0) {
           html += `<p class="empty">No aborted missions yet.</p>`;
@@ -951,20 +950,20 @@
             `;
           }).join('');
         }
-  
+
         // If too many history items exist, show a download & clear button
         const totalHistory = completedTasks.length + abortedTasks.length;
         if (totalHistory > this.maxHistoryCount) {
           html += `<button id="downloadHistoryBtn" class="download-history-btn">Download and Clear History</button>`;
         }
         this.taskHistory.innerHTML = html;
-  
+
         const downloadBtn = document.getElementById('downloadHistoryBtn');
         if (downloadBtn) {
           downloadBtn.addEventListener('click', () => this.downloadAndClearHistory());
         }
       }
-  
+
       renderNotes() {
         if (this.state.notes.length === 0) {
           this.noteHistory.innerHTML = `<p class="empty">No encrypted notes yet.</p>`;
@@ -980,13 +979,13 @@
           </div>
         `).join('');
       }
-  
+
       updateUI() {
         this.renderActiveTasks();
         this.renderTaskHistory();
         this.renderNotes();
       }
-  
+
       toggleHistory() {
         if (this.taskHistoryWrapper.classList.contains('open')) {
           this.taskHistoryWrapper.classList.remove('open');
@@ -996,7 +995,7 @@
           this.toggleHistoryBtn.textContent = "Hide Task History";
         }
       }
-  
+
       toggleNotes() {
         const notesContainer = document.getElementById("notesContainer");
         if (notesContainer.style.display === "none") {
@@ -1007,7 +1006,7 @@
           this.toggleNotesBtn.textContent = "Show Notes";
         }
       }
-  
+
       toggleSettings() {
         if (this.settingsContainer.style.display === "none") {
           this.settingsContainer.style.display = "block";
@@ -1015,7 +1014,7 @@
           this.settingsContainer.style.display = "none";
         }
       }
-  
+
       clearHistory() {
         // Remove all tasks that are completed or aborted
         this.state.tasks = this.state.tasks.filter(task => !task.completed && !task.aborted);
@@ -1024,7 +1023,7 @@
         this.saveState();
         this.showAchievement('Task history cleared!');
       }
-  
+
       resetDailyPoints() {
         this.state.dailyPoints = 0;
         this.state.dailyGoalAchieved = false;
@@ -1032,7 +1031,7 @@
         this.saveState();
         this.showAchievement('Daily points reset!');
       }
-  
+
       editTask(id) {
         const taskTextElem = document.getElementById(`taskText-${id}`);
         const editInput = document.getElementById(`editInput-${id}`);
@@ -1045,7 +1044,7 @@
           saveBtn.style.display = "inline-block";
         }
       }
-  
+
       saveEditedTask(id) {
         const editInput = document.getElementById(`editInput-${id}`);
         const taskTextElem = document.getElementById(`taskText-${id}`);
@@ -1061,14 +1060,12 @@
           }
         }
       }
-  
+
       // Pause / Resume functionality using activeDuration tracking
-  
       pauseTask(id) {
         const task = this.state.tasks.find(t => t.id === id);
         if (task && !task.paused && !task.completed && !task.aborted) {
-          // Add the elapsed active time before pausing
-          task.activeDuration += Date.now() - task.lastActiveTimestamp;
+          // On pause, do not update activeDuration further
           task.paused = true;
           task.pauseStart = Date.now();
           this.updateUI();
@@ -1076,10 +1073,11 @@
           this.showAchievement('Timer paused.');
         }
       }
-  
+
       resumeTask(id) {
         const task = this.state.tasks.find(t => t.id === id);
         if (task && task.paused && !task.completed && !task.aborted) {
+          // On resume, set lastActiveTimestamp to current time so that paused duration is not counted
           task.paused = false;
           task.lastActiveTimestamp = Date.now();
           task.pauseStart = null;
@@ -1088,8 +1086,8 @@
           this.showAchievement('Timer resumed.');
         }
       }
-  
-      // If history (completed + aborted) exceeds threshold, download & clear it
+
+      // Download & clear history if threshold exceeded
       downloadAndClearHistory() {
         const historyData = this.state.tasks.filter(task => task.completed || task.aborted);
         const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(historyData, null, 2));
@@ -1099,32 +1097,33 @@
         document.body.appendChild(downloadAnchorNode);
         downloadAnchorNode.click();
         downloadAnchorNode.remove();
-  
+
         // Remove history tasks from state
         this.state.tasks = this.state.tasks.filter(task => !(task.completed || task.aborted));
         this.saveState();
         this.updateUI();
         this.showAchievement('History downloaded and cleared!');
       }
-  
-      // Updated progress loop using activeDuration (ignores paused time)
+
+      // Update loop using activeDuration tracking
       startProgressUpdateLoop() {
         setInterval(() => {
           const now = Date.now();
           this.state.tasks.forEach(task => {
             if (!task.completed && !task.aborted) {
               if (task.paused) {
+                // When paused, keep progress as it was
+                // (activeDuration remains unchanged)
                 const deadlineElem = document.getElementById(`deadline-${task.id}`);
                 if (deadlineElem) {
                   deadlineElem.textContent = "Paused";
                 }
               } else {
-                // Update activeDuration based on non-paused time
+                // Update activeDuration only when not paused
                 task.activeDuration += now - task.lastActiveTimestamp;
                 task.lastActiveTimestamp = now;
                 const progress = Math.min((task.activeDuration / task.totalDuration) * 100, 100);
                 task.progress = progress;
-  
                 const progressElem = document.getElementById(`progress-${task.id}`);
                 if (progressElem) {
                   progressElem.style.width = `${progress}%`;
@@ -1153,6 +1152,10 @@
                 if (progress >= 100 && !task.completed && !task.prompted) {
                   task.prompted = true;
                   this.playSound('timer');
+                  // Request notification permission if not granted
+                  if (Notification.permission !== "granted") {
+                    Notification.requestPermission();
+                  }
                   if (Notification.permission === "granted") {
                     new Notification("Task Timer Finished", { 
                       body: `Task: ${task.text}\nDid you complete the task?`
@@ -1176,14 +1179,13 @@
           });
         }, 500);
       }
-  
-      // Modified beep reminder: only for non-paused tasks every 7 minutes
+
       startBeepReminder() {
         if (this.beepTimeout) {
           clearTimeout(this.beepTimeout);
         }
         const beepFunction = () => {
-          const activeTasks = this.state.tasks.filter(task => !task.completed && !task.aborted && !task.paused);
+          const activeTasks = this.state.tasks.filter(task => !task.completed && !task.aborted);
           if (activeTasks.length > 0) {
             console.log("Beep! 🔊");
             this.playSound('beep');
@@ -1192,9 +1194,9 @@
         };
         beepFunction();
       }
-  
-      // Paused reminder: if any task is paused, play reminder every 3 minutes
+
       startPausedReminder() {
+        // Plays reminder sound every 3 minutes if any task is paused
         if (this.pausedReminderTimeout) {
           clearTimeout(this.pausedReminderTimeout);
         }
@@ -1208,7 +1210,7 @@
         };
         reminderFunction();
       }
-  
+
       playSound(name) {
         if (this.sounds[name]) {
           this.sounds[name].currentTime = 0;
@@ -1219,7 +1221,7 @@
           console.warn("Sound not found:", name);
         }
       }
-  
+
       showAchievement(message) {
         const achievement = document.createElement('div');
         achievement.textContent = message;
@@ -1234,7 +1236,7 @@
         document.body.appendChild(achievement);
         setTimeout(() => achievement.remove(), 3000);
       }
-  
+
       showCelebration(message) {
         for (let i = 0; i < 3; i++) {
           setTimeout(() => {
@@ -1258,7 +1260,7 @@
         document.body.appendChild(flash);
         setTimeout(() => { flash.style.opacity = '0'; }, 100);
         setTimeout(() => { flash.remove(); }, 1100);
-  
+
         const celebration = document.createElement('div');
         celebration.textContent = message;
         celebration.style.position = 'fixed';
@@ -1285,13 +1287,13 @@
         }, 2000);
         setTimeout(() => { celebration.remove(); }, 2500);
       }
-  
+
       requestNotificationPermission() {
         if ("Notification" in window && Notification.permission !== "granted") {
           Notification.requestPermission();
         }
       }
-  
+
       initBackgroundAudio() {
         if (window.AudioContext || window.webkitAudioContext) {
           try {
@@ -1305,7 +1307,7 @@
           }
         }
       }
-  
+
       setupVisibilityChange() {
         document.addEventListener('visibilitychange', () => {
           if (document.visibilityState === 'hidden') {
@@ -1326,20 +1328,32 @@
           }
         });
       }
-  
+
+      startBeepReminder() {
+        if (this.beepTimeout) {
+          clearTimeout(this.beepTimeout);
+        }
+        const beepFunction = () => {
+          const activeTasks = this.state.tasks.filter(task => !task.completed && !task.aborted);
+          if (activeTasks.length > 0) {
+            console.log("Beep! 🔊");
+            this.playSound('beep');
+          }
+          this.beepTimeout = setTimeout(beepFunction, 7 * 60 * 1000);
+        };
+        beepFunction();
+      }
+
       componentWillUnmount() {
         if (this.beepTimeout) {
           clearTimeout(this.beepTimeout);
         }
-        if (this.pausedReminderTimeout) {
-          clearTimeout(this.pausedReminderTimeout);
-        }
       }
     }
-  
+
     document.addEventListener('DOMContentLoaded', () => {
       const app = new DarkProductivityApp();
-  
+
       if (typeof particlesJS !== "undefined") {
         particlesJS('particles-js', {
           particles: {
@@ -1371,7 +1385,7 @@
         console.error("particlesJS is not loaded!");
       }
     });
-  
+
     document.addEventListener("visibilitychange", () => {
       if (document.hidden) {
           console.log("Page is in background");
@@ -1379,7 +1393,7 @@
           console.log("Page is active");
       }
     });
-  
+
     document.addEventListener("click", () => {
       Notification.requestPermission().then(permission => {
           if (permission === "granted") {
@@ -1388,7 +1402,6 @@
       });
     });
   </script>
-  
   
   
   
