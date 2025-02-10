@@ -694,9 +694,10 @@ button:hover {
           seventy: new Audio('70.mp3'),
           ninety: new Audio('90.mp3'),
           beep: new Audio('beep.mp3'),
-          timer: new Audio('timer.mp3')
+          timer: new Audio('timer.mp3'),
+          reminder: new Audio('reminder.mp3')  // Naya reminder sound
         };
-
+  
         // Initialize state from localStorage or defaults
         this.state = {
           tasks: JSON.parse(localStorage.getItem('tasks')) || [],
@@ -706,14 +707,14 @@ button:hover {
           dailyDate: localStorage.getItem('dailyDate') || new Date().toLocaleDateString(),
           dailyGoalAchieved: false
         };
-
+  
         // Configuration
         this.config = {
           voiceEnabled: (localStorage.getItem('voiceEnabled') === null)
             ? true
             : JSON.parse(localStorage.getItem('voiceEnabled'))
         };
-
+  
         // Reset daily points if the day has changed
         const today = new Date().toLocaleDateString();
         if (this.state.dailyDate !== today) {
@@ -722,24 +723,29 @@ button:hover {
           this.state.dailyGoalAchieved = false;
           this.saveState();
         }
-
+  
         // History load threshold
         this.maxHistoryCount = 20;
-
+  
         // For controlling task history display (toggle button)
         this.historyExpanded = false;
-
+  
+        // Timeouts for beep and paused reminder
+        this.beepTimeout = null;
+        this.pausedReminderTimeout = null;
+  
         this.cacheDOM();
         this.bindEvents();
         this.updateUI();
         this.updateRewardPointsDisplay();
         this.startProgressUpdateLoop();
-        this.startBeepReminder();
+        this.startBeepReminder();       // Beep reminder har 7 minute (sirf non-paused tasks ke liye)
+        this.startPausedReminder();     // Paused reminder har 3 minute (jab koi task paused ho)
         this.initBackgroundAudio();
         this.requestNotificationPermission();
         this.setupVisibilityChange();
       }
-
+  
       cacheDOM() {
         this.taskInput = document.getElementById('taskInput');
         this.priority = document.getElementById('priority');
@@ -760,7 +766,7 @@ button:hover {
         this.voiceToggle = document.getElementById('voiceToggle');
         this.dailyPointsDisplay = document.getElementById('dailyPoints');
       }
-
+  
       bindEvents() {
         this.addTaskBtn.addEventListener('click', () => this.handleAddTask());
         this.addNoteBtn.addEventListener('click', () => this.handleAddNote());
@@ -773,7 +779,7 @@ button:hover {
           this.config.voiceEnabled = this.voiceToggle.checked;
           localStorage.setItem('voiceEnabled', JSON.stringify(this.config.voiceEnabled));
         });
-
+  
         // Delegate active task actions
         this.taskList.addEventListener('click', (e) => {
           if (e.target.classList.contains('complete-task')) {
@@ -797,7 +803,7 @@ button:hover {
             this.resumeTask(id);
           }
         });
-
+  
         // Delegate deletion in history
         this.taskHistory.addEventListener('click', (e) => {
           if (e.target.classList.contains('delete-task')) {
@@ -805,7 +811,7 @@ button:hover {
             this.deleteTask(id);
           }
         });
-
+  
         // Toggle note decryption
         this.noteHistory.addEventListener('click', (e) => {
           if (e.target.classList.contains('toggle-note')) {
@@ -813,7 +819,7 @@ button:hover {
             this.toggleNoteDecryption(id);
           }
         });
-
+  
         // Add task on Enter (unless in note input)
         document.addEventListener('keypress', (e) => {
           if (e.key === 'Enter' && document.activeElement !== this.noteInput) {
@@ -822,7 +828,7 @@ button:hover {
           }
         });
       }
-
+  
       saveState() {
         localStorage.setItem('tasks', JSON.stringify(this.state.tasks));
         localStorage.setItem('notes', JSON.stringify(this.state.notes));
@@ -830,7 +836,7 @@ button:hover {
         localStorage.setItem('dailyPoints', this.state.dailyPoints);
         localStorage.setItem('dailyDate', this.state.dailyDate);
       }
-
+  
       handleAddTask() {
         const text = this.taskInput.value.trim();
         const time = parseInt(this.taskTime.value);
@@ -863,7 +869,7 @@ button:hover {
         this.playSound('timer');
         this.showAchievement('Timer started! Good luck!');
       }
-
+  
       completeTask(id, manual = false) {
         const task = this.state.tasks.find(t => t.id === id);
         if (task && !task.completed && !task.aborted) {
@@ -882,7 +888,7 @@ button:hover {
           this.showCelebration('Mission Accomplished!');
         }
       }
-
+  
       abortTask(id) {
         const task = this.state.tasks.find(t => t.id === id);
         if (task && !task.completed && !task.aborted) {
@@ -898,13 +904,13 @@ button:hover {
           this.saveState();
         }
       }
-
+  
       deleteTask(id) {
         this.state.tasks = this.state.tasks.filter(t => t.id !== id);
         this.updateUI();
         this.saveState();
       }
-
+  
       handleAddNote() {
         const text = this.noteInput.value.trim();
         if (!text) return;
@@ -920,13 +926,13 @@ button:hover {
         this.updateUI();
         this.saveState();
       }
-
+  
       deleteNote(id) {
         this.state.notes = this.state.notes.filter(note => note.id !== id);
         this.updateUI();
         this.saveState();
       }
-
+  
       toggleNoteDecryption(id) {
         const note = this.state.notes.find(note => note.id === id);
         if (note) {
@@ -935,7 +941,7 @@ button:hover {
           this.saveState();
         }
       }
-
+  
       updateRewardPointsDisplay() {
         this.dailyPointsDisplay.textContent = `Daily Points: ${this.state.dailyPoints}/100`;
         if (this.state.dailyPoints >= 100 && !this.state.dailyGoalAchieved) {
@@ -943,7 +949,7 @@ button:hover {
           this.state.dailyGoalAchieved = true;
         }
       }
-
+  
       getRemainingTimeText(task) {
         if (task.paused) return "Paused";
         const now = Date.now();
@@ -952,7 +958,7 @@ button:hover {
         const seconds = Math.floor((remaining % 60000) / 1000);
         return minutes === 0 ? `${seconds} seconds left` : `${minutes} minutes ${seconds} seconds left`;
       }
-
+  
       renderActiveTasks() {
         const activeTasks = this.state.tasks.filter(task => !task.completed && !task.aborted);
         if (activeTasks.length === 0) {
@@ -984,14 +990,14 @@ button:hover {
           </div>
         `).join('');
       }
-
+  
       renderTaskHistory() {
         // Separate history into Completed and Aborted tasks, sorted by start time (latest first)
         const completedTasks = this.state.tasks.filter(task => task.completed)
                                   .sort((a, b) => b.startTime - a.startTime);
         const abortedTasks = this.state.tasks.filter(task => task.aborted)
                                   .sort((a, b) => b.startTime - a.startTime);
-
+  
         let html = `<h3>Completed Missions</h3>`;
         if (completedTasks.length === 0) {
           html += `<p class="empty">No completed missions yet.</p>`;
@@ -1018,7 +1024,7 @@ button:hover {
             `;
           }).join('');
         }
-
+  
         html += `<h3>Aborted Missions</h3>`;
         if (abortedTasks.length === 0) {
           html += `<p class="empty">No aborted missions yet.</p>`;
@@ -1042,20 +1048,20 @@ button:hover {
             `;
           }).join('');
         }
-
+  
         // If too many history items exist, show a download & clear button
         const totalHistory = completedTasks.length + abortedTasks.length;
         if (totalHistory > this.maxHistoryCount) {
           html += `<button id="downloadHistoryBtn" class="download-history-btn">Download and Clear History</button>`;
         }
         this.taskHistory.innerHTML = html;
-
+  
         const downloadBtn = document.getElementById('downloadHistoryBtn');
         if (downloadBtn) {
           downloadBtn.addEventListener('click', () => this.downloadAndClearHistory());
         }
       }
-
+  
       renderNotes() {
         if (this.state.notes.length === 0) {
           this.noteHistory.innerHTML = `<p class="empty">No encrypted notes yet.</p>`;
@@ -1071,13 +1077,13 @@ button:hover {
           </div>
         `).join('');
       }
-
+  
       updateUI() {
         this.renderActiveTasks();
         this.renderTaskHistory();
         this.renderNotes();
       }
-
+  
       toggleHistory() {
         if (this.taskHistoryWrapper.classList.contains('open')) {
           this.taskHistoryWrapper.classList.remove('open');
@@ -1087,7 +1093,7 @@ button:hover {
           this.toggleHistoryBtn.textContent = "Hide Task History";
         }
       }
-
+  
       toggleNotes() {
         const notesContainer = document.getElementById("notesContainer");
         if (notesContainer.style.display === "none") {
@@ -1098,7 +1104,7 @@ button:hover {
           this.toggleNotesBtn.textContent = "Show Notes";
         }
       }
-
+  
       toggleSettings() {
         if (this.settingsContainer.style.display === "none") {
           this.settingsContainer.style.display = "block";
@@ -1106,7 +1112,7 @@ button:hover {
           this.settingsContainer.style.display = "none";
         }
       }
-
+  
       clearHistory() {
         // Remove all tasks that are completed or aborted
         this.state.tasks = this.state.tasks.filter(task => !task.completed && !task.aborted);
@@ -1115,7 +1121,7 @@ button:hover {
         this.saveState();
         this.showAchievement('Task history cleared!');
       }
-
+  
       resetDailyPoints() {
         this.state.dailyPoints = 0;
         this.state.dailyGoalAchieved = false;
@@ -1123,7 +1129,7 @@ button:hover {
         this.saveState();
         this.showAchievement('Daily points reset!');
       }
-
+  
       editTask(id) {
         const taskTextElem = document.getElementById(`taskText-${id}`);
         const editInput = document.getElementById(`editInput-${id}`);
@@ -1136,7 +1142,7 @@ button:hover {
           saveBtn.style.display = "inline-block";
         }
       }
-
+  
       saveEditedTask(id) {
         const editInput = document.getElementById(`editInput-${id}`);
         const taskTextElem = document.getElementById(`taskText-${id}`);
@@ -1152,9 +1158,9 @@ button:hover {
           }
         }
       }
-
+  
       // Pause / Resume functionality
-
+  
       pauseTask(id) {
         const task = this.state.tasks.find(t => t.id === id);
         if (task && !task.paused && !task.completed && !task.aborted) {
@@ -1166,7 +1172,7 @@ button:hover {
           this.showAchievement('Timer paused.');
         }
       }
-
+  
       resumeTask(id) {
         const task = this.state.tasks.find(t => t.id === id);
         if (task && task.paused && !task.completed && !task.aborted) {
@@ -1180,7 +1186,7 @@ button:hover {
           this.showAchievement('Timer resumed.');
         }
       }
-
+  
       // If history (completed + aborted) exceeds threshold, download & clear it
       downloadAndClearHistory() {
         const historyData = this.state.tasks.filter(task => task.completed || task.aborted);
@@ -1191,21 +1197,21 @@ button:hover {
         document.body.appendChild(downloadAnchorNode);
         downloadAnchorNode.click();
         downloadAnchorNode.remove();
-
+  
         // Remove history tasks from state
         this.state.tasks = this.state.tasks.filter(task => !(task.completed || task.aborted));
         this.saveState();
         this.updateUI();
         this.showAchievement('History downloaded and cleared!');
       }
-
+  
       startProgressUpdateLoop() {
         setInterval(() => {
           const now = Date.now();
           this.state.tasks.forEach(task => {
             if (!task.completed && !task.aborted) {
               if (task.paused) {
-                // Keep progress frozen when paused
+                // Jab task paused ho, to progress ko freeze karke "Paused" dikhayenge
                 if (task.progressAtPause !== null) {
                   task.progress = task.progressAtPause;
                 }
@@ -1269,7 +1275,39 @@ button:hover {
           });
         }, 500);
       }
-
+  
+      // Modified beep reminder: sirf non-paused tasks ke liye har 7 minute beep bajayega
+      startBeepReminder() {
+        if (this.beepTimeout) {
+          clearTimeout(this.beepTimeout);
+        }
+        const beepFunction = () => {
+          const activeTasks = this.state.tasks.filter(task => !task.completed && !task.aborted && !task.paused);
+          if (activeTasks.length > 0) {
+            console.log("Beep! 🔊");
+            this.playSound('beep');
+          }
+          this.beepTimeout = setTimeout(beepFunction, 7 * 60 * 1000);
+        };
+        beepFunction();
+      }
+  
+      // Naya paused reminder: agar koi task paused hai to har 3 minute reminder.mp3 bajayega
+      startPausedReminder() {
+        if (this.pausedReminderTimeout) {
+          clearTimeout(this.pausedReminderTimeout);
+        }
+        const reminderFunction = () => {
+          const pausedTasks = this.state.tasks.filter(task => task.paused && !task.completed && !task.aborted);
+          if (pausedTasks.length > 0) {
+            console.log("Paused Reminder! 🔔");
+            this.playSound('reminder');
+          }
+          this.pausedReminderTimeout = setTimeout(reminderFunction, 3 * 60 * 1000);
+        };
+        reminderFunction();
+      }
+  
       playSound(name) {
         if (this.sounds[name]) {
           this.sounds[name].currentTime = 0;
@@ -1280,7 +1318,7 @@ button:hover {
           console.warn("Sound not found:", name);
         }
       }
-
+  
       showAchievement(message) {
         const achievement = document.createElement('div');
         achievement.textContent = message;
@@ -1295,7 +1333,7 @@ button:hover {
         document.body.appendChild(achievement);
         setTimeout(() => achievement.remove(), 3000);
       }
-
+  
       showCelebration(message) {
         for (let i = 0; i < 3; i++) {
           setTimeout(() => {
@@ -1319,7 +1357,7 @@ button:hover {
         document.body.appendChild(flash);
         setTimeout(() => { flash.style.opacity = '0'; }, 100);
         setTimeout(() => { flash.remove(); }, 1100);
-
+  
         const celebration = document.createElement('div');
         celebration.textContent = message;
         celebration.style.position = 'fixed';
@@ -1346,13 +1384,13 @@ button:hover {
         }, 2000);
         setTimeout(() => { celebration.remove(); }, 2500);
       }
-
+  
       requestNotificationPermission() {
         if ("Notification" in window && Notification.permission !== "granted") {
           Notification.requestPermission();
         }
       }
-
+  
       initBackgroundAudio() {
         if (window.AudioContext || window.webkitAudioContext) {
           try {
@@ -1366,7 +1404,7 @@ button:hover {
           }
         }
       }
-
+  
       setupVisibilityChange() {
         document.addEventListener('visibilitychange', () => {
           if (document.visibilityState === 'hidden') {
@@ -1387,32 +1425,20 @@ button:hover {
           }
         });
       }
-
-      startBeepReminder() {
-        if (this.beepTimeout) {
-          clearTimeout(this.beepTimeout);
-        }
-        const beepFunction = () => {
-          const activeTasks = this.state.tasks.filter(task => !task.completed && !task.aborted);
-          if (activeTasks.length > 0) {
-            console.log("Beep! 🔊");
-            this.playSound('beep');
-          }
-          this.beepTimeout = setTimeout(beepFunction, 7 * 60 * 1000);
-        };
-        beepFunction();
-      }
-
+  
       componentWillUnmount() {
         if (this.beepTimeout) {
           clearTimeout(this.beepTimeout);
         }
+        if (this.pausedReminderTimeout) {
+          clearTimeout(this.pausedReminderTimeout);
+        }
       }
     }
-
+  
     document.addEventListener('DOMContentLoaded', () => {
       const app = new DarkProductivityApp();
-
+  
       if (typeof particlesJS !== "undefined") {
         particlesJS('particles-js', {
           particles: {
@@ -1444,7 +1470,7 @@ button:hover {
         console.error("particlesJS is not loaded!");
       }
     });
-
+  
     document.addEventListener("visibilitychange", () => {
       if (document.hidden) {
           console.log("Page is in background");
@@ -1452,7 +1478,7 @@ button:hover {
           console.log("Page is active");
       }
     });
-
+  
     document.addEventListener("click", () => {
       Notification.requestPermission().then(permission => {
           if (permission === "granted") {
@@ -1460,8 +1486,8 @@ button:hover {
           }
       });
     });
-    
   </script>
+  
   
   
   
