@@ -592,7 +592,7 @@
   <script>
     class DarkProductivityApp {
       constructor() {
-        // Preload audio files (adjust paths as needed)
+        // Preload audio files (ensure paths are correct)
         this.sounds = {
           fifty: new Audio('50.mp3'),
           seventy: new Audio('70.mp3'),
@@ -640,7 +640,7 @@
         this.updateRewardPointsDisplay();
         this.startProgressUpdateLoop();
         this.startBeepReminder();
-        this.startPausedReminder();  // Paused reminder every 3 minutes
+        this.startPausedReminder();  // Start reminder for paused tasks
         this.initBackgroundAudio();
         this.requestNotificationPermission();
         this.setupVisibilityChange();
@@ -751,11 +751,12 @@
           aborted: false,
           progress: 0,
           startTime: Date.now(),
-          totalDuration: time * 60000, // total required active time
-          activeDuration: 0,             // accumulated active time
-          lastActiveTimestamp: Date.now(), // for tracking active intervals
+          totalDuration: time * 60000,  // Total required active time (ms)
+          activeDuration: 0,            // Accumulated active (non-paused) time
+          lastActiveTimestamp: Date.now(), // For tracking active intervals
           rewarded: false,
           prompted: false,
+          awaitingResponse: false,  // To ensure we don't repeatedly prompt user
           beep50: false,
           beep70: false,
           beep90: false,
@@ -854,7 +855,6 @@
 
       getRemainingTimeText(task) {
         if (task.paused) return "Paused";
-        // Calculate remaining active time (in seconds and minutes)
         const remaining = Math.max(task.totalDuration - task.activeDuration, 0);
         const minutes = Math.floor(remaining / 60000);
         const seconds = Math.floor((remaining % 60000) / 1000);
@@ -894,7 +894,6 @@
       }
 
       renderTaskHistory() {
-        // Separate history into Completed and Aborted tasks, sorted by start time (latest first)
         const completedTasks = this.state.tasks.filter(task => task.completed)
                                   .sort((a, b) => b.startTime - a.startTime);
         const abortedTasks = this.state.tasks.filter(task => task.aborted)
@@ -951,7 +950,6 @@
           }).join('');
         }
 
-        // If too many history items exist, show a download & clear button
         const totalHistory = completedTasks.length + abortedTasks.length;
         if (totalHistory > this.maxHistoryCount) {
           html += `<button id="downloadHistoryBtn" class="download-history-btn">Download and Clear History</button>`;
@@ -1016,7 +1014,6 @@
       }
 
       clearHistory() {
-        // Remove all tasks that are completed or aborted
         this.state.tasks = this.state.tasks.filter(task => !task.completed && !task.aborted);
         this.historyExpanded = false;
         this.updateUI();
@@ -1065,7 +1062,6 @@
       pauseTask(id) {
         const task = this.state.tasks.find(t => t.id === id);
         if (task && !task.paused && !task.completed && !task.aborted) {
-          // On pause, do not update activeDuration further
           task.paused = true;
           task.pauseStart = Date.now();
           this.updateUI();
@@ -1077,7 +1073,7 @@
       resumeTask(id) {
         const task = this.state.tasks.find(t => t.id === id);
         if (task && task.paused && !task.completed && !task.aborted) {
-          // On resume, set lastActiveTimestamp to current time so that paused duration is not counted
+          // On resume, update lastActiveTimestamp so that paused duration is not added
           task.paused = false;
           task.lastActiveTimestamp = Date.now();
           task.pauseStart = null;
@@ -1098,7 +1094,6 @@
         downloadAnchorNode.click();
         downloadAnchorNode.remove();
 
-        // Remove history tasks from state
         this.state.tasks = this.state.tasks.filter(task => !(task.completed || task.aborted));
         this.saveState();
         this.updateUI();
@@ -1112,8 +1107,6 @@
           this.state.tasks.forEach(task => {
             if (!task.completed && !task.aborted) {
               if (task.paused) {
-                // When paused, keep progress as it was
-                // (activeDuration remains unchanged)
                 const deadlineElem = document.getElementById(`deadline-${task.id}`);
                 if (deadlineElem) {
                   deadlineElem.textContent = "Paused";
@@ -1149,14 +1142,20 @@
                     this.playSound('ninety');
                   }
                 }
-                if (progress >= 100 && !task.completed && !task.prompted) {
-                  task.prompted = true;
+                if (progress >= 100 && !task.completed && !task.awaitingResponse) {
+                  // When progress completes, prompt the user once.
+                  task.awaitingResponse = true;
                   this.playSound('timer');
-                  // Request notification permission if not granted
+                  // Request notification permission properly before showing notification
                   if (Notification.permission !== "granted") {
-                    Notification.requestPermission();
-                  }
-                  if (Notification.permission === "granted") {
+                    Notification.requestPermission().then(permission => {
+                      if (permission === "granted") {
+                        new Notification("Task Timer Finished", { 
+                          body: `Task: ${task.text}\nDid you complete the task?`
+                        });
+                      }
+                    });
+                  } else {
                     new Notification("Task Timer Finished", { 
                       body: `Task: ${task.text}\nDid you complete the task?`
                     });
@@ -1165,13 +1164,10 @@
                   if (userConfirmed) {
                     this.completeTask(task.id);
                   } else {
-                    this.state.rewardPoints -= 20;
-                    this.state.dailyPoints -= 20;
-                    task.aborted = true;
-                    task.abortTime = Date.now();
-                    this.updateUI();
-                    this.updateRewardPointsDisplay();
-                    this.saveState();
+                    // Do not auto-abort; let the task remain for user action.
+                    // The task remains in a finished state (progress 100) and awaits user manual abort if desired.
+                    // Optionally, you can show a message here.
+                    alert("Task remains unfinished. You can manually abort it if needed.");
                   }
                 }
               }
