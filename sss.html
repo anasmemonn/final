@@ -3,10 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <title>Focus Study Organizer</title>
+   <link rel="icon" href="imagess.jpg" type="image/jpg" />
   <!-- Modern font for a clean look -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
     :root {
+      /* Base Palette */
       --primary-color: #BB86FC;
       --accent-color: #03DAC6;
       --secondary-color: #1F1B24;
@@ -14,6 +16,12 @@
       --text-color: #ffc400;
       --border-color: #333;
       --highlight-color: #37ff00;
+      /* Task-Specific Variables */
+      --task-text-color: #18eb00;
+      --task-text-hover-color: #00fff2;
+      --task-bg-color: #505f69;
+      --task-border-color: #050404;
+      --task-item-shadow: 0 2px 5px rgba(8, 0, 255, 0.751);
     }
     /* Global Reset and Base Styles */
     * {
@@ -131,8 +139,10 @@
       align-items: center;
       padding: 15px;
       margin-bottom: 15px;
-      background-color: var(--background-color);
+      background-color: var(--task-bg-color);
+      border: 1px solid var(--task-border-color);
       border-radius: 8px;
+      box-shadow: var(--task-item-shadow);
       transition: transform 0.2s;
     }
     .tasks-section li.task-item:hover {
@@ -152,6 +162,8 @@
       font-size: 1.1em;
       cursor: pointer;
       user-select: none;
+      color: var(--task-text-color);
+      transition: color 0.3s;
     }
     .tasks-section li.task-item label::before {
       content: "";
@@ -161,7 +173,7 @@
       transform: translateY(-50%);
       width: 24px;
       height: 24px;
-      border: 2px solid var(--border-color);
+      border: 2px solid var(--task-border-color);
       border-radius: 6px;
       background-color: var(--secondary-color);
     }
@@ -193,6 +205,9 @@
     }
     .tasks-section li.task-item button.delete-btn:hover {
       color: #d32f2f;
+    }
+    .tasks-section li.task-item:hover label {
+      color: var(--task-text-hover-color);
     }
     /* Study Sessions Section */
     .study-sessions .session-inputs {
@@ -412,7 +427,7 @@
         li.innerHTML = `<span class="emoji">⏰</span> Session ${index + 1}: ${formatTime(session.time)}`;
         sessionsList.appendChild(li);
       });
-      totalTimeDisplay.textContent = "🕰️📓 TOTAL STUDY📚: " + formatTime(totalTime);
+      totalTimeDisplay.textContent = "🕰️📓 TOTAL STUDY📚ㅤ    ㅤㅤ:ㅤㅤ    ㅤㅤㅤㅤ        " + formatTime(totalTime);
     }
     
     addSessionBtn.addEventListener('click', () => {
