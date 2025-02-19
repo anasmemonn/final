@@ -1,518 +1,556 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Interactive Calendar - Hard Work Pays Off</title>
-  <link rel="icon" href="isagi.jpg" type="image/jpg" />
+  <meta charset="UTF-8">
+  <title>Focus Study Organizer</title>
+  <!-- Modern font for a clean look -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
-    /* CSS Reset for Consistency */
+    :root {
+      --primary-color: #BB86FC;
+      --accent-color: #03DAC6;
+      --secondary-color: #1F1B24;
+      --background-color: #121212;
+      --text-color: #ffc400;
+      --border-color: #333;
+      --highlight-color: #37ff00;
+    }
+    /* Global Reset and Base Styles */
     * {
-      margin: 0;
+      margin: 0;  
       padding: 0;
       box-sizing: border-box;
     }
-    html {
-      font-size: 16px;
+    html, body {
+      height: 100%;
     }
     body {
+      background-color: var(--background-color);
       font-family: 'Poppins', sans-serif;
-      background: radial-gradient(circle at 50% 50%, #421f1f, #1a1a1a, #191811);
-      color: #fff;
-      text-align: center;
+      color: var(--text-color);
       padding: 20px;
-      overflow-x: hidden;
-      min-height: 100vh;
+      line-height: 1.6;
     }
-    :root {
-      --primary-color: #ffcc00;
-      --accent-color: #ffcc00;
-      --bg-dark: #1a1a1a;
-      --btn-bg: #333;
-      --btn-hover-bg: #444;
-      --glow-color: rgba(255, 200, 0, 0.8);
+    /* Container */
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background-color: var(--secondary-color);
+      padding: 40px 50px;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+      transition: transform 0.3s ease;
+    }
+    .container:hover {
+      transform: scale(1.01);
     }
     /* Header */
     header {
-      margin-bottom: 20px;
+      text-align: center;
+      margin-bottom: 50px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid var(--primary-color);
     }
     header h1 {
-      font-size: 3.5em;
-      margin-bottom: 20px;
-      text-shadow: 0 0 10px var(--glow-color), 0 0 20px var(--glow-color);
-      animation: glowPulse 2s infinite ease-in-out;
-    }
-    @keyframes glowPulse {
-      0%, 100% {
-        text-shadow: 0 0 10px var(--glow-color), 0 0 20px var(--glow-color);
-      }
-      50% {
-        text-shadow: 0 0 20px var(--glow-color), 0 0 40px var(--glow-color);
-      }
-    }
-    /* Calendar Controls */
-    .calendar-controls {
-      margin-bottom: 20px;
-    }
-    .calendar-controls select,
-    .calendar-controls button {
-      padding: 10px 20px;
-      font-size: 16px;
-      border: none;
-      border-radius: 8px;
-      margin: 5px;
-      cursor: pointer;
-      background: linear-gradient(135deg, #4caf50, #6ce75a);
-      color: #fff;
-      transition: all 0.4s ease;
-      animation: glowPulse 2s infinite ease-in-out;
-    }
-    .calendar-controls button:hover {
-      transform: scale(1.1);
-      box-shadow: 0 5px 20px rgba(76, 175, 80, 0.7);
-      background: linear-gradient(135deg, #3e8e41, #5fcc62);
-    }
-    /* Main Content */
-    main {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    /* Notes Section with Glassmorphism */
-/* Notes Section - Fixed Side Position */
-#notes-section {
-  display: none;
-  position: fixed;
-  top: 30%;
-  right:30px;
-  transform: translateY(-50%) scale(0.9); /* Start smaller */
-  width: 400px;
-  padding: 20px;
-  background: rgba(2, 22, 138, 0.9);
-  border: 1px solid rgba(7, 255, 94, 0.811);
-  border-radius: 10px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(10px);
-  opacity: 0;
-  z-index: 1000;
-  animation: slideIn 0.5s ease-out forwards;
-}
-
-/* Hover Effect - Slight Glow & Scale */
-#notes-section:hover {
-  transform: translateY(-50%) scale(1.05);
-  box-shadow: 0 10px 25px rgba(255, 255, 255, 0.3);
-}
-
-/* Slide In Animation */
-@keyframes slideIn {
-  0% {
-    opacity: 0;
-    transform: translateY(-50%) translateX(50px) scale(0.9);
-  }
-  100% {
-    opacity: 1;
-    transform: translateY(-50%) translateX(0) scale(1);
-  }
-}
-
-/* Slide Out Animation */
-@keyframes slideOut {
-  0% {
-    opacity: 1;
-    transform: translateY(-50%) translateX(0) scale(1);
-  }
-  100% {
-    opacity: 0;
-    transform: translateY(-50%) translateX(50px) scale(0.9);
-  }
-}
-
-/* Apply exit animation before hiding */
-.hide-notes {
-  animation: slideOut 0.4s ease-in forwards;
-}
-
-
-/* Adjust position for smaller screens */
-@media (max-width: 768px) {
-  #notes-section {
-    position: static;
-    transform: none;
-    width: 90%;
-    margin: 10px auto;
-  }
-}
-
-    #notes-section h3 {
-      margin-bottom: 10px;
-      font-size: 1.5em;
-      text-shadow: 0 0 5px var(--glow-color);
-    }
-    #notes-section textarea {
-      width: 100%;
-      padding: 10px;
-      border-radius: 5px;
-      border: none;
-      font-size: 16px;
-      margin-bottom: 10px;
-      resize: none;
-      color: #000;
-      background: #fff;
-      box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
-    }
-    #last-saved {
-      font-size: 14px;
-      margin-top: 5px;
-      color: #ccc;
-    }
-    .toggle-container {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      font-size: 3em;
+      color: var(--primary-color);
       margin-bottom: 10px;
     }
-    .toggle-switch {
-      position: relative;
-      display: inline-block;
-      width: 50px;
-      height: 26px;
-      margin-right: 10px;
+    header p {
+      font-size: 1.2em;
+      color: #aaa;
     }
-    .toggle-switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: #ccc;
-      transition: 0.4s;
-      border-radius: 26px;
-    }
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 20px;
-      width: 20px;
-      left: 3px;
-      bottom: 3px;
-      background-color: white;
-      transition: 0.4s;
-      border-radius: 50%;
-      box-shadow: 0 0 2px rgba(0, 0, 0, 0.6);
-    }
-    .toggle-switch input:checked + .slider {
-      background-color: var(--primary-color);
-    }
-    .toggle-switch input:checked + .slider:before {
-      transform: translateX(24px);
-    }
-    .toggle-label {
-      font-size: 16px;
-      cursor: pointer;
-    }
-    /* Buttons */
-    .button {
-      padding: 10px 15px;
-      background-color: var(--btn-bg);
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      margin: 5px;
-      font-size: 16px;
-      transition: transform 0.4s, box-shadow 0.4s;
-    }
-    .button:hover {
-      transform: scale(1.1);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
-      background-color: var(--btn-hover-bg);
-    }
-    .delete-btn {
-      background-color: #f44336;
-    }
-    .delete-btn:hover {
-      background-color: #e41f1f;
-    }
-    .extra-buttons {
-      margin-top: 10px;
-    }
-    .extra-buttons button {
-      background: linear-gradient(135deg, #6a11cb, #2575fc);
-    }
-    .extra-buttons button:hover {
-      background: linear-gradient(135deg, #5a0bb7, #1f65ea);
-    }
-    /* Calendar Grid */
-    #calendar-container {
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      width: 100%;
-    }
-    #calendar {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 10px;
-      max-width: 700px;
-      padding: 20px;
-      background: rgba(0, 0, 0, 0.5);
-      border-radius: 15px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-      backdrop-filter: blur(5px);
-      animation: fadeIn 1s ease-in-out;
+    /* Section Styles with Fade-in Animation */
+    .section {
+      margin-bottom: 60px;
+      animation: fadeIn 0.8s ease-in-out;
     }
     @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
-    #calendar div {
-      padding: 20px;
-      background: rgba(68, 68, 68, 0.8);
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.4s ease;
-      font-size: 18px;
-      color: var(--primary-color);
-      position: relative;
+    .section h2 {
+      font-size: 1.8em;
+      margin-bottom: 20px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid var(--primary-color);
     }
-    #calendar div:hover {
+    /* Tasks Section (Daily Goals) */
+    .tasks-section .progress-container {
+      margin-bottom: 20px;
+    }
+    .tasks-section .progress-bar {
+      background-color: var(--border-color);
+      border-radius: 10px;
+      overflow: hidden;
+      height: 25px;
+    }
+    .tasks-section .progress {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+      transition: width 0.5s;
+    }
+    .tasks-section .progress-text {
+      text-align: center;
+      font-size: 1em;
+      color: #aaa;
+      margin-top: 5px;
+    }
+    .tasks-section .add-task {
+      display: flex;
+      margin-bottom: 20px;
+    }
+    .tasks-section .add-task input[type="text"] {
+      flex: 1;
+      padding: 15px;
+      border: none;
+      border-radius: 8px 0 0 8px;
+      font-size: 1em;
+      background-color: var(--background-color);
+      color: var(--text-color);
+    }
+    .tasks-section .add-task button {
+      padding: 15px 25px;
+      border: none;
       background-color: var(--primary-color);
-      color: #000;
-      transform: scale(1.1) rotate(2deg);
-      box-shadow: 0 10px 20px var(--glow-color);
+      color: var(--background-color);
+      font-size: 1em;
+      cursor: pointer;
+      border-radius: 0 8px 8px 0;
+      transition: background-color 0.3s;
     }
-    #calendar div.completed {
-      background: linear-gradient(135deg, #55ad02, #005f0b);
-      color: #fff;
+    .tasks-section .add-task button:hover {
+      background-color: #a072d1;
     }
-    /* Responsive Design */
-    @media (max-width: 768px) {
-      #calendar {
-        grid-template-columns: repeat(4, 1fr);
-      }
-      #notes-section {
-        width: 90%;
-      }
-      header h1 {
-        font-size: 2.5em;
-      }
-      .calendar-controls select,
-      .calendar-controls button {
-        font-size: 14px;
-      }
+    .tasks-section ul.task-list {
+      list-style: none;
+    }
+    .tasks-section li.task-item {
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      margin-bottom: 15px;
+      background-color: var(--background-color);
+      border-radius: 8px;
+      transition: transform 0.2s;
+    }
+    .tasks-section li.task-item:hover {
+      transform: scale(1.02);
+    }
+    .tasks-section li.task-item .task-content {
+      flex: 1;
+      display: flex;
+      align-items: center;
+    }
+    .tasks-section li.task-item input[type="checkbox"] {
+      display: none;
+    }
+    .tasks-section li.task-item label {
+      position: relative;
+      padding-left: 35px;
+      font-size: 1.1em;
+      cursor: pointer;
+      user-select: none;
+    }
+    .tasks-section li.task-item label::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 24px;
+      height: 24px;
+      border: 2px solid var(--border-color);
+      border-radius: 6px;
+      background-color: var(--secondary-color);
+    }
+    .tasks-section li.task-item input[type="checkbox"]:checked + label::before {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+    }
+    .tasks-section li.task-item input[type="checkbox"]:checked + label::after {
+      content: "\2713";
+      position: absolute;
+      left: 6px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.2em;
+      color: var(--background-color);
+    }
+    .tasks-section li.task-item.completed label {
+      text-decoration: line-through;
+      color: #777;
+    }
+    .tasks-section li.task-item button.delete-btn {
+      background: transparent;
+      border: none;
+      color: #f44336;
+      font-size: 1.4em;
+      cursor: pointer;
+      margin-left: 15px;
+      transition: color 0.3s;
+    }
+    .tasks-section li.task-item button.delete-btn:hover {
+      color: #d32f2f;
+    }
+    /* Study Sessions Section */
+    .study-sessions .session-inputs {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+      gap: 10px;
+    }
+    .study-sessions .session-inputs input[type="number"] {
+      width: 80px;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      font-size: 1em;
+    }
+    .study-sessions .session-inputs button {
+      padding: 10px 20px;
+      border: none;
+      background-color: var(--primary-color);
+      color: var(--background-color);
+      font-size: 1em;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+    .study-sessions .session-inputs button:hover {
+      background-color: #a072d1;
+    }
+    .study-sessions .sessions {
+      background-color: var(--background-color);
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+    }
+    .study-sessions .sessions h3 {
+      margin-bottom: 10px;
+    }
+    .study-sessions .sessions ul {
+      list-style: none;
+      padding: 0;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+    .study-sessions .sessions li {
+      padding: 8px 10px;
+      background-color: var(--secondary-color);
+      border-radius: 5px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .study-sessions .sessions li span.emoji {
+      font-size: 1.2em;
+    }
+    .study-sessions .total-time {
+      text-align: center;
+      font-size: 1.2em;
+      margin-top: 10px;
+      color: var(--highlight-color);
+    }
+    .study-sessions .clear-sessions-btn {
+      margin-top: 10px;
+      padding: 10px 20px;
+      border: none;
+      background-color: #f44336;
+      color: var(--background-color);
+      font-size: 1em;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: background-color 0.3s;
+    }
+    .study-sessions .clear-sessions-btn:hover {
+      background-color: #d32f2f;
+    }
+    /* Notes Section */
+    .notes-section textarea {
+      width: 100%;
+      min-height: 250px;
+      padding: 15px;
+      border: none;
+      border-radius: 8px;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      font-size: 1.1em;
+      resize: vertical;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      transition: box-shadow 0.3s;
+    }
+    .notes-section textarea:focus {
+      outline: none;
+      box-shadow: 0 0 15px var(--primary-color);
+    }
+    .notes-section .notes-buttons {
+      margin-top: 10px;
+      text-align: right;
+    }
+    .notes-section .notes-buttons button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .notes-section .notes-buttons button#saveNotesBtn {
+      background-color: var(--primary-color);
+      color: var(--background-color);
+    }
+    .notes-section .notes-buttons button#clearNotesBtn {
+      background-color: #f44336;
+      color: var(--background-color);
+      margin-left: 10px;
+    }
+    .notes-section .notes-buttons button:hover {
+      opacity: 0.9;
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>ROUTINE PROGRESS</h1>
-  </header>
-  
-  <nav class="calendar-controls" aria-label="Calendar Controls">
-    <select id="month-select" title="Design with aesthetic appeal.">
-      <option value="0">January</option>
-      <option value="1">February</option>
-      <option value="2">March</option>
-      <option value="3">April</option>
-      <option value="4">May</option>
-      <option value="5">June</option>
-      <option value="6">July</option>
-      <option value="7">August</option>
-      <option value="8">September</option>
-      <option value="9">October</option>
-      <option value="10">November</option>
-      <option value="11">December</option>
-    </select>
-    <button id="generate-calendar" title="Craft elegant styles.">Generate Calendar</button>
-  </nav>
-  
-  <main>
-    <!-- Notes Section -->
-    <section id="notes-section" aria-live="polite">
-      <h3>Notes for <span id="selected-date"></span></h3>
-      <textarea id="notes-text" rows="4" placeholder="Enter your notes..."></textarea>
-      <p id="last-saved"></p>
-      <div class="toggle-container">
-        <label class="toggle-switch">
-          <input type="checkbox" id="mark-complete">
-          <span class="slider"></span>
-        </label>
-        <span class="toggle-label" for="mark-complete">Mark as Complete</span>
+  <div class="container">
+    <header>
+      <h1>Focus Study Organizer</h1>
+      <p id="currentDate"></p>
+    </header>
+    
+    <!-- Daily Goals (Tasks) Section -->
+    <section class="tasks-section section">
+      <h2>Daily Goals</h2>
+      <!-- Progress Bar -->
+      <div class="progress-container">
+        <div class="progress-bar">
+          <div class="progress" id="progressBar"></div>
+        </div>
+        <p class="progress-text" id="progressText">No tasks yet</p>
       </div>
-      <button class="button" id="save-notes" title="Create stunning looks.">Save Notes</button>
-      <button class="button delete-btn" id="delete-notes" title="Delete note entry.">Delete Notes</button>
-      <div class="extra-buttons">
-        <button class="button" id="download-note" title="Download your note.">Download Note</button>
-        <button class="button" id="copy-note" title="Copy note to clipboard.">Copy Note</button>
-        <button class="button" id="clear-notes" title="Clear all notes.">Clear All</button>
+      <div class="add-task">
+        <input type="text" id="newTaskInput" placeholder="Enter your daily goal...">
+        <button id="addTaskBtn">Add</button>
       </div>
+      <ul class="task-list" id="taskList"></ul>
     </section>
     
-    <!-- Calendar Container -->
-    <div id="calendar-container">
-      <div class="calendar" id="calendar"></div>
-    </div>
-  </main>
+    <!-- Study Sessions Section -->
+    <section class="study-sessions section">
+      <h2>Study Sessions</h2>
+      <div class="session-inputs">
+        <input type="number" id="hoursInput" placeholder="Hours" min="0">
+        <input type="number" id="minutesInput" placeholder="Minutes" min="0" max="59">
+        <button id="addSessionBtn">⏰ Add Session</button>
+      </div>
+      <div class="sessions">
+        <h3>Sessions Log</h3>
+        <ul id="sessionsList"></ul>
+        <div class="total-time" id="totalTimeDisplay">🕰️📓 TOTAL STUDY📚: 00:00:00</div>
+      </div>
+      <button class="clear-sessions-btn" id="clearSessionsBtn">Clear Sessions</button>
+    </section>
+    
+    <!-- Planning Notes Section -->
+    <section class="notes-section section">
+      <h2>Planning Notes</h2>
+      <textarea id="notesArea" placeholder="Jot down your planning notes here..."></textarea>
+      <div class="notes-buttons">
+        <button id="saveNotesBtn">Save Notes</button>
+        <button id="clearNotesBtn">Clear Notes</button>
+      </div>
+    </section>
+  </div>
+  
+  <!-- Audio element for session sound -->
+  <audio id="sessionSound">
+    <source src="timer.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+  </audio>
   
   <script>
-    (function() {
-      'use strict';
-      // Element References
-      const calendarEl = document.getElementById('calendar');
-      const notesSection = document.getElementById('notes-section');
-      const selectedDateElem = document.getElementById('selected-date');
-      const notesTextEl = document.getElementById('notes-text');
-      const markCompleteEl = document.getElementById('mark-complete');
-      const saveNotesButton = document.getElementById('save-notes');
-      const deleteNotesButton = document.getElementById('delete-notes');
-      const clearNotesButton = document.getElementById('clear-notes');
-      const downloadNoteButton = document.getElementById('download-note');
-      const copyNoteButton = document.getElementById('copy-note');
-      const lastSavedElem = document.getElementById('last-saved');
-      const monthSelect = document.getElementById('month-select');
-      const generateCalendarButton = document.getElementById('generate-calendar');
-      
-      let selectedDateKey = null;
-      // Retrieve saved notes data from localStorage
-      const notesStorage = JSON.parse(localStorage.getItem('notesData')) || {};
-
-      // Initialize calendar on DOM load
-      document.addEventListener('DOMContentLoaded', () => {
-        const savedMonth = localStorage.getItem('lastOpenedMonth');
-        const currentMonth = savedMonth ? parseInt(savedMonth, 10) : new Date().getMonth();
-        monthSelect.value = currentMonth;
-        generateCalendar(currentMonth);
+    // Set current date and localStorage key based on date
+    const today = new Date();
+    const dateKey = today.toISOString().split('T')[0];
+    document.getElementById('currentDate').textContent = today.toDateString();
+    
+    /* Utility: Format seconds as HH:MM:SS */
+    function formatTime(seconds) {
+      const hrs = Math.floor(seconds / 3600);
+      const mins = Math.floor((seconds % 3600) / 60);
+      const secs = seconds % 60;
+      return (hrs < 10 ? "0" + hrs : hrs) + ":" +
+             (mins < 10 ? "0" + mins : mins) + ":" +
+             (secs < 10 ? "0" + secs : secs);
+    }
+    
+    /* ----- Study Sessions ----- */
+    const hoursInput = document.getElementById('hoursInput');
+    const minutesInput = document.getElementById('minutesInput');
+    const addSessionBtn = document.getElementById('addSessionBtn');
+    const sessionsList = document.getElementById('sessionsList');
+    const totalTimeDisplay = document.getElementById('totalTimeDisplay');
+    const clearSessionsBtn = document.getElementById('clearSessionsBtn');
+    const sessionSound = document.getElementById('sessionSound');
+    
+    const sessionsKey = 'sessions-' + dateKey;
+    let sessions = JSON.parse(localStorage.getItem(sessionsKey)) || [];
+    
+    function saveSessions() {
+      localStorage.setItem(sessionsKey, JSON.stringify(sessions));
+    }
+    
+    function updateSessionsDisplay() {
+      sessionsList.innerHTML = '';
+      let totalTime = 0;
+      sessions.forEach((session, index) => {
+        totalTime += session.time;
+        const li = document.createElement('li');
+        li.innerHTML = `<span class="emoji">⏰</span> Session ${index + 1}: ${formatTime(session.time)}`;
+        sessionsList.appendChild(li);
       });
-
-      // Event Listener for Generate Calendar button
-      generateCalendarButton.addEventListener('click', () => {
-        const selectedMonth = parseInt(monthSelect.value, 10);
-        localStorage.setItem('lastOpenedMonth', selectedMonth);
-        generateCalendar(selectedMonth);
-      });
-
-      // Function to generate calendar for a given month
-      function generateCalendar(month) {
-        calendarEl.innerHTML = '';
-        const today = new Date();
-        today.setMonth(month);
-        today.setDate(1);
-        const year = today.getFullYear();
-        const daysInMonth = new Date(year, month + 1, 0).getDate();
-        const firstDayOfWeek = today.getDay();
-
-        // Create empty cells for alignment
-        for (let i = 0; i < firstDayOfWeek; i++) {
-          const emptyCell = document.createElement('div');
-          emptyCell.classList.add('empty');
-          calendarEl.appendChild(emptyCell);
-        }
-
-        // Create day cells
-        for (let day = 1; day <= daysInMonth; day++) {
-          const dayCell = document.createElement('div');
-          dayCell.setAttribute('data-date', day);
-          dayCell.textContent = day;
-          const key = `${month}-${day}`;
-          if (notesStorage[key]?.completed) {
-            dayCell.classList.add('completed');
-          }
-          dayCell.addEventListener('click', () => {
-            selectedDateKey = key;
-            selectedDateElem.textContent = `Date ${day} (Month: ${month + 1})`;
-            notesTextEl.value = notesStorage[key]?.notes || '';
-            markCompleteEl.checked = notesStorage[key]?.completed || false;
-            lastSavedElem.textContent = notesStorage[key]?.lastSaved ? `Last saved on: ${notesStorage[key].lastSaved}` : '';
-            notesSection.style.display = 'block';
-          });
-          calendarEl.appendChild(dayCell);
-        }
+      totalTimeDisplay.textContent = "🕰️📓 TOTAL STUDY📚: " + formatTime(totalTime);
+    }
+    
+    addSessionBtn.addEventListener('click', () => {
+      const hrs = parseInt(hoursInput.value) || 0;
+      const mins = parseInt(minutesInput.value) || 0;
+      const totalSeconds = hrs * 3600 + mins * 60;
+      if (totalSeconds > 0) {
+        sessions.push({ time: totalSeconds });
+        saveSessions();
+        updateSessionsDisplay();
+        // Play session sound
+        sessionSound.currentTime = 0;
+        sessionSound.play();
+        hoursInput.value = "";
+        minutesInput.value = "";
       }
-
-      // Save notes handler
-      saveNotesButton.addEventListener('click', () => {
-        if (!selectedDateKey) return;
-        const now = new Date().toLocaleString();
-        notesStorage[selectedDateKey] = {
-          notes: notesTextEl.value,
-          completed: markCompleteEl.checked,
-          lastSaved: now
-        };
-        localStorage.setItem('notesData', JSON.stringify(notesStorage));
-        lastSavedElem.textContent = `Last saved on: ${now}`;
-        showNotification("Notes saved successfully!");
-        generateCalendar(parseInt(monthSelect.value, 10));
-      });
-
-      // Delete notes handler
-      deleteNotesButton.addEventListener('click', () => {
-        if (!selectedDateKey) return;
-        delete notesStorage[selectedDateKey];
-        localStorage.setItem('notesData', JSON.stringify(notesStorage));
-        notesTextEl.value = '';
-        markCompleteEl.checked = false;
-        lastSavedElem.textContent = '';
-        showNotification("Notes deleted successfully!");
-        generateCalendar(parseInt(monthSelect.value, 10));
-      });
-
-      // Clear all notes handler
-      clearNotesButton.addEventListener('click', () => {
-        if (confirm("Are you sure you want to clear all notes?")) {
-          localStorage.removeItem('notesData');
-          location.reload();
-        }
-      });
-
-      // Download note handler
-      downloadNoteButton.addEventListener('click', () => {
-        if (!selectedDateKey) return;
-        const text = notesTextEl.value;
-        const blob = new Blob([text], { type: 'text/plain' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `note-${selectedDateKey}.txt`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        URL.revokeObjectURL(url);
-      });
-
-      // Copy note handler
-      copyNoteButton.addEventListener('click', () => {
-        if (!selectedDateKey) return;
-        navigator.clipboard.writeText(notesTextEl.value)
-          .then(() => showNotification("Note copied to clipboard!"))
-          .catch(() => showNotification("Failed to copy note."));
-      });
-
-      // Function to show temporary notifications
-      function showNotification(message) {
-        const notif = document.createElement('div');
-        notif.textContent = message;
-        notif.style.position = 'fixed';
-        notif.style.bottom = '20px';
-        notif.style.right = '20px';
-        notif.style.background = 'rgba(0, 0, 0, 0.7)';
-        notif.style.color = '#fff';
-        notif.style.padding = '10px 20px';
-        notif.style.borderRadius = '5px';
-        notif.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.5)';
-        notif.style.zIndex = '1000';
-        document.body.appendChild(notif);
-        setTimeout(() => {
-          notif.remove();
-        }, 3000);
+    });
+    
+    clearSessionsBtn.addEventListener('click', () => {
+      if (confirm("Are you sure you want to clear all sessions?")) {
+        sessions = [];
+        saveSessions();
+        updateSessionsDisplay();
       }
-    })();
+    });
+    
+    updateSessionsDisplay();
+    
+    /* ----- Tasks Section ----- */
+    const taskListEl = document.getElementById('taskList');
+    const newTaskInput = document.getElementById('newTaskInput');
+    const addTaskBtn = document.getElementById('addTaskBtn');
+    const progressBar = document.getElementById('progressBar');
+    const progressText = document.getElementById('progressText');
+    
+    const tasksKey = 'tasks-' + dateKey;
+    let tasks = JSON.parse(localStorage.getItem(tasksKey)) || [];
+    
+    function saveTasks() {
+      localStorage.setItem(tasksKey, JSON.stringify(tasks));
+    }
+    
+    function renderTasks() {
+      taskListEl.innerHTML = '';
+      tasks.forEach((task, index) => {
+        const li = document.createElement('li');
+        li.classList.add('task-item');
+        if (task.completed) li.classList.add('completed');
+        
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = 'task-' + index;
+        checkbox.checked = task.completed;
+        checkbox.addEventListener('change', () => {
+          tasks[index].completed = checkbox.checked;
+          saveTasks();
+          renderTasks();
+          updateProgress();
+        });
+        
+        const label = document.createElement('label');
+        label.htmlFor = 'task-' + index;
+        label.textContent = task.text;
+        
+        const deleteBtn = document.createElement('button');
+        deleteBtn.classList.add('delete-btn');
+        deleteBtn.innerHTML = '&times;';
+        deleteBtn.addEventListener('click', () => {
+          tasks.splice(index, 1);
+          saveTasks();
+          renderTasks();
+          updateProgress();
+        });
+        
+        const taskContent = document.createElement('div');
+        taskContent.classList.add('task-content');
+        taskContent.appendChild(checkbox);
+        taskContent.appendChild(label);
+        
+        li.appendChild(taskContent);
+        li.appendChild(deleteBtn);
+        taskListEl.appendChild(li);
+      });
+    }
+    
+    function updateProgress() {
+      if (tasks.length === 0) {
+        progressBar.style.width = '0%';
+        progressText.textContent = 'No tasks yet';
+        return;
+      }
+      const completedCount = tasks.filter(task => task.completed).length;
+      const percent = Math.round((completedCount / tasks.length) * 100);
+      progressBar.style.width = percent + '%';
+      progressText.textContent = percent + '% Completed';
+    }
+    
+    addTaskBtn.addEventListener('click', () => {
+      const taskText = newTaskInput.value.trim();
+      if (taskText !== '') {
+        tasks.push({ text: taskText, completed: false });
+        newTaskInput.value = '';
+        saveTasks();
+        renderTasks();
+        updateProgress();
+      }
+    });
+    
+    newTaskInput.addEventListener('keyup', function (e) {
+      if (e.key === 'Enter') addTaskBtn.click();
+    });
+    
+    renderTasks();
+    updateProgress();
+    
+    /* ----- Notes Section ----- */
+    const notesArea = document.getElementById('notesArea');
+    const saveNotesBtn = document.getElementById('saveNotesBtn');
+    const clearNotesBtn = document.getElementById('clearNotesBtn');
+    const notesKey = 'notes-' + dateKey;
+    
+    // Load saved notes if any
+    const savedNotes = localStorage.getItem(notesKey);
+    if (savedNotes) {
+      notesArea.value = savedNotes;
+    }
+    
+    saveNotesBtn.addEventListener('click', () => {
+      localStorage.setItem(notesKey, notesArea.value);
+      alert("Notes saved!");
+    });
+    
+    clearNotesBtn.addEventListener('click', () => {
+      if (confirm("Are you sure you want to clear your notes?")) {
+        notesArea.value = "";
+        localStorage.removeItem(notesKey);
+      }
+    });
   </script>
 </body>
 </html>
