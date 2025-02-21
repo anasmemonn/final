@@ -1,535 +1,444 @@
 <!DOCTYPE html>
 <html lang="en">
-    <link rel="icon" href="imagess.jpg" type="image/jpg">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quantum Study Planner 3.0</title>
-    <style>
-        :root {
-            --primary: #1a1a2e;
-            --secondary: #16213e;
-            --accent: #0f3460;
-            --highlight: #e94560;
-            --text: #ffffff;
-            --glass: rgba(255, 255, 255, 0.1);
-            --gradient: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-        }
+  <meta charset="UTF-8">
+  <title>1% Better Everyday</title>
+  <link rel="icon" href="isagi.jpg" type="image/jpg">
+  <style>
+    /* Global Styles */
+    body {
+      margin: 0;
+      padding: 20px;
+      background: #ddd; /* Light gray background */
+      font-family: "Times New Roman", serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    h1 {
+      margin-bottom: 20px;
+      font-size: 2rem;
+      letter-spacing: 1px;
+      color: #333;
+    }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
+    .page-container {
+      width: 600px; /* Default width */
+      height: 850px; /* Default height */
+      background: linear-gradient(to bottom, #f5e6d3, #e0c7a1); /* Gradient for depth */
+      border-radius: 50px; /* Curved edges for barrel shape */
+      border: 4px solid #fff;
+      box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.2), 0 8px 16px rgba(0, 0, 0, 0.3);
+      padding: 50px 30px;
+      position: relative;
+      overflow: hidden;
+      /* 3D settings for turnover effect */
+      transform-style: preserve-3d;
+      perspective: 1200px;
+      backface-visibility: hidden;
+    }
+    
+    /* Minimal Navigation Icons */
+    .nav-icon {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 2rem;
+      color: #333;
+      cursor: pointer;
+      user-select: none;
+      opacity: 0;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    .page-container:hover .nav-icon {
+      opacity: 1;
+    }
+    .nav-icon:hover {
+      transform: translateY(-50%) scale(1.1);
+    }
+    .nav-prev {
+      left: 10px;
+    }
+    .nav-next {
+      right: 10px;
+    }
 
-        body {
-            background: var(--gradient);
-            color: var(--text);
-            min-height: 100vh;
-            padding: 2rem;
-            position: relative;
-            overflow-x: hidden;
-            transition: background 0.5s ease;
-        }
+    /* Save Buttons */
+    #saveBtn, #saveWeeklyBtn {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      padding: 8px 16px;
+      background: #333;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      z-index: 5;
+      transition: background 0.3s ease;
+    }
+    #saveBtn:hover, #saveWeeklyBtn:hover {
+      background: #555;
+    }
 
-        body.light-theme {
-            --primary: #f0f0f0;
-            --secondary: #ffffff;
-            --accent: #e0e0e0;
-            --highlight: #ff6b6b;
-            --text: #2d3436;
-            --glass: rgba(0, 0, 0, 0.1);
-            --gradient: linear-gradient(135deg, #f8f9fa 0%, #ffffff 50%, #f1f3f5 100%);
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            position: relative;
-            z-index: 1;
-        }
-
-        .header {
-            text-align: center;
-            margin: 3rem 0;
-            position: relative;
-        }
-
-        .header h1 {
-            font-size: 4rem;
-            background: linear-gradient(45deg, var(--highlight), #e9456099);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            text-shadow: 0 0 30px var(--highlight);
-            animation: glow 2s infinite alternate;
-        }
-
-        .timeline {
-            position: relative;
-            padding: 4rem 0;
-        }
-
-        .timeline::before {
-            content: '';
-            position: absolute;
-            left: 50%;
-            top: 0;
-            height: 100%;
-            width: 4px;
-            background: var(--highlight);
-            transform: translateX(-50%);
-            box-shadow: 0 0 20px var(--highlight);
-            animation: timelinePulse 2s infinite;
-        }
-
-        .schedule-card {
-            background: var(--glass);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 2rem;
-            margin: 2rem;
-            width: 45%;
-            position: relative;
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            cursor: pointer;
-        }
-
-        .schedule-card:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 15px 45px rgba(233, 69, 96, 0.3);
-        }
-
-        .left { float: left; clear: both; }
-        .right { float: right; clear: both; }
-
-        .time-slot {
-            padding: 1.2rem;
-            margin: 1rem 0;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 15px;
-            position: relative;
-            border-left: 4px solid var(--highlight);
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            animation: slideIn 0.5s ease forwards;
-        }
-
-        .time-slot:hover {
-            background: rgba(233, 69, 96, 0.1);
-        }
-
-        .time-slot.active {
-            background: var(--highlight);
-            box-shadow: 0 0 15px var(--highlight);
-            animation: pulse 2s infinite;
-        }
-
-        .probability-switcher {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin: 3rem 0;
-            flex-wrap: wrap;
-        }
-
-        .switch-btn {
-            padding: 1rem 2.5rem;
-            border: none;
-            border-radius: 50px;
-            background: var(--accent);
-            color: var(--text);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 600;
-            letter-spacing: 1px;
-            position: relative;
-            overflow: hidden;
-        }
-        .scenario-container {
-            display: none;
-        }
-        .scenario-container.active {
-            display: block;
-        }
-        .switch-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transition: 0.5s;
-        }
-
-        .switch-btn:hover::before {
-            left: 100%;
-        }
-
-        .switch-btn.active {
-            background: var(--highlight);
-            box-shadow: 0 0 20px var(--highlight);
-        }
-
-        .progress-pie {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            background: conic-gradient(var(--highlight) 0% 90%, var(--accent) 30% 100%);
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            box-shadow: 0 0 30px rgba(233, 69, 96, 0.3);
-            animation: float 3s ease-in-out infinite;
-            cursor: pointer;
-        }
-
-        .achievements {
-            position: fixed;
-            top: 2rem;
-            right: 2rem;
-            background: var(--glass);
-            padding: 1rem;
-            border-radius: 15px;
-            max-width: 300px;
-            backdrop-filter: blur(10px);
-        }
-
-        .theme-toggle {
-            position: fixed;
-            top: 2rem;
-            left: 2rem;
-            cursor: pointer;
-            padding: 1rem;
-            background: var(--glass);
-            border-radius: 50%;
-            backdrop-filter: blur(10px);
-        }
-
-        .particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .night-schedule {
-            margin-top: 4rem;
-            animation: fadeInUp 0.5s ease;
-        }
-
-        /* New Animations */
-        @keyframes timelinePulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-20px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.02); }
-        }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(40px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Study Focus Effects */
-        .focus-mode {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 999;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            backdrop-filter: blur(10px);
-        }
-
-        .focus-timer {
-            font-size: 4rem;
-            text-align: center;
-            animation: textGlow 1s infinite alternate;
-        }
-
-        @keyframes textGlow {
-            from { text-shadow: 0 0 10px var(--highlight); }
-            to { text-shadow: 0 0 30px var(--highlight); }
-        }
-
-        .completed {
-            background: rgba(0, 255, 0, 0.1) !important;
-            border-color: #00ff00 !important;
-        }
-
-        .progress-bar {
-            height: 4px;
-            background: var(--accent);
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            transition: width 0.5s ease;
-        }
-
-        @media (max-width: 768px) {
-            .schedule-card {
-                width: 90%;
-                margin: 1rem auto;
-                float: none !important;
-            }
-
-            .timeline::before {
-                left: 20px;
-            }
-
-            .header h1 {
-                font-size: 2.5rem;
-            }
-
-            .progress-pie {
-                width: 80px;
-                height: 80px;
-                font-size: 0.8rem;
-                bottom: 1rem;
-                right: 1rem;
-            }
-        }
-    </style>
+    /* Content Styles */
+    h2 {
+      text-align: center;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      letter-spacing: 1px;
+    }
+    .date-label {
+      text-align: center;
+      font-size: 1rem;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+    .quote {
+      font-style: italic;
+      margin-bottom: 15px;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 10px;
+    }
+    .quote p {
+      margin-bottom: 5px;
+    }
+    .quote span {
+      display: block;
+      text-align: right;
+      font-size: 0.85rem;
+      color: #666;
+    }
+    .section-title {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      margin: 15px 0 5px;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 3px;
+      letter-spacing: 0.5px;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+      margin-bottom: 15px;
+    }
+    li {
+      margin-bottom: 8px;
+    }
+    input[type="text"],
+    input[type="number"],
+    textarea {
+      font-family: "Times New Roman", serif;
+    }
+    input[type="text"] {
+      width: 80%;
+      padding: 5px;
+      border: 1px solid #aaa;
+      border-radius: 4px;
+      background: #fff;
+    }
+    /* Circular checkboxes */
+    .agenda-list input[type="checkbox"] {
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border: 2px solid #000;
+      border-radius: 50%;
+      margin-right: 10px;
+      position: relative;
+      cursor: pointer;
+    }
+    .agenda-list input[type="checkbox"]:checked {
+      background: #000;
+    }
+    .agenda-list input[type="checkbox"]:checked::after {
+      content: "✓";
+      color: #fff;
+      font-size: 14px;
+      position: absolute;
+      top: -2px;
+      left: 3px;
+    }
+    .rating-box {
+      display: inline-block;
+      margin-right: 20px;
+      margin-bottom: 10px;
+    }
+    .rating-box label {
+      margin-right: 5px;
+      font-weight: bold;
+    }
+    .rating-box input[type="number"] {
+      width: 50px;
+      padding: 4px;
+      border: 1px solid #aaa;
+      border-radius: 4px;
+      text-align: center;
+    }
+    textarea {
+      width: 100%;
+      min-height: 60px;
+      margin-bottom: 10px;
+      padding: 6px 8px;
+      border: none;
+      border-bottom: 1px dotted #999;
+      resize: vertical;
+      background: transparent;
+      font-size: 1rem;
+      box-sizing: border-box;
+    }
+    .thankful-textarea {
+      min-height: 120px;
+    }
+    /* New Rule: Weekly Review Textareas equal size */
+    .weekly-review textarea {
+      height: 200px;  /* Set fixed height for each textarea */
+    }
+    /* Transition effect for page turnover */
+    .page-container.transition {
+      transition: transform 0.7s ease-in-out;
+    }
+  </style>
 </head>
 <body>
-    <div class="particles" id="particles"></div>
-    <div class="theme-toggle" onclick="toggleTheme()">🌓</div>
-    <div class="achievements" id="achievements"></div>
-    <div class="progress-pie" id="progressPie">90%</div>
-    <div class="current-time" id="currentTime"></div>
-    <div class="focus-mode" id="focusMode">
-        <div class="focus-timer" id="focusTimer">25:00</div>
-    </div>
-    
-    <div class="container">
-        <div class="header">
-            <h1>Quantum Study Planner ⚡</h1>
-        </div>
 
-        <!-- Morning Schedule -->
-        <div class="probability-switcher">
-            <button class="switch-btn active" onclick="showProbability('probability1')">🌅 6:30 AM Start</button>
-            <button class="switch-btn" onclick="showProbability('probability2')">⏰ 7:15 AM Start</button>
-        </div>
+  <!-- A4 Page Container -->
+  <div class="page-container" id="pageContainer">
+    <!-- Navigation Icons will be added dynamically -->
+  </div>
 
-        <div id="probability1" class="scenario-container active">
-            <div class="timeline">
-                <div class="schedule-card left">
-                    <div class="time-slot">
-                        <span class="emoji">⏰</span>
-                        6:30-7:45 AM: Wake up, Walk, Breakfast, Namaz
-                        <div class="progress-bar"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
+  <script>
+    /* CONFIGURATION */
+    const TOTAL_DAYS = 365; // Total days to track
+    let startDate = new Date();
+    // Uncomment below to start from a specific date:
+    // startDate = new Date("2025-02-01");
 
-        <div id="probability2" class="scenario-container">
-            <div class="timeline">
-                <div class="schedule-card left">
-                    <div class="time-slot">
-                        <span class="emoji">⏰</span>
-                        7:15-7:45 AM: Wake up, Namaz
-                        <div class="progress-bar"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    // Retrieve currentOffset from localStorage if available, else default to 0
+    let currentOffset = parseInt(localStorage.getItem("currentOffset") || "0", 10);
 
-        <!-- Afternoon Schedule Switcher -->
-        <div class="probability-switcher">
-            <button class="switch-btn active" onclick="showScenario('scenario1')">🏡 Home at 11 AM</button>
-            <button class="switch-btn" onclick="showScenario('scenario2')">🏡 Home at 1 PM</button>
-        </div>
+    const quotes = [
+      { text: "The best time to plant a tree was 20 years ago. The second best time is now.", author: "Chinese Proverb" },
+      { text: "What seems to us as bitter trials are often blessings in disguise.", author: "Oscar Wilde" },
+      { text: "Believe you can and you're halfway there.", author: "Theodore Roosevelt" },
+      { text: "Act as if what you do makes a difference. It does.", author: "William James" },
+      { text: "With the new day comes new strength and new thoughts.", author: "Eleanor Roosevelt" },
+    ];
 
-        <!-- Scenarios -->
-        <div id="scenario1" class="scenario-container active">
-            <div class="timeline">
-                <div class="schedule-card right">
-                    <div class="time-slot">
-                        <span class="emoji">📚</span>
-                        11:15-11:55 AM: Deep Study Session { urgent }
-                        <div class="progress-bar"></div>
-                    </div>
-                    <div class="time-slot break">
-                        <span class="emoji">☕</span>
-                        12:00 PM: long break (Hydration & lunch)
-                    </div>
-                    <div class="time-slot">
-                        <span class="emoji">📝</span>
-                        12:10-12:50 PM: lunch
-                        <div class="progress-bar"></div>
-                    </div>
-                    <div class="time-slot break">
-                        <span class="emoji">🍴</span>
-                        1:00-2:00 PM: namaz and rest
-                    </div>
-                     <div class="time-slot break">
-                        <span class="emoji">🍴</span>
-                        2:00 to 2:30 PM: study { not urgent }
-                    </div>
-                </div>
-            </div>
-        </div>
+    // Utility: format date (e.g., "Mon, Jan 01 2025")
+    function formatDate(dateObj) {
+      const options = { weekday: 'short', month: 'short', day: '2-digit', year: 'numeric' };
+      return dateObj.toLocaleDateString(undefined, options);
+    }
+    // Utility: get date key for localStorage in YYYY-MM-DD format
+    function getDateKey(dateObj) {
+      return dateObj.toISOString().substring(0, 10);
+    }
 
-        <div id="scenario2" class="scenario-container">
-            <div class="timeline">
-                <div class="schedule-card right">
-                    <div class="time-slot">
-                        <span class="emoji">📚</span>
-                        2:30-3:30 PM: Intensive Study Session { urgent }
-                        <div class="progress-bar"></div>
-                    </div>
-                    <div class="time-slot break">
-                        <span class="emoji">☕</span>
-                        3:30-3:45 PM: Refresh Break
-                    </div>
-                    <div class="time-slot">
-                        <span class="emoji">📖</span>
-                        3:45-4:45 PM: Revision & Notes Making { urgent }
-                        <div class="progress-bar"></div>
-                    </div>
-                </div>
-            </div>
+    /* Generate Daily Layout */
+    function getDailyLayout(dateObj, dayIndex) {
+      const quote = quotes[dayIndex % quotes.length];
+      return `
+        <h2>Daily Planner</h2>
+        <div class="date-label">${formatDate(dateObj)}</div>
+        <div class="quote">
+          <p>"${quote.text}"</p>
+          <span>- ${quote.author}</span>
         </div>
-
-        <!-- Night Schedule -->
-        <div class="night-schedule">
-            <div class="schedule-card">
-                <h3>🌌 Night Schedule (Fixed)</h3>
-                <div class="time-slot">
-                    <span class="emoji">📚</span>
-                    9:00-9:45 PM: Evening Study Session { urgent }
-                    <div class="progress-bar"></div>
-                </div>
-                <div class="time-slot break">
-                    <span class="emoji">🍵</span>
-                    9:45-10:00 PM: Tea Break
-                </div>
-                <div class="time-slot">
-                    <span class="emoji">📈</span>
-                    10:00-11:00 PM: Analysis & Strategy Session { urgent }
-                    <div class="progress-bar"></div>
-                </div>
-                <div class="time-slot break">
-                    <span class="emoji">🧘</span>
-                    11:00-11:15 PM: Meditation & Wind Down
-                </div>
-                <div class="time-slot special">
-                    <span class="emoji">📝</span>
-                    11:15-11:45 PM: Next Day Planning { urgent }
-                    <div class="progress-bar"></div>
-                </div>
-            </div>
+        <div class="rating-box">
+          <label>Productivity:</label>
+          <input type="number" id="prod" min="0" max="10" placeholder="/10">
         </div>
-    </div>
+        <div class="rating-box">
+          <label>Mood:</label>
+          <input type="number" id="mood" min="0" max="10" placeholder="/10">
+        </div>
+        <div class="section-title">Today's Agenda</div>
+        <ul class="agenda-list">
+          <li><input type="checkbox" id="agenda1_cb"><input type="text" id="agenda1" placeholder="Agenda item"></li>
+          <li><input type="checkbox" id="agenda2_cb"><input type="text" id="agenda2" placeholder="Agenda item"></li>
+          <li><input type="checkbox" id="agenda3_cb"><input type="text" id="agenda3" placeholder="Agenda item"></li>
+        </ul>
+        <div class="section-title">Daily Goals</div>
+        <ul class="goals-list">
+          <li><input type="text" id="goal1" placeholder="Goal #1"></li>
+          <li><input type="text" id="goal2" placeholder="Goal #2"></li>
+          <li><input type="text" id="goal3" placeholder="Goal #3"></li>
+        </ul>
+        <div class="section-title">Reflection</div>
+        <textarea id="reflection" placeholder="Write your reflection here..."></textarea>
+        <div class="section-title">I am thankful for...</div>
+        <textarea id="thankful" class="thankful-textarea" placeholder="Write what you are thankful for..."></textarea>
+        <button id="saveBtn">Save</button>
+      `;
+    }
 
-    <script>
-        // Scenario Switching Logic
-        function showScenario(scenarioId) {
-            document.querySelectorAll('.scenario-container').forEach(container => {
-                container.classList.remove('active');
-            });
-            document.querySelectorAll('.switch-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            document.getElementById(scenarioId).classList.add('active');
-            event.target.classList.add('active');
-        }
-    
-        function showProbability(probabilityId) {
-            document.querySelectorAll('.scenario-container').forEach(container => {
-                container.classList.remove('active');
-            });
-            document.querySelectorAll('.switch-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            document.getElementById(probabilityId).classList.add('active');
-            event.target.classList.add('active');
-        }
-    
-        // Initialize the planner
-        document.addEventListener('DOMContentLoaded', () => {
-            StudyManager.init();
-            
-            // Initialize default active states
-            document.querySelectorAll('.switch-btn').forEach(btn => {
-                if(btn.classList.contains('active')) {
-                    const targetId = btn.getAttribute('onclick').match(/'(.*?)'/)[1];
-                    document.getElementById(targetId).classList.add('active');
-                }
-            });
+    /* Generate Weekly Review Layout with Save Button */
+    function getWeeklyReviewLayout(dateObj, weekNumber) {
+      return `
+        <h2>Week ${weekNumber} - Review</h2>
+        <div class="date-label">${formatDate(dateObj)} (Sunday)</div>
+        <div class="weekly-review">
+          <div class="section-title">Weekly Highlights</div>
+          <textarea id="weeklyHighlights" placeholder="What went well this week..."></textarea>
+          <div class="section-title">Areas to Improve</div>
+          <textarea id="areasImprove" placeholder="What can be improved next week..."></textarea>
+          <div class="section-title">Overall Reflection</div>
+          <textarea id="overallReflection" placeholder="Overall thoughts on the week..."></textarea>
+        </div>
+        <button id="saveWeeklyBtn">Save Weekly Review</button>
+      `;
+    }
+
+    /* Render page content based on currentOffset */
+    function renderPage(offset) {
+      const container = document.getElementById('pageContainer');
+      let thisDate = new Date(startDate);
+      thisDate.setDate(startDate.getDate() + offset);
+      
+      if (thisDate.getDay() === 0) {
+        let weekNumber = Math.floor(offset / 7) + 1;
+        container.innerHTML = getWeeklyReviewLayout(thisDate, weekNumber);
+        loadWeeklyReviewData(thisDate);
+        document.getElementById('saveWeeklyBtn').addEventListener('click', function(e) {
+          e.preventDefault();
+          saveWeeklyReviewData(thisDate);
         });
-    
-        // Theme Toggler
-        function toggleTheme() {
-            document.body.classList.toggle('light-theme');
-        }
-    
-        // Complete the StudyManager class implementation
-        class StudyManager {
-            // ... [Keep previous implementation] ...
-    
-            static updateAllProgressBars() {
-                document.querySelectorAll('.time-slot').forEach(slot => {
-                    const now = new Date();
-                    const timeRange = slot.textContent.match(/(\d+:\d+).*?(\d+:\d+)/);
-                    if(timeRange) {
-                        const start = this.parseTime(timeRange[1]);
-                        const end = this.parseTime(timeRange[2]);
-                        const progress = this.calculateProgress(start, end, now);
-                        slot.querySelector('.progress-bar').style.width = `${progress}%`;
-                    }
-                });
-            }
-    
-            static parseTime(timeString) {
-                const [time, modifier] = timeString.split(/(am|pm)/i);
-                let [hours, minutes] = time.split(':').map(Number);
-                if (modifier?.toLowerCase() === 'pm' && hours < 12) hours += 12;
-                if (modifier?.toLowerCase() === 'am' && hours === 12) hours = 0;
-                return new Date().setHours(hours, minutes, 0, 0);
-            }
-    
-            static calculateProgress(start, end, now) {
-                const total = end - start;
-                const elapsed = now - start;
-                return Math.min(Math.max((elapsed / total) * 100, 0), 100);
-            }
-    
-            static showConfetti() {
-                // Add confetti implementation here
-            }
-        }
-    </script>
-    
+      } else {
+        container.innerHTML = getDailyLayout(thisDate, offset);
+        loadCurrentDayData(thisDate);
+        document.getElementById('saveBtn').addEventListener('click', function(e) {
+          e.preventDefault();
+          saveCurrentDayData(thisDate);
+        });
+      }
+      addNavigationIcons();
+      localStorage.setItem("currentOffset", offset);
+      localStorage.setItem("containerWidth", document.getElementById('pageContainer').offsetWidth);
+      localStorage.setItem("containerHeight", document.getElementById('pageContainer').offsetHeight);
+    }
 
-        
-    </body>
-    </html>
-    </html>
+    /* Save Daily Data */
+    function saveCurrentDayData(dateObj) {
+      const key = "planner_" + getDateKey(dateObj);
+      const data = {
+        prod: document.getElementById('prod')?.value || "",
+        mood: document.getElementById('mood')?.value || "",
+        agenda1: document.getElementById('agenda1')?.value || "",
+        agenda1_cb: document.getElementById('agenda1_cb')?.checked || false,
+        agenda2: document.getElementById('agenda2')?.value || "",
+        agenda2_cb: document.getElementById('agenda2_cb')?.checked || false,
+        agenda3: document.getElementById('agenda3')?.value || "",
+        agenda3_cb: document.getElementById('agenda3_cb')?.checked || false,
+        goal1: document.getElementById('goal1')?.value || "",
+        goal2: document.getElementById('goal2')?.value || "",
+        goal3: document.getElementById('goal3')?.value || "",
+        reflection: document.getElementById('reflection')?.value || "",
+        thankful: document.getElementById('thankful')?.value || ""
+      };
+      localStorage.setItem(key, JSON.stringify(data));
+      alert("Daily Data saved for " + getDateKey(dateObj));
+    }
+
+    /* Load Daily Data */
+    function loadCurrentDayData(dateObj) {
+      const key = "planner_" + getDateKey(dateObj);
+      const saved = localStorage.getItem(key);
+      if (saved) {
+        const data = JSON.parse(saved);
+        if (document.getElementById('prod')) document.getElementById('prod').value = data.prod;
+        if (document.getElementById('mood')) document.getElementById('mood').value = data.mood;
+        if (document.getElementById('agenda1')) document.getElementById('agenda1').value = data.agenda1;
+        if (document.getElementById('agenda1_cb')) document.getElementById('agenda1_cb').checked = data.agenda1_cb;
+        if (document.getElementById('agenda2')) document.getElementById('agenda2').value = data.agenda2;
+        if (document.getElementById('agenda2_cb')) document.getElementById('agenda2_cb').checked = data.agenda2_cb;
+        if (document.getElementById('agenda3')) document.getElementById('agenda3').value = data.agenda3;
+        if (document.getElementById('agenda3_cb')) document.getElementById('agenda3_cb').checked = data.agenda3_cb;
+        if (document.getElementById('goal1')) document.getElementById('goal1').value = data.goal1;
+        if (document.getElementById('goal2')) document.getElementById('goal2').value = data.goal2;
+        if (document.getElementById('goal3')) document.getElementById('goal3').value = data.goal3;
+        if (document.getElementById('reflection')) document.getElementById('reflection').value = data.reflection;
+        if (document.getElementById('thankful')) document.getElementById('thankful').value = data.thankful;
+      }
+    }
+
+    /* Save Weekly Review Data */
+    function saveWeeklyReviewData(dateObj) {
+      const key = "weeklyReview_" + getDateKey(dateObj);
+      const data = {
+        weeklyHighlights: document.getElementById('weeklyHighlights')?.value || "",
+        areasImprove: document.getElementById('areasImprove')?.value || "",
+        overallReflection: document.getElementById('overallReflection')?.value || "",
+        containerWidth: document.getElementById('pageContainer').offsetWidth,
+        containerHeight: document.getElementById('pageContainer').offsetHeight
+      };
+      localStorage.setItem(key, JSON.stringify(data));
+      alert("Weekly Review Data saved for " + getDateKey(dateObj));
+    }
+
+    /* Load Weekly Review Data */
+    function loadWeeklyReviewData(dateObj) {
+      const key = "weeklyReview_" + getDateKey(dateObj);
+      const saved = localStorage.getItem(key);
+      if (saved) {
+        const data = JSON.parse(saved);
+        if (document.getElementById('weeklyHighlights')) document.getElementById('weeklyHighlights').value = data.weeklyHighlights;
+        if (document.getElementById('areasImprove')) document.getElementById('areasImprove').value = data.areasImprove;
+        if (document.getElementById('overallReflection')) document.getElementById('overallReflection').value = data.overallReflection;
+        if (data.containerWidth && data.containerHeight) {
+          document.getElementById('pageContainer').style.width = data.containerWidth + "px";
+          document.getElementById('pageContainer').style.height = data.containerHeight + "px";
+        }
+      }
+    }
+
+    /* Add navigation icons inside the container */
+    function addNavigationIcons() {
+      const container = document.getElementById('pageContainer');
+      if (!document.getElementById('prevIcon')) {
+        const prev = document.createElement('div');
+        prev.className = "nav-icon nav-prev";
+        prev.id = "prevIcon";
+        prev.innerHTML = "&#8249;";
+        container.appendChild(prev);
+        prev.addEventListener('click', function() {
+          if (currentOffset > 0) transitionPage("prev");
+          else alert("This is the start date!");
+        });
+      }
+      if (!document.getElementById('nextIcon')) {
+        const next = document.createElement('div');
+        next.className = "nav-icon nav-next";
+        next.id = "nextIcon";
+        next.innerHTML = "&#8250;";
+        container.appendChild(next);
+        next.addEventListener('click', function() {
+          if (currentOffset < (TOTAL_DAYS - 1)) transitionPage("next");
+          else alert("You've reached the maximum day limit!");
+        });
+      }
+    }
+
+    /* Turnover transition effect using setTimeout for smoothness */
+    function transitionPage(direction) {
+      const container = document.getElementById('pageContainer');
+      container.style.transition = "transform 0.7s ease-in-out";
+      container.style.transform = direction === "next" ? "rotateY(-90deg)" : "rotateY(90deg)";
+      setTimeout(() => {
+        currentOffset = direction === "next" ? currentOffset + 1 : currentOffset - 1;
+        renderPage(currentOffset);
+        container.style.transition = "none";
+        container.style.transform = direction === "next" ? "rotateY(90deg)" : "rotateY(-90deg)";
+        void container.offsetWidth;
+        container.style.transition = "transform 0.7s ease-in-out";
+        container.style.transform = "rotateY(0deg)";
+      }, 700);
+    }
+
+    /* Initial load */
+    window.addEventListener('DOMContentLoaded', () => {
+      renderPage(currentOffset);
+    });
+  </script>
+</body>
+</html>
