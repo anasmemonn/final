@@ -3,9 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <title>1% Better Everyday</title>
-  <link rel="icon" href="isagi.jpg" type="image/jpg">
+  <link rel="icon" href="imagess.jpg" type="image/jpg">
   <style>
-    /* Global Styles */
+    .wrapper {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden; /* Extra scroll remove */
+    
+      /* Scale up to compensate for 67% zoom */
+      transform: scale(1.49);
+      transform-origin: center;
+    }
+    
     body {
       margin: 0;
       padding: 20px;
@@ -14,7 +26,44 @@
       display: flex;
       flex-direction: column;
       align-items: center;
+      width: 100vw;
+      min-height: 100vh;
+    
+      /* Scale up to compensate for 67% zoom */
+      transform: scale(1.49);
+      transform-origin: top center;
+    
+      /* Enable smooth vertical scrolling */
+      overflow-x: hidden; /* Disable horizontal scroll */
+      overflow-y: auto; /* Enable vertical scroll */
+      scroll-behavior: smooth;
     }
+    
+    /* Thinnest possible scrollbar */
+    body::-webkit-scrollbar {
+      width: 2px; /* Ultra-thin scrollbar */
+    }
+    
+    body::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0.2); /* Light transparent scrollbar */
+      border-radius: 10px; /* Smooth edges */
+    }
+    
+    body::-webkit-scrollbar-track {
+      background: transparent; /* Invisible track */
+    }
+    
+    body::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0.2); /* Light transparent scrollbar */
+      border-radius: 10px; /* Smooth edges */
+    }
+    
+    body::-webkit-scrollbar-track {
+      background: transparent; /* Invisible track */
+    }
+    
+    
+    
     h1 {
       margin-bottom: 20px;
       font-size: 2rem;
@@ -36,6 +85,7 @@
       transform-style: preserve-3d;
       perspective: 1200px;
       backface-visibility: hidden;
+    
     }
     
     /* Minimal Navigation Icons */
