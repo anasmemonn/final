@@ -11,83 +11,58 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      overflow: hidden; /* Extra scroll remove */
-    
+      overflow: hidden;
       /* Scale up to compensate for 67% zoom */
       transform: scale(1.49);
       transform-origin: center;
     }
-    
     body {
       margin: 0;
       padding: 20px;
-      background: #ddd; /* Light gray background */
+      background: #ddd;
       font-family: "Times New Roman", serif;
       display: flex;
       flex-direction: column;
       align-items: center;
       width: 100vw;
       min-height: 100vh;
-    
-      /* Scale up to compensate for 67% zoom */
       transform: scale(1.49);
       transform-origin: top center;
-    
-      /* Enable smooth vertical scrolling */
-      overflow-x: hidden; /* Disable horizontal scroll */
-      overflow-y: auto; /* Enable vertical scroll */
+      overflow-x: hidden;
+      overflow-y: auto;
       scroll-behavior: smooth;
     }
-    
     /* Thinnest possible scrollbar */
     body::-webkit-scrollbar {
-      width: 2px; /* Ultra-thin scrollbar */
+      width: 2px;
     }
-    
     body::-webkit-scrollbar-thumb {
-      background: rgba(0, 0, 0, 0.2); /* Light transparent scrollbar */
-      border-radius: 10px; /* Smooth edges */
+      background: rgba(0, 0, 0, 0.2);
+      border-radius: 10px;
     }
-    
     body::-webkit-scrollbar-track {
-      background: transparent; /* Invisible track */
+      background: transparent;
     }
-    
-    body::-webkit-scrollbar-thumb {
-      background: rgba(0, 0, 0, 0.2); /* Light transparent scrollbar */
-      border-radius: 10px; /* Smooth edges */
-    }
-    
-    body::-webkit-scrollbar-track {
-      background: transparent; /* Invisible track */
-    }
-    
-    
-    
     h1 {
       margin-bottom: 20px;
       font-size: 2rem;
       letter-spacing: 1px;
       color: #333;
     }
-
     .page-container {
-      width: 600px; /* Default width */
-      height: 850px; /* Default height */
-      background: linear-gradient(to bottom, #f5e6d3, #e0c7a1); /* Gradient for depth */
-      border-radius: 50px; /* Curved edges for barrel shape */
+      width: 500px; /* Fixed width */
+      height: 850px;
+      background: linear-gradient(to bottom, #f5e6d3, #e0c7a1);
+      border-radius: 50px;
       border: 4px solid #fff;
       box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.2), 0 8px 16px rgba(0, 0, 0, 0.3);
       padding: 50px 30px;
       position: relative;
       overflow: hidden;
-      /* 3D settings for turnover effect */
       transform-style: preserve-3d;
       perspective: 1200px;
       backface-visibility: hidden;
-    
     }
-    
     /* Minimal Navigation Icons */
     .nav-icon {
       position: absolute;
@@ -112,8 +87,7 @@
     .nav-next {
       right: 10px;
     }
-
-    /* Save Buttons */
+    /* Save Buttons with icon */
     #saveBtn, #saveWeeklyBtn {
       position: absolute;
       bottom: 20px;
@@ -126,11 +100,13 @@
       cursor: pointer;
       z-index: 5;
       transition: background 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
     #saveBtn:hover, #saveWeeklyBtn:hover {
       background: #555;
     }
-
     /* Content Styles */
     h2 {
       text-align: center;
@@ -149,15 +125,19 @@
       margin-bottom: 15px;
       border-bottom: 1px solid #ddd;
       padding-bottom: 10px;
+      font-weight: bolder;
     }
     .quote p {
       margin-bottom: 5px;
+      color: #001637;
+      font-weight: bolder;
     }
     .quote span {
       display: block;
       text-align: right;
       font-size: 0.85rem;
-      color: #666;
+      color: #480a0a;
+      font-weight: bolder;
     }
     .section-title {
       font-size: 0.9rem;
@@ -174,41 +154,61 @@
     }
     li {
       margin-bottom: 8px;
+      display: flex;
+      align-items: center;
     }
+    /* Updated Input Style: Underline design with creative placeholder */
     input[type="text"],
-    input[type="number"],
-    textarea {
-      font-family: "Times New Roman", serif;
-    }
-    input[type="text"] {
+    input[type="number"] {
       width: 80%;
-      padding: 5px;
-      border: 1px solid #aaa;
-      border-radius: 4px;
-      background: #fff;
+      padding: 5px 0;
+      border: none;
+      border-bottom: 2px solid #000;
+      background: transparent;
+      font-family: "Times New Roman", serif;
+      transition: border-color 0.3s ease;
     }
-    /* Circular checkboxes */
-    .agenda-list input[type="checkbox"] {
-      appearance: none;
+    input[type="text"]:focus,
+    input[type="number"]:focus {
+      border-bottom: 2px solid #555;
+      outline: none;
+    }
+    /* Placeholder styling for a creative and smaller look */
+    input::placeholder,
+    textarea::placeholder {
+      font-family: "Times New Roman", serif;
+      font-size: 0.85em;
+      color: #888;
+    }
+    /* Custom Agenda Checkbox */
+    .custom-checkbox {
+      display: inline-block;
       width: 18px;
       height: 18px;
       border: 2px solid #000;
       border-radius: 50%;
       margin-right: 10px;
-      position: relative;
+      vertical-align: middle;
       cursor: pointer;
     }
-    .agenda-list input[type="checkbox"]:checked {
-      background: #000;
+    .custom-checkbox[data-state="0"] {
+      background: none;
     }
-    .agenda-list input[type="checkbox"]:checked::after {
-      content: "✓";
+    .custom-checkbox[data-state="1"] {
+      background: green;
+    }
+    .custom-checkbox[data-state="2"] {
+      background: red;
+    }
+    .custom-checkbox[data-state="1"]::after,
+    .custom-checkbox[data-state="2"]::after {
+      content: attr(data-symbol);
+      display: block;
       color: #fff;
-      font-size: 14px;
-      position: absolute;
-      top: -2px;
-      left: 3px;
+      text-align: center;
+      line-height: 18px;
     }
+    /* Keep rating boxes unchanged */
     .rating-box {
       display: inline-block;
       margin-right: 20px;
@@ -225,6 +225,11 @@
       border-radius: 4px;
       text-align: center;
     }
+    /* Reflection textarea adjustment */
+    textarea#reflection {
+      width: 100%;
+      height: 130px;
+    }
     textarea {
       width: 100%;
       min-height: 60px;
@@ -240,41 +245,78 @@
     .thankful-textarea {
       min-height: 120px;
     }
-    /* New Rule: Weekly Review Textareas equal size */
+    /* Weekly Review Textareas equal size */
     .weekly-review textarea {
-      height: 200px;  /* Set fixed height for each textarea */
-    }
-    /* Transition effect for page turnover */
-    .page-container.transition {
-      transition: transform 0.7s ease-in-out;
+      height: 200px;
     }
   </style>
 </head>
 <body>
-
   <!-- A4 Page Container -->
   <div class="page-container" id="pageContainer">
     <!-- Navigation Icons will be added dynamically -->
   </div>
-
   <script>
     /* CONFIGURATION */
     const TOTAL_DAYS = 365; // Total days to track
-    let startDate = new Date();
-    // Uncomment below to start from a specific date:
-    // startDate = new Date("2025-02-01");
-
+    // Set start date to February 21, 2025 as requested
+    let startDate = new Date("2025-02-21");
     // Retrieve currentOffset from localStorage if available, else default to 0
     let currentOffset = parseInt(localStorage.getItem("currentOffset") || "0", 10);
-
+    // Additional motivational quotes added
     const quotes = [
-      { text: "The best time to plant a tree was 20 years ago. The second best time is now.", author: "Chinese Proverb" },
-      { text: "What seems to us as bitter trials are often blessings in disguise.", author: "Oscar Wilde" },
-      { text: "Believe you can and you're halfway there.", author: "Theodore Roosevelt" },
-      { text: "Act as if what you do makes a difference. It does.", author: "William James" },
-      { text: "With the new day comes new strength and new thoughts.", author: "Eleanor Roosevelt" },
+    { text: "Your time is limited, don't waste it living someone else's life.", author: "Steve Jobs" },
+    { text: "You miss 100% of the shots you don't take.", author: "Wayne Gretzky" },
+    { text: "I've learned that people will forget what you said, people will forget what you did, but people will never forget how you made them feel.", author: "Maya Angelou" },
+    { text: "The only limit to our realization of tomorrow is our doubts of today.", author: "Franklin D. Roosevelt" },
+    { text: "It does not matter how slowly you go as long as you do not stop.", author: "Confucius" },
+    { text: "Everything you’ve ever wanted is on the other side of fear.", author: "George Addair" },
+    { text: "Hardships often prepare ordinary people for an extraordinary destiny.", author: "C.S. Lewis" },
+    { text: "Don't be pushed around by the fears in your mind. Be led by the dreams in your heart.", author: "Roy T. Bennett" },
+    { text: "It always seems impossible until it is done.", author: "Nelson Mandela" },
+    { text: "Dream big and dare to fail.", author: "Norman Vaughan" },
+    { text: "The best way to predict your future is to create it.", author: "Abraham Lincoln" },
+    { text: "Don't let yesterday take up too much of today.", author: "Will Rogers" },
+    { text: "You are never too old to set another goal or to dream a new dream.", author: "C.S. Lewis" },
+    { text: "If you can dream it, you can do it.", author: "Walt Disney" },
+    { text: "Keep your face always toward the sunshine—and shadows will fall behind you.", author: "Walt Whitman" },
+    { text: "The only person you are destined to become is the person you decide to be.", author: "Ralph Waldo Emerson" },
+    { text: "Go confidently in the direction of your dreams! Live the life you've imagined.", author: "Henry David Thoreau" },
+    { text: "The harder you work for something, the greater you’ll feel when you achieve it.", author: "Anonymous" },
+    { text: "Don't stop when you're tired. Stop when you're done.", author: "Anonymous" },
+    { text: "Little by little, a little becomes a lot.", author: "Tanzanian Proverb" },
+    { text: "The secret of getting ahead is getting started.", author: "Mark Twain" },
+    { text: "Start where you are. Use what you have. Do what you can.", author: "Arthur Ashe" },
+    { text: "Success doesn't just find you. You have to go out and get it.", author: "Anonymous" },
+    { text: "The way to get started is to quit talking and begin doing.", author: "Walt Disney" },
+    { text: "Don't wait for opportunity. Create it.", author: "Anonymous" },
+    { text: "Sometimes we're tested not to show our weaknesses, but to discover our strengths.", author: "Anonymous" },
+    { text: "If you want to achieve greatness, stop asking for permission.", author: "Anonymous" },
+    { text: "Success is walking from failure to failure with no loss of enthusiasm.", author: "Winston Churchill" },
+    { text: "Don’t limit your challenges. Challenge your limits.", author: "Anonymous" },
+    { text: "Opportunities don't happen, you create them.", author: "Chris Grosser" },
+    { text: "Don't count the days, make the days count.", author: "Muhammad Ali" },
+    { text: "I am not a product of my circumstances. I am a product of my decisions.", author: "Stephen Covey" },
+    { text: "Believe in yourself and all that you are. Know that there is something inside you that is greater than any obstacle.", author: "Christian D. Larson" },
+    { text: "What we achieve inwardly will change outer reality.", author: "Plutarch" },
+    { text: "If you want to live a happy life, tie it to a goal, not to people or things.", author: "Albert Einstein" },
+    { text: "Don't be afraid to give up the good to go for the great.", author: "John D. Rockefeller" },
+    { text: "A champion is defined not by their wins but by how they can recover when they fall.", author: "Serena Williams" },
+    { text: "Your passion is waiting for your courage to catch up.", author: "Isabelle Lafleche" },
+    { text: "Magic is believing in yourself, if you can do that, you can make anything happen.", author: "Johann Wolfgang von Goethe" },
+    { text: "If you want to fly, give up everything that weighs you down.", author: "Buddha" },
+    { text: "The only way to achieve the impossible is to believe it is possible.", author: "Charles Kingsleigh" },
+    { text: "Sometimes you win, sometimes you learn.", author: "John C. Maxwell" },
+    { text: "Don't be busy, be productive.", author: "Anonymous" },
+    { text: "Great things never come from comfort zones.", author: "Anonymous" },
+    { text: "Dream it. Wish it. Do it.", author: "Anonymous" },
+    { text: "Success is not how high you have climbed, but how you make a positive difference to the world.", author: "Roy T. Bennett" },
+    { text: "When you feel like quitting, think about why you started.", author: "Anonymous" },
+    { text: "Doubt kills more dreams than failure ever will.", author: "Suzy Kassem" },
+    { text: "The road to success and the road to failure are almost exactly the same.", author: "Colin R. Davis" },
+    { text: "Your life does not get better by chance, it gets better by change.", author: "Jim Rohn" }
+    
     ];
-
     // Utility: format date (e.g., "Mon, Jan 01 2025")
     function formatDate(dateObj) {
       const options = { weekday: 'short', month: 'short', day: '2-digit', year: 'numeric' };
@@ -284,7 +326,6 @@
     function getDateKey(dateObj) {
       return dateObj.toISOString().substring(0, 10);
     }
-
     /* Generate Daily Layout */
     function getDailyLayout(dateObj, dayIndex) {
       const quote = quotes[dayIndex % quotes.length];
@@ -305,9 +346,18 @@
         </div>
         <div class="section-title">Today's Agenda</div>
         <ul class="agenda-list">
-          <li><input type="checkbox" id="agenda1_cb"><input type="text" id="agenda1" placeholder="Agenda item"></li>
-          <li><input type="checkbox" id="agenda2_cb"><input type="text" id="agenda2" placeholder="Agenda item"></li>
-          <li><input type="checkbox" id="agenda3_cb"><input type="text" id="agenda3" placeholder="Agenda item"></li>
+          <li>
+            <span class="custom-checkbox" id="agenda1_cb" data-state="0" data-symbol=""></span>
+            <input type="text" id="agenda1" placeholder="Agenda item">
+          </li>
+          <li>
+            <span class="custom-checkbox" id="agenda2_cb" data-state="0" data-symbol=""></span>
+            <input type="text" id="agenda2" placeholder="Agenda item">
+          </li>
+          <li>
+            <span class="custom-checkbox" id="agenda3_cb" data-state="0" data-symbol=""></span>
+            <input type="text" id="agenda3" placeholder="Agenda item">
+          </li>
         </ul>
         <div class="section-title">Daily Goals</div>
         <ul class="goals-list">
@@ -319,15 +369,15 @@
         <textarea id="reflection" placeholder="Write your reflection here..."></textarea>
         <div class="section-title">I am thankful for...</div>
         <textarea id="thankful" class="thankful-textarea" placeholder="Write what you are thankful for..."></textarea>
-        <button id="saveBtn">Save</button>
+        <button id="saveBtn"><span class="save-icon">💾</span> Save</button>
       `;
     }
-
     /* Generate Weekly Review Layout with Save Button */
     function getWeeklyReviewLayout(dateObj, weekNumber) {
       return `
-        <h2>Week ${weekNumber} - Review</h2>
-        <div class="date-label">${formatDate(dateObj)} (Sunday)</div>
+        <h2>Week ${weekNumber} - Productivity Review</h2>
+        <div class="sub-header" style="text-align:center; margin-bottom:10px; font-style:italic;">Write your Sunday goal</div>
+        <div class="date-label">${formatDate(dateObj)}</div>
         <div class="weekly-review">
           <div class="section-title">Weekly Highlights</div>
           <textarea id="weeklyHighlights" placeholder="What went well this week..."></textarea>
@@ -336,18 +386,22 @@
           <div class="section-title">Overall Reflection</div>
           <textarea id="overallReflection" placeholder="Overall thoughts on the week..."></textarea>
         </div>
-        <button id="saveWeeklyBtn">Save Weekly Review</button>
+        <button id="saveWeeklyBtn"><span class="save-icon">💾</span> Save Weekly Review</button>
       `;
     }
-
     /* Render page content based on currentOffset */
     function renderPage(offset) {
       const container = document.getElementById('pageContainer');
+      // Force fixed width and height on every render
+      container.style.width = "500px";
+      container.style.height = "850px";
       let thisDate = new Date(startDate);
       thisDate.setDate(startDate.getDate() + offset);
       
+      // Show weekly review ONLY on Sundays (getDay() === 0)
       if (thisDate.getDay() === 0) {
-        let weekNumber = Math.floor(offset / 7) + 1;
+        const diffDays = Math.floor((thisDate - startDate) / (1000 * 60 * 60 * 24));
+        let weekNumber = Math.floor(diffDays / 7) + 1;
         container.innerHTML = getWeeklyReviewLayout(thisDate, weekNumber);
         loadWeeklyReviewData(thisDate);
         document.getElementById('saveWeeklyBtn').addEventListener('click', function(e) {
@@ -361,13 +415,29 @@
           e.preventDefault();
           saveCurrentDayData(thisDate);
         });
+        initCustomCheckboxes();
       }
       addNavigationIcons();
       localStorage.setItem("currentOffset", offset);
-      localStorage.setItem("containerWidth", document.getElementById('pageContainer').offsetWidth);
-      localStorage.setItem("containerHeight", document.getElementById('pageContainer').offsetHeight);
     }
-
+    /* Custom Checkbox Behavior: cycles through 0 -> 1 -> 2 -> 0 */
+    function initCustomCheckboxes() {
+      const checkboxes = document.querySelectorAll('.custom-checkbox');
+      checkboxes.forEach(cb => {
+        cb.addEventListener('click', () => {
+          let currentState = parseInt(cb.getAttribute('data-state'));
+          let nextState = (currentState + 1) % 3;
+          cb.setAttribute('data-state', nextState);
+          if(nextState === 1){
+            cb.setAttribute('data-symbol', '✓');
+          } else if(nextState === 2){
+            cb.setAttribute('data-symbol', '✗');
+          } else {
+            cb.setAttribute('data-symbol', '');
+          }
+        });
+      });
+    }
     /* Save Daily Data */
     function saveCurrentDayData(dateObj) {
       const key = "planner_" + getDateKey(dateObj);
@@ -375,11 +445,11 @@
         prod: document.getElementById('prod')?.value || "",
         mood: document.getElementById('mood')?.value || "",
         agenda1: document.getElementById('agenda1')?.value || "",
-        agenda1_cb: document.getElementById('agenda1_cb')?.checked || false,
+        agenda1_state: document.getElementById('agenda1_cb')?.getAttribute('data-state') || "0",
         agenda2: document.getElementById('agenda2')?.value || "",
-        agenda2_cb: document.getElementById('agenda2_cb')?.checked || false,
+        agenda2_state: document.getElementById('agenda2_cb')?.getAttribute('data-state') || "0",
         agenda3: document.getElementById('agenda3')?.value || "",
-        agenda3_cb: document.getElementById('agenda3_cb')?.checked || false,
+        agenda3_state: document.getElementById('agenda3_cb')?.getAttribute('data-state') || "0",
         goal1: document.getElementById('goal1')?.value || "",
         goal2: document.getElementById('goal2')?.value || "",
         goal3: document.getElementById('goal3')?.value || "",
@@ -389,7 +459,6 @@
       localStorage.setItem(key, JSON.stringify(data));
       alert("Daily Data saved for " + getDateKey(dateObj));
     }
-
     /* Load Daily Data */
     function loadCurrentDayData(dateObj) {
       const key = "planner_" + getDateKey(dateObj);
@@ -399,11 +468,11 @@
         if (document.getElementById('prod')) document.getElementById('prod').value = data.prod;
         if (document.getElementById('mood')) document.getElementById('mood').value = data.mood;
         if (document.getElementById('agenda1')) document.getElementById('agenda1').value = data.agenda1;
-        if (document.getElementById('agenda1_cb')) document.getElementById('agenda1_cb').checked = data.agenda1_cb;
+        if (document.getElementById('agenda1_cb')) document.getElementById('agenda1_cb').setAttribute('data-state', data.agenda1_state || "0");
         if (document.getElementById('agenda2')) document.getElementById('agenda2').value = data.agenda2;
-        if (document.getElementById('agenda2_cb')) document.getElementById('agenda2_cb').checked = data.agenda2_cb;
+        if (document.getElementById('agenda2_cb')) document.getElementById('agenda2_cb').setAttribute('data-state', data.agenda2_state || "0");
         if (document.getElementById('agenda3')) document.getElementById('agenda3').value = data.agenda3;
-        if (document.getElementById('agenda3_cb')) document.getElementById('agenda3_cb').checked = data.agenda3_cb;
+        if (document.getElementById('agenda3_cb')) document.getElementById('agenda3_cb').setAttribute('data-state', data.agenda3_state || "0");
         if (document.getElementById('goal1')) document.getElementById('goal1').value = data.goal1;
         if (document.getElementById('goal2')) document.getElementById('goal2').value = data.goal2;
         if (document.getElementById('goal3')) document.getElementById('goal3').value = data.goal3;
@@ -411,21 +480,17 @@
         if (document.getElementById('thankful')) document.getElementById('thankful').value = data.thankful;
       }
     }
-
     /* Save Weekly Review Data */
     function saveWeeklyReviewData(dateObj) {
       const key = "weeklyReview_" + getDateKey(dateObj);
       const data = {
         weeklyHighlights: document.getElementById('weeklyHighlights')?.value || "",
         areasImprove: document.getElementById('areasImprove')?.value || "",
-        overallReflection: document.getElementById('overallReflection')?.value || "",
-        containerWidth: document.getElementById('pageContainer').offsetWidth,
-        containerHeight: document.getElementById('pageContainer').offsetHeight
+        overallReflection: document.getElementById('overallReflection')?.value || ""
       };
       localStorage.setItem(key, JSON.stringify(data));
       alert("Weekly Review Data saved for " + getDateKey(dateObj));
     }
-
     /* Load Weekly Review Data */
     function loadWeeklyReviewData(dateObj) {
       const key = "weeklyReview_" + getDateKey(dateObj);
@@ -435,13 +500,8 @@
         if (document.getElementById('weeklyHighlights')) document.getElementById('weeklyHighlights').value = data.weeklyHighlights;
         if (document.getElementById('areasImprove')) document.getElementById('areasImprove').value = data.areasImprove;
         if (document.getElementById('overallReflection')) document.getElementById('overallReflection').value = data.overallReflection;
-        if (data.containerWidth && data.containerHeight) {
-          document.getElementById('pageContainer').style.width = data.containerWidth + "px";
-          document.getElementById('pageContainer').style.height = data.containerHeight + "px";
-        }
       }
     }
-
     /* Add navigation icons inside the container */
     function addNavigationIcons() {
       const container = document.getElementById('pageContainer');
@@ -468,23 +528,20 @@
         });
       }
     }
-
-    /* Turnover transition effect using setTimeout for smoothness */
+    /* Smooth fade transition for page navigation */
     function transitionPage(direction) {
       const container = document.getElementById('pageContainer');
-      container.style.transition = "transform 0.7s ease-in-out";
-      container.style.transform = direction === "next" ? "rotateY(-90deg)" : "rotateY(90deg)";
+      container.style.transition = "opacity 0.7s ease-in-out";
+      container.style.opacity = 0;
       setTimeout(() => {
         currentOffset = direction === "next" ? currentOffset + 1 : currentOffset - 1;
         renderPage(currentOffset);
-        container.style.transition = "none";
-        container.style.transform = direction === "next" ? "rotateY(90deg)" : "rotateY(-90deg)";
+        container.style.opacity = 0;
         void container.offsetWidth;
-        container.style.transition = "transform 0.7s ease-in-out";
-        container.style.transform = "rotateY(0deg)";
+        container.style.transition = "opacity 0.7s ease-in-out";
+        container.style.opacity = 1;
       }, 700);
     }
-
     /* Initial load */
     window.addEventListener('DOMContentLoaded', () => {
       renderPage(currentOffset);
