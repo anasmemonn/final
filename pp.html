@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <title>1% Better Everyday</title>
   <link rel="icon" href="imagess.jpg" type="image/jpg">
+  <!-- Manifest file ko link karna -->
+  <link rel="manifest" href="/final/manifest.json">
   <style>
     .wrapper {
       width: 100vw;
@@ -591,6 +593,16 @@
     window.addEventListener('DOMContentLoaded', () => {
       renderPage(currentOffset);
     });
+  </script>
+  <!-- Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/final/service-worker.js')
+          .then(reg => console.log("Service Worker Registered", reg))
+          .catch(err => console.log("Service Worker Registration Failed", err));
+      });
+    }
   </script>
 </body>
 </html>
