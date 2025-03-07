@@ -2,10 +2,11 @@
     "name": "Final App",
     "short_name": "Final",
     "description": "A futuristic neon-style app",
-    "start_url": "/",
+    "start_url": "/final/",
     "display": "standalone",
     "background_color": "#000000",
     "theme_color": "#000000",
+     "scope": "/final/",
     "icons": [
       {
         "src": "icon.png",
