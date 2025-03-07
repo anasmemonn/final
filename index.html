@@ -7,6 +7,8 @@
   <link rel="icon" href="imagess.jpg" type="image/jpg">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <!-- Linking custom manifest file -->
+  <link rel="manifest" href="app-manifest.json">
   <style>
     /* Reset & Base */
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -80,7 +82,6 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       margin-bottom: 1.5rem;
-    
     }
     @keyframes neonFlicker {
       0%, 18%, 22%, 25%, 53%, 57%, 100% {
@@ -101,23 +102,22 @@
       color: #e0e0e0;
       margin-bottom: 2rem;
     }
-   /* Updated Profile Image Styling */
-  .profile-img {
-    width: 5400%;
-    max-width: 400px;
-    height: 400px; /* Fixed height for consistency */
-    object-fit: cover; /* Ensures the image covers the container without distortion */
-    border-radius: 2rem;
-    border: 5px solid #00ffcc; /* Neon border for a futuristic look */
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
-    animation: float 6s ease-in-out infinite;
-    transition: transform 0.3s ease, filter 0.3s ease;
-  }
-
-  .profile-img:hover {
-    transform: scale(1.05);
-    filter: brightness(1.1);
-  }
+    /* Updated Profile Image Styling */
+    .profile-img {
+      width: 5400%;
+      max-width: 400px;
+      height: 400px; /* Fixed height for consistency */
+      object-fit: cover; /* Ensures the image covers the container without distortion */
+      border-radius: 2rem;
+      border: 5px solid #00ffcc; /* Neon border for a futuristic look */
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+      animation: float 6s ease-in-out infinite;
+      transition: transform 0.3s ease, filter 0.3s ease;
+    }
+    .profile-img:hover {
+      transform: scale(1.05);
+      filter: brightness(1.1);
+    }
     /* Skill Bar */
     .skill-container { margin: 1.5rem 0; }
     .skill-bar {
@@ -390,6 +390,13 @@
     </div>
   </div>
   <script>
+    // Service Worker Registration
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service.js')
+        .then(() => console.log('Service Worker Registered!'))
+        .catch((error) => console.error('Service Worker Registration Failed:', error));
+    }
+    
     // Scroll Animation using Intersection Observer
     const observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
