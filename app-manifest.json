@@ -1,28 +1,14 @@
 {
-    "name": "Final App",
-    "short_name": "Final",
-    "description": "A futuristic neon-style app",
-    "start_url": "/final/",
-    "display": "standalone",
-    "background_color": "#000000",
-    "theme_color": "#000000",
-     "scope": "/final/",
-    "icons": [
-      {
-        "src": "icon.png",
-        "type": "image/png",
-        "sizes": "512x512"
-      },
-      {
-        "src": "icon-192.png",
-        "type": "image/png",
-        "sizes": "192x192"
-      },
-      {
-        "src": "icon-512.png",
-        "type": "image/png",
-        "sizes": "512x512"
-      }
-    ]
-  }
-  
+  "name": "Anas Memon | AI Developer Portfolio",
+  "short_name": "AnasMemon",
+  "start_url": "/final/",
+  "scope": "/final/",
+  "display": "standalone",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
