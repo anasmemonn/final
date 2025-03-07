@@ -1,14 +1,14 @@
 {
-  "name": "Anas Memon | AI Developer Portfolio",
+  "name": "Anas's Web App",
   "short_name": "AnasMemon",
   "start_url": "/final/",
   "scope": "/final/",
   "display": "standalone",
   "icons": [
     {
-      "src": "icon.png",
+      "src": "imagee.jpg",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/jpg"
     }
   ]
 }
