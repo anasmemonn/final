@@ -6,9 +6,9 @@
   "display": "standalone",
   "icons": [
     {
-      "src": "imagee.jpg",
+      "src": "icon.png",
       "sizes": "192x192",
-      "type": "image/jpg"
+      "type": "image/png"
     }
   ]
 }
