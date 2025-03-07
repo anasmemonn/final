@@ -6,12 +6,20 @@
   <title>Anas Memon | AI Developer Portfolio</title>
   <link rel="icon" href="imagess.jpg" type="image/jpg">
   <link rel="icon" type="image/png" href="icon.png">
-<link rel="apple-touch-icon" sizes="192x192" href="icon.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="icon.png">
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <!-- Linking custom manifest file -->
   <link rel="manifest" href="app-manifest.json">
+  
+  <!-- Redirect script: Agar user root par aata hai to /final/ par bhej de -->
+  <script>
+    if (window.location.pathname === "/" || window.location.pathname === "/index.html") {
+      window.location.replace("/final/");
+    }
+  </script>
+  
   <style>
     /* Reset & Base */
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -468,7 +476,6 @@
     window.addEventListener('resize', resizeCanvas);
     resizeCanvas();
     animateParticles();
-    window.location.href = "/final/";
   </script>
 </body>
 </html>
